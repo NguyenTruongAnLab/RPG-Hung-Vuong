@@ -1,0 +1,25 @@
+{
+  "name": "than-thu-van-lang",
+  "version": "1.0.0",
+  "description": "Game RPG đánh theo lượt lấy bối cảnh thời Hùng Vương - đất Văn Lang",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "rpg",
+    "game",
+    "hung-vuong",
+    "vietnam"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "pixi.js": "^8.0.0"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}

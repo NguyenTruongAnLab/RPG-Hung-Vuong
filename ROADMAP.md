@@ -78,102 +78,220 @@ Add professional development infrastructure without breaking existing functional
 
 ---
 
-## 📦 Phase 2: Core Systems Refactor (Week 2)
+## 📦 Phase 2: Pokemon-Style Overworld with Matter.js Physics (Week 2-3)
 
 ### Goal
-Refactor existing systems to TypeScript with proper architecture patterns.
+Implement Pokemon-style overworld with Matter.js physics, following strict modular architecture and AI-friendly patterns.
 
-### 2.1 Core Managers
-- [ ] Create `src/core/SceneManager.ts`
-  - [ ] Abstract Scene base class
-  - [ ] Scene lifecycle methods (init, update, destroy)
-  - [ ] Scene switching with transitions
-  - [ ] Write unit tests
-  
-- [ ] Create `src/core/AssetManager.ts`
-  - [ ] Lazy loading for monster assets
-  - [ ] Caching system
-  - [ ] Batch loading (chunks of 10)
-  - [ ] Progress tracking
-  - [ ] Write unit tests
-  
-- [ ] Create `src/core/EventBus.ts`
-  - [ ] Event emitter pattern
-  - [ ] Type-safe event system
-  - [ ] Listener management
-  - [ ] Write unit tests
-  
-- [ ] Implement `src/core/DragonBonesManager.ts`
-  - [ ] Factory initialization
-  - [ ] Asset parsing
-  - [ ] Armature display creation
-  - [ ] Animation controls
-  - [ ] Write unit tests
+### Core Philosophy
+1. **Use Popular Libraries**: Matter.js, GSAP, @pixi/tilemap (AI-trained)
+2. **File Size Limit**: Max 500 lines per file, target <400 lines
+3. **Extreme Modularity**: One responsibility per file
+4. **AI-Friendly Documentation**: Comprehensive JSDoc with examples
 
-### 2.2 System Conversion (JS → TS)
-- [ ] Convert `BattleSystem.js` → `BattleSystem.ts`
-  - [ ] Add type definitions
-  - [ ] Extract ElementSystem logic
-  - [ ] Write comprehensive unit tests
-  - [ ] Document all methods
-  
-- [ ] Convert `CaptureSystem.js` → `CaptureSystem.ts`
-  - [ ] Add type definitions
-  - [ ] Add persistence hooks (for future save system)
-  - [ ] Write unit tests
-  - [ ] Document capture algorithm
-  
-- [ ] Convert `MapExplorer.js` → `MapSystem.ts`
-  - [ ] Add type definitions
-  - [ ] Improve location unlock system
-  - [ ] Write unit tests
-  
-- [ ] Create `src/systems/ElementSystem.ts`
-  - [ ] Extract from BattleSystem
-  - [ ] Pure functions for element calculations
-  - [ ] Write extensive unit tests
+### 2.0 Library Installation & Documentation
+- [ ] Install Phase 2 dependencies
+  - [ ] `npm install matter-js @types/matter-js`
+  - [ ] `npm install gsap`
+  - [ ] `npm install @pixi/tilemap`
+  - [ ] `npm install lodash @types/lodash` (optional)
+- [x] Create `docs/LIBRARIES.md` - Rationale for library choices
+- [x] Update `.github/copilot-instructions.md` - Add architectural rules
+- [x] Create folder README.md files - Document responsibilities
 
-### 2.3 Scene Implementation
-- [ ] Create `src/scenes/Scene.ts` (base class)
-- [ ] Create `src/scenes/MenuScene.ts`
-  - [ ] Migrate menu code from Game.js
-  - [ ] Add to/from transitions
-  - [ ] Write E2E test
+### 2.1 Physics Integration (Matter.js)
+- [ ] Create `src/core/PhysicsManager.ts` (<300 lines)
+  - [ ] Initialize Matter.js Engine and World
+  - [ ] Physics simulation loop (sync with PixiJS)
+  - [ ] API to add/remove bodies
+  - [ ] Body-to-sprite synchronization
+  - [ ] JSDoc with Matter.js examples
+  - [ ] Write 15 unit tests
   
-- [ ] Create `src/scenes/ExploreScene.ts`
-  - [ ] Migrate explore code from Game.js
-  - [ ] Integrate with MapSystem
-  - [ ] Write E2E test
+- [ ] Create `src/systems/CollisionSystem.ts` (<300 lines)
+  - [ ] Register collision pairs (player-wall, player-enemy)
+  - [ ] Handle Matter.js collision events
+  - [ ] Emit game events via EventBus
+  - [ ] Collision filtering (categories, masks)
+  - [ ] JSDoc with collision examples
+  - [ ] Write 20 unit tests
   
-- [ ] Create `src/scenes/BattleScene.ts`
-  - [ ] Migrate battle code from Game.js
-  - [ ] Integrate BattleSystem and UI components
-  - [ ] Write E2E test
-  
-- [ ] Refactor `src/core/Game.ts`
-  - [ ] Convert to TypeScript
-  - [ ] Simplify to bootstrap only
-  - [ ] Use SceneManager
-  - [ ] Remove 80% of code
+- [ ] Create `src/utils/MatterHelpers.ts` (<200 lines)
+  - [ ] Helper functions for common body shapes
+  - [ ] Coordinate conversion (PixiJS ↔ Matter.js)
+  - [ ] Sprite-body sync utilities
+  - [ ] Debug rendering helpers
+  - [ ] Pure functions with JSDoc
+  - [ ] Write 10 unit tests
 
-### 2.4 Placeholder Assets
-- [ ] Create asset structure: `public/assets/monsters/`
-- [ ] Generate 3 placeholder DragonBones assets
-  - [ ] `char001/` (Rồng Kim - Kim element)
-  - [ ] `char041/` (Rồng Mộc - Mộc element)
-  - [ ] `char081/` (Rồng Thủy - Thủy element)
-- [ ] Write script to generate simple colored squares as placeholders
-- [ ] Test loading with AssetManager
+### 2.2 Input Management
+- [ ] Create `src/core/InputManager.ts` (<200 lines)
+  - [ ] Keyboard event listeners (WASD + Arrow keys)
+  - [ ] Mouse/touch event listeners
+  - [ ] Query API: isKeyPressed(), getMovementVector()
+  - [ ] Singleton pattern
+  - [ ] Mobile-ready touch gestures
+  - [ ] Write 12 unit tests
 
-**Status**: 📅 Planned  
-**Target Date**: End of Week 2  
+### 2.3 Player Entity (Component Pattern)
+- [ ] Create `src/entities/Player.ts` (<300 lines)
+  - [ ] Orchestrate components
+  - [ ] Hold Matter.js body reference
+  - [ ] Update loop delegation
+  - [ ] Event emission
+  - [ ] Write 15 unit tests
+  
+- [ ] Create `src/entities/PlayerMovement.ts` (<200 lines)
+  - [ ] Calculate velocity from input
+  - [ ] Apply forces to Matter.js body
+  - [ ] Handle facing direction
+  - [ ] Walking animation states
+  - [ ] Write 12 unit tests
+  
+- [ ] Create `src/entities/PlayerCombat.ts` (<200 lines)
+  - [ ] Attack action handling
+  - [ ] Create attack hitbox (sensor body)
+  - [ ] Damage calculation
+  - [ ] Attack animations
+  - [ ] Write 12 unit tests
+  
+- [ ] Create `src/entities/PlayerStats.ts` (<150 lines)
+  - [ ] HP, maxHP, attack, defense properties
+  - [ ] takeDamage() method
+  - [ ] heal() method
+  - [ ] Level up logic
+  - [ ] Write 8 unit tests
+  
+- [ ] Create `src/entities/README.md` - Document composition pattern
+
+### 2.4 Tilemap System (Split by Concern)
+- [ ] Create `src/world/Tilemap.ts` (<350 lines)
+  - [ ] Render tiles using @pixi/tilemap
+  - [ ] Load Tiled JSON format
+  - [ ] Manage layers (ground, decoration, foreground)
+  - [ ] Public API for tile queries
+  - [ ] Write 15 unit tests
+  
+- [ ] Create `src/world/TilemapCollision.ts` (<200 lines)
+  - [ ] Parse collision layer from Tiled JSON
+  - [ ] Create Matter.js static bodies for walls
+  - [ ] isWalkable(x, y) query
+  - [ ] Handle collision shapes
+  - [ ] Write 12 unit tests
+  
+- [ ] Create `src/world/TilemapEncounters.ts` (<200 lines)
+  - [ ] Parse encounter zones from Tiled JSON
+  - [ ] Track player steps in zones
+  - [ ] Calculate encounter probability
+  - [ ] Emit encounter events
+  - [ ] Write 10 unit tests
+  
+- [ ] Create `src/world/MapLoader.ts` (<250 lines)
+  - [ ] Load Tiled JSON from file
+  - [ ] Validate map data structure
+  - [ ] Cache loaded maps
+  - [ ] Handle loading errors
+  - [ ] Write 8 unit tests
+  
+- [ ] Create `src/world/README.md` - Document world systems
+
+### 2.5 Camera System
+- [ ] Create `src/world/Camera.ts` (<250 lines)
+  - [ ] Follow target (player) smoothly
+  - [ ] Clamp to world bounds
+  - [ ] Smooth interpolation using GSAP
+  - [ ] Zoom in/out support
+  - [ ] Shake effect for impacts
+  - [ ] Write 12 unit tests
+
+### 2.6 Overworld Scene (Split by Responsibility)
+- [ ] Create `src/scenes/OverworldScene.ts` (<400 lines)
+  - [ ] Scene lifecycle (init, update, destroy)
+  - [ ] Coordinate subsystems
+  - [ ] Handle scene-level events
+  - [ ] Delegate to UI, Entities, World
+  - [ ] Write E2E tests
+  
+- [ ] Create `src/scenes/OverworldUI.ts` (<200 lines)
+  - [ ] Render HP bar
+  - [ ] Render minimap
+  - [ ] Render control hints
+  - [ ] Update UI each frame
+  - [ ] Write 10 unit tests
+  
+- [ ] Create `src/scenes/OverworldEntities.ts` (<250 lines)
+  - [ ] Spawn player
+  - [ ] Spawn NPCs
+  - [ ] Spawn enemies
+  - [ ] Manage entity lifecycle
+  - [ ] Write 12 unit tests
+  
+- [ ] Create `src/scenes/README.md` - Document scene architecture
+
+### 2.7 Existing System Updates
+- [ ] Update `src/core/SceneManager.ts`
+  - [ ] Add OverworldScene support
+  - [ ] Scene transition with GSAP
+  - [ ] Ensure <400 lines
+  
+- [ ] Update `src/core/AssetManager.ts`
+  - [ ] Add tilemap asset loading
+  - [ ] Add Tiled JSON parsing
+  - [ ] Ensure <400 lines
+
+### 2.8 Placeholder Assets
+- [ ] Create example Tiled map JSON
+  - [ ] Create `public/maps/test-map.json`
+  - [ ] Add collision layer
+  - [ ] Add encounter zones
+  - [ ] Test with MapLoader
+  
+- [ ] Create placeholder tilesets
+  - [ ] Ground tiles (grass, dirt, stone)
+  - [ ] Wall/obstacle tiles
+  - [ ] 32x32 pixel tiles
+
+### 2.9 Documentation & Quality
+- [ ] Verify all files <500 lines
+  - [ ] Run: `find src -name "*.ts" -exec wc -l {} + | sort -n`
+  - [ ] Create issues for files >400 lines
+  
+- [ ] Update `ARCHITECTURE.md`
+  - [ ] Add Matter.js integration section
+  - [ ] Add file size enforcement policy
+  - [ ] Add composition pattern examples
+  
+- [ ] Create `docs/GAMEPLAY.md`
+  - [ ] Overworld controls
+  - [ ] Movement system
+  - [ ] Encounter mechanics
+  - [ ] Battle transition flow
+  
+- [ ] Generate metrics report
+  - [ ] File size distribution
+  - [ ] Library usage (grep for Matter., gsap., etc.)
+  - [ ] Test coverage report
+  - [ ] Bundle size impact
+
+**Status**: 📅 Planned (Documentation Ready)  
+**Target Date**: End of Week 3  
 **Success Criteria**:
-- All JS systems converted to TS
-- SceneManager working with 3 scenes
-- AssetManager can load placeholder assets
-- EventBus connecting systems
-- Unit test coverage ≥ 60%
-- Game still fully functional
+- ✅ Zero files >500 lines
+- ✅ 90%+ files <400 lines
+- ✅ Matter.js integrated for all physics
+- ✅ GSAP used for all animations
+- ✅ @pixi/tilemap for tilemap rendering
+- ✅ 100+ total tests passing
+- ✅ Test coverage ≥75%
+- ✅ Every folder has README.md
+- ✅ Every public method has JSDoc with @example
+- ✅ Pokemon-style overworld working
+- ✅ Player movement with Matter.js collision
+- ✅ Random encounters functional
+- ✅ Battle transition working
+- ✅ Existing systems still functional
+- ✅ 60 FPS maintained
+- ✅ Bundle size <3MB
 
 ---
 

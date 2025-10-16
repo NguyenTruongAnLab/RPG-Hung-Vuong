@@ -281,4 +281,225 @@ See ROADMAP.md for detailed checklist. Current focus:
 
 ---
 
+## 🚨 CRITICAL ARCHITECTURAL RULES (PHASE 2+)
+
+### File Size Enforcement (MANDATORY)
+
+**Rule: No file >500 lines. Ideal: <400 lines.**
+
+When writing code:
+1. Before saving file, check line count
+2. If >400 lines → STOP → Analyze what to extract
+3. Extract into new file with clear responsibility
+4. Update imports
+5. Add README.md in folder explaining split
+
+**How to check line count:**
+```bash
+wc -l src/path/to/file.ts
+```
+
+**When to split:**
+- Scene >400 lines → Extract UI, Entities, Logic into separate files
+- Entity >300 lines → Extract components (Movement, Combat, Stats)
+- System >350 lines → Extract helpers, utilities
+- Manager >400 lines → Split by responsibility
+
+**Examples of good splits:**
+- ❌ `Player.ts` (800 lines) - TOO BIG
+- ✅ `Player.ts` (250 lines) + `PlayerMovement.ts` (150 lines) + `PlayerCombat.ts` (150 lines)
+
+- ❌ `OverworldScene.ts` (1200 lines) - TOO BIG
+- ✅ `OverworldScene.ts` (350 lines) + `OverworldUI.ts` (180 lines) + `OverworldEntities.ts` (200 lines)
+
+### Use Popular Libraries (AI Training Data)
+
+**Rule: Prefer industry-standard libraries over custom code**
+
+**✅ USE THESE (AI trained on them):**
+- Matter.js for physics
+- GSAP for animations
+- @pixi/tilemap for tilemaps
+- Lodash for utilities
+
+**❌ AVOID custom implementations of:**
+- Physics/collision math
+- Animation systems
+- Tilemap rendering
+- Common utilities (sorting, filtering, etc.)
+
+**Why:**
+- AI agent already knows these APIs
+- No need to read custom code
+- Community support and examples
+- Faster development
+- Fewer bugs
+
+**When AI agent sees:**
+```typescript
+Matter.Body.applyForce(body, position, force);
+```
+→ AI instantly knows what this does (trained on Matter.js)
+
+**When AI agent sees:**
+```typescript
+customPhysicsEngine.applyForceWithCustomAlgorithm(...);
+```
+→ AI must read entire customPhysicsEngine code to understand
+
+### Composition Over Inheritance
+
+**Rule: Use composition pattern for entities**
+
+**✅ GOOD:**
+```typescript
+// Player.ts (300 lines)
+class Player {
+  movement: PlayerMovement;
+  combat: PlayerCombat;
+  stats: PlayerStats;
+  
+  update(delta: number) {
+    this.movement.update(delta);
+    this.combat.update(delta);
+  }
+}
+
+// PlayerMovement.ts (150 lines) - separate file
+// PlayerCombat.ts (150 lines) - separate file
+// PlayerStats.ts (100 lines) - separate file
+```
+
+**❌ BAD:**
+```typescript
+// Player.ts (800 lines) - everything in one file
+class Player {
+  // 200 lines of movement code
+  // 200 lines of combat code
+  // 150 lines of stats code
+  // 250 lines of animation code
+}
+```
+
+### JSDoc Must Be Sufficient
+
+**Rule: JSDoc should allow AI to use code without reading implementation**
+
+**✅ GOOD JSDoc:**
+```typescript
+/**
+ * Creates a circular Matter.js body for the player
+ * 
+ * @param x - World X coordinate
+ * @param y - World Y coordinate
+ * @param radius - Circle radius in pixels
+ * @returns Matter.js body with player collision category
+ * 
+ * @example
+ * const playerBody = MatterHelpers.createCircleBody(100, 200, 16);
+ * Matter.World.add(world, playerBody);
+ */
+```
+
+**❌ BAD JSDoc:**
+```typescript
+/**
+ * Creates body
+ */
+```
+
+### Folder README Files
+
+**Rule: Every folder must have README.md explaining its purpose**
+
+**Example: `src/entities/README.md`**
+```markdown
+# Entities
+
+Game entities that exist in the world.
+
+## Files
+- `Player.ts` - Player character (orchestrator)
+- `PlayerMovement.ts` - Movement component (<200 lines)
+- `PlayerCombat.ts` - Combat component (<200 lines)
+- `PlayerStats.ts` - Stats management (<150 lines)
+- `Monster.ts` - Thần Thú entities
+- `Enemy.ts` - Overworld enemies
+
+## Composition Pattern
+Entities use composition. Player.ts coordinates components.
+Components are independent and testable in isolation.
+```
+
+**When adding new file:**
+1. Create file
+2. Update folder README.md
+3. Commit both together
+
+### Testing Philosophy
+
+**Rule: Test public API, not implementation details**
+
+**✅ GOOD test:**
+```typescript
+test('player should move right when D key pressed', () => {
+  // Test via public API
+  player.handleInput({ right: true });
+  player.update(1);
+  expect(player.x).toBeGreaterThan(initialX);
+});
+```
+
+**❌ BAD test:**
+```typescript
+test('internal velocity calculation uses correct formula', () => {
+  // Testing implementation detail
+  expect(player.calculateVelocity()).toBe(...);
+});
+```
+
+**Why:** Tests should not break when refactoring implementation.
+
+### Code Review Checklist (Before Commit)
+
+AI agent must verify:
+- [ ] Every file <500 lines (check with `wc -l`)
+- [ ] If file >400 lines, created issue to split it
+- [ ] Used Matter.js/GSAP/standard libraries instead of custom code
+- [ ] Every public method has JSDoc with @example
+- [ ] Every folder has README.md
+- [ ] Tests written for public API only
+- [ ] No breaking changes to existing tests
+- [ ] TypeScript strict mode passes (npm run type-check)
+- [ ] All tests pass (npm run test)
+
+### Commit Message Format for Architecture
+
+When splitting file:
+```
+refactor(entities): Split Player.ts into components
+
+- Extracted PlayerMovement.ts (150 lines)
+- Extracted PlayerCombat.ts (150 lines)
+- Player.ts now 250 lines (was 550 lines)
+- All tests still passing
+- No breaking changes
+
+Reason: File exceeded 500 line limit
+```
+
+When using library instead of custom code:
+```
+refactor(physics): Replace custom collision with Matter.js
+
+- Removed 300 lines of custom collision math
+- Added Matter.js integration in PhysicsManager.ts
+- 20% performance improvement
+- AI-friendly: Matter.js is industry standard
+
+Reason: Prefer trained libraries over custom code
+```
+
+---
+
 **Remember**: This is a migration/improvement project, NOT a rewrite. Preserve existing functionality while adding professional infrastructure!

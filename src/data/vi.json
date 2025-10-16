@@ -1,0 +1,44 @@
+{
+  "game": {
+    "title": "Thần Thú Văn Lang",
+    "subtitle": "Hùng Vương RPG",
+    "start": "Bắt đầu",
+    "continue": "Tiếp tục",
+    "newGame": "Trò chơi mới",
+    "settings": "Cài đặt",
+    "quit": "Thoát"
+  },
+  "elements": {
+    "kim": "Kim (Kim Loại)",
+    "moc": "Mộc (Gỗ)",
+    "thuy": "Thủy (Nước)",
+    "hoa": "Hỏa (Lửa)",
+    "tho": "Thổ (Đất)"
+  },
+  "battle": {
+    "turn": "Lượt",
+    "attack": "Tấn công",
+    "skill": "Kỹ năng",
+    "capture": "Thu phục",
+    "flee": "Chạy trốn",
+    "victory": "Chiến thắng!",
+    "defeat": "Thất bại!",
+    "captureSuccess": "Thu phục thành công!",
+    "captureFailed": "Thu phục thất bại!",
+    "hp": "HP",
+    "speed": "Tốc độ",
+    "level": "Cấp độ"
+  },
+  "monster": {
+    "captured": "Đã thu phục",
+    "wild": "Hoang dã",
+    "evolve": "Tiến hóa",
+    "evolved": "đã tiến hóa thành"
+  },
+  "map": {
+    "explore": "Khám phá",
+    "battle": "Chiến đấu",
+    "sanctuary": "Thánh địa",
+    "village": "Làng"
+  }
+}

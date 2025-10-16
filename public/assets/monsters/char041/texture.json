@@ -1,0 +1,15 @@
+{
+  "name": "char041",
+  "imagePath": "texture.png",
+  "width": 128,
+  "height": 128,
+  "SubTexture": [
+    {
+      "name": "char041",
+      "x": 0,
+      "y": 0,
+      "width": 128,
+      "height": 128
+    }
+  ]
+}

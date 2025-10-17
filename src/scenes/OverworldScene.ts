@@ -11,22 +11,26 @@
  * ```
  */
 import * as PIXI from 'pixi.js';
-import { Scene } from '../core/SceneManager';
+import { Scene, SceneManager } from '../core/SceneManager';
 import { PhysicsManager } from '../core/PhysicsManager';
 import { InputManager } from '../core/InputManager';
 import { EventBus } from '../core/EventBus';
+import { TransitionManager } from '../core/TransitionManager';
 import { Player } from '../entities/Player';
 import { Tilemap } from '../world/Tilemap';
 import { TilemapCollision } from '../world/TilemapCollision';
 import { TilemapEncounters } from '../world/TilemapEncounters';
 import { Camera } from '../world/Camera';
 import { OverworldUI } from './OverworldUI';
+import { BattleSceneV2, EncounterData } from './BattleSceneV2';
 import testMapData from '../data/maps/test-map.json';
 
 export class OverworldScene extends Scene {
   private physics: PhysicsManager;
   private input: InputManager;
   private eventBus: EventBus;
+  private transitionManager: TransitionManager;
+  private sceneManager: SceneManager | null = null;
   private player: Player | null = null;
   private tilemap: Tilemap | null = null;
   private collision: TilemapCollision | null = null;
@@ -34,8 +38,9 @@ export class OverworldScene extends Scene {
   private camera: Camera | null = null;
   private ui: OverworldUI | null = null;
   private worldContainer: PIXI.Container;
+  private playerPosition: { x: number; y: number } = { x: 320, y: 240 };
 
-  constructor(app: PIXI.Application) {
+  constructor(app: PIXI.Application, sceneManager?: SceneManager) {
     super(app);
     this.worldContainer = new PIXI.Container();
     this.addChild(this.worldContainer);
@@ -44,6 +49,8 @@ export class OverworldScene extends Scene {
     this.physics = PhysicsManager.getInstance();
     this.input = InputManager.getInstance();
     this.eventBus = EventBus.getInstance();
+    this.transitionManager = TransitionManager.getInstance();
+    this.sceneManager = sceneManager || null;
   }
 
   /**
@@ -73,6 +80,9 @@ export class OverworldScene extends Scene {
 
     // Create UI
     this.createUI();
+
+    // Listen for battle end events
+    this.eventBus.on('battle:end', this.onBattleEnd.bind(this));
 
     console.log('OverworldScene initialized');
   }
@@ -106,9 +116,9 @@ export class OverworldScene extends Scene {
    * Creates the player
    */
   private createPlayer(): void {
-    // Spawn player at center of map
-    const spawnX = 320; // 10 tiles * 32px
-    const spawnY = 240; // 7.5 tiles * 32px
+    // Use saved position or default spawn
+    const spawnX = this.playerPosition.x;
+    const spawnY = this.playerPosition.y;
     
     this.player = new Player(spawnX, spawnY, this.physics);
     
@@ -124,6 +134,8 @@ export class OverworldScene extends Scene {
         const pos = this.player.getPosition();
         playerGraphics.x = pos.x;
         playerGraphics.y = pos.y;
+        // Save position
+        this.playerPosition = { x: pos.x, y: pos.y };
       }
     });
   }
@@ -168,15 +180,49 @@ export class OverworldScene extends Scene {
   /**
    * Handles encounter trigger
    */
-  private handleEncounter(data: any): void {
+  private async handleEncounter(data: any): Promise<void> {
     console.log('Encounter triggered!', data);
     
     if (this.ui) {
       this.ui.showEncounterMessage('Wild Thần Thú appeared!');
     }
     
-    // TODO: Transition to battle scene
-    // For now, just log
+    // Wait a moment to show the message
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    // Fade out
+    await this.transitionManager.fadeOut(this, 0.5);
+    
+    // Switch to battle scene
+    if (this.sceneManager) {
+      const encounterData: EncounterData = {
+        enemyMonsterId: 'char001',
+        zone: data.zone || 'unknown',
+        canEscape: true
+      };
+      
+      const battleScene = new BattleSceneV2(this.app, encounterData, this.sceneManager);
+      await this.sceneManager.switchTo(battleScene);
+      
+      // Fade in battle scene
+      await this.transitionManager.fadeIn(battleScene, 0.5);
+    }
+  }
+
+  /**
+   * Handles battle end event
+   */
+  private async onBattleEnd(result: 'victory' | 'defeat'): Promise<void> {
+    console.log('Battle ended:', result);
+    
+    if (result === 'victory') {
+      console.log('Victory! Returning to overworld...');
+    } else {
+      console.log('Defeat! Returning to overworld...');
+    }
+    
+    // Return to overworld will be handled by the battle scene
+    // transitioning back to a new OverworldScene instance
   }
 
   /**
@@ -257,6 +303,7 @@ export class OverworldScene extends Scene {
     
     // Remove event listeners
     this.eventBus.off('encounter:trigger', this.handleEncounter);
+    this.eventBus.off('battle:end', this.onBattleEnd);
     
     // Destroy PIXI containers
     this.worldContainer.destroy({ children: true });

@@ -23,6 +23,7 @@ import { InputManager } from '../core/InputManager';
 import { PlayerMovement } from './components/PlayerMovement';
 import { PlayerCombat } from './components/PlayerCombat';
 import { PlayerStats, PlayerStatsData } from './components/PlayerStats';
+import { PlayerAnimation } from './components/PlayerAnimation';
 import { createCircleBody } from '../utils/MatterHelpers';
 import { Vector2D } from '../utils/Vector2D';
 
@@ -34,6 +35,7 @@ export class Player {
   public movement: PlayerMovement;
   public combat: PlayerCombat;
   public stats: PlayerStats;
+  public animation: PlayerAnimation;
 
   /**
    * Creates a new Player
@@ -70,6 +72,7 @@ export class Player {
     this.stats = new PlayerStats(initialStats);
     this.movement = new PlayerMovement(this.body);
     this.combat = new PlayerCombat(this.stats, physics);
+    this.animation = new PlayerAnimation();
   }
 
   /**
@@ -93,13 +96,41 @@ export class Player {
     const movementVector = input.getMovementVector();
     if (movementVector.x !== 0 || movementVector.y !== 0) {
       this.movement.move(movementVector);
+      this.updateAnimation(movementVector);
     } else {
       this.movement.applyFriction();
+      this.updateAnimation(movementVector);
     }
 
     // Handle attack input
     if (input.isAttackPressed()) {
       this.tryAttack();
+    }
+
+    // Update animation component
+    this.animation.update(deltaMs);
+  }
+
+  /**
+   * Updates player animation based on movement
+   * 
+   * @param movementVector - Current movement vector
+   */
+  private updateAnimation(movementVector: Vector2D): void {
+    // Update animation state
+    if (movementVector.x !== 0 || movementVector.y !== 0) {
+      this.animation.play('walk');
+      
+      // Update direction based on dominant movement axis
+      if (Math.abs(movementVector.x) > Math.abs(movementVector.y)) {
+        // Horizontal movement
+        this.animation.setDirection(movementVector.x > 0 ? 'right' : 'left');
+      } else if (movementVector.y !== 0) {
+        // Vertical movement
+        this.animation.setDirection(movementVector.y > 0 ? 'down' : 'up');
+      }
+    } else {
+      this.animation.play('idle');
     }
   }
 
@@ -212,5 +243,6 @@ export class Player {
    */
   public destroy(): void {
     this.physics.removeBody(this.body);
+    this.animation.dispose();
   }
 }

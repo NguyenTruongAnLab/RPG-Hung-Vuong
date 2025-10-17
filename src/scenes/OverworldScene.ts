@@ -25,6 +25,7 @@ import { Camera } from '../world/Camera';
 import { OverworldUI } from './OverworldUI';
 import { BattleSceneV2, EncounterData } from './BattleSceneV2';
 import { TutorialOverlay } from '../ui/TutorialOverlay';
+import { resolveAudioPath } from '../utils/paths';
 import testMapData from '../data/maps/test-map.json';
 
 export class OverworldScene extends Scene {
@@ -64,44 +65,53 @@ export class OverworldScene extends Scene {
   async init(): Promise<void> {
     console.log('Initializing OverworldScene...');
 
-    // Load overworld audio
-    await this.audioManager.load('bgm_overworld', '/assets/audio/bgm_overworld.wav', 'music');
-    await this.audioManager.load('sfx_menu_select', '/assets/audio/sfx_menu_select.wav', 'sfx');
+    try {
+      // Load overworld audio (gracefully fails if audio missing)
+      await this.audioManager.load('bgm_overworld', resolveAudioPath('bgm_overworld.wav'), 'music');
+      await this.audioManager.load('sfx_menu_select', resolveAudioPath('sfx_menu_select.wav'), 'sfx');
 
-    // Initialize systems
-    this.physics.init();
-    this.input.init();
+      // Initialize systems
+      this.physics.init();
+      this.input.init();
+      console.log('✅ Physics and Input initialized');
 
-    // Create tilemap with placeholder texture
-    await this.createTilemap();
+      // Create tilemap with placeholder texture
+      await this.createTilemap();
 
-    // Create player
-    this.createPlayer();
+      // Create player
+      this.createPlayer();
 
-    // Setup camera
-    this.setupCamera();
+      // Setup camera
+      this.setupCamera();
 
-    // Setup collision
-    this.setupCollision();
+      // Setup collision
+      this.setupCollision();
 
-    // Setup encounters
-    this.setupEncounters();
+      // Setup encounters
+      this.setupEncounters();
 
-    // Create UI
-    this.createUI();
+      // Create UI
+      this.createUI();
 
-    // Play overworld music
-    this.audioManager.playMusic('bgm_overworld', 1000);
+      // Play overworld music
+      this.audioManager.playMusic('bgm_overworld', 1000);
 
-    // Show tutorial if first time
-    if (!TutorialOverlay.isComplete()) {
-      this.showTutorial();
+      // Show tutorial if first time
+      if (!TutorialOverlay.isComplete()) {
+        this.showTutorial();
+      }
+
+      // Listen for battle end events
+      this.eventBus.on('battle:end', this.onBattleEnd.bind(this));
+
+      console.log('✅ OverworldScene initialized successfully');
+      console.log('✅ Controls: WASD/Arrow keys to move, Mouse wheel to zoom');
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      console.error('❌ Failed to initialize OverworldScene:', errorMsg);
+      alert(`⚠️ Failed to initialize game:\n${errorMsg}\n\nPlease refresh the page or check the console for details.`);
+      throw error;
     }
-
-    // Listen for battle end events
-    this.eventBus.on('battle:end', this.onBattleEnd.bind(this));
-
-    console.log('OverworldScene initialized');
   }
 
   /**

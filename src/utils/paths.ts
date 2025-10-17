@@ -13,10 +13,8 @@
  * This matches the Vite base configuration
  */
 export function getBasePath(): string {
-  // In Vite, import.meta.env.BASE_URL provides the base path
-  // TypeScript doesn't know about Vite's import.meta.env by default
-  const meta = import.meta as any;
-  return meta.env?.BASE_URL || '/';
+  // Vite will replace import.meta.env.BASE_URL with the actual base path at build time
+  return import.meta.env.BASE_URL;
 }
 
 /**

@@ -25,6 +25,7 @@ import { Camera } from '../world/Camera';
 import { OverworldUI } from './OverworldUI';
 import { BattleSceneV2, EncounterData } from './BattleSceneV2';
 import { TutorialOverlay } from '../ui/TutorialOverlay';
+import { resolveAudioPath } from '../utils/paths';
 import testMapData from '../data/maps/test-map.json';
 
 export class OverworldScene extends Scene {
@@ -66,8 +67,8 @@ export class OverworldScene extends Scene {
 
     try {
       // Load overworld audio (gracefully fails if audio missing)
-      await this.audioManager.load('bgm_overworld', '/assets/audio/bgm_overworld.wav', 'music');
-      await this.audioManager.load('sfx_menu_select', '/assets/audio/sfx_menu_select.wav', 'sfx');
+      await this.audioManager.load('bgm_overworld', resolveAudioPath('bgm_overworld.wav'), 'music');
+      await this.audioManager.load('sfx_menu_select', resolveAudioPath('sfx_menu_select.wav'), 'sfx');
 
       // Initialize systems
       this.physics.init();

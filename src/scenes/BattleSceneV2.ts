@@ -25,6 +25,7 @@ import { ProgressionSystem } from '../systems/ProgressionSystem';
 import { BattleAnimations } from './BattleAnimations';
 import { DragonBonesAnimation } from '../entities/components/DragonBonesAnimation';
 import { BattleMonsterLoader } from './BattleMonsterLoader';
+import { resolveAudioPath } from '../utils/paths';
 import gsap from 'gsap';
 
 // Element types for the Five Elements system
@@ -138,9 +139,9 @@ export class BattleSceneV2 extends Scene {
     console.log('Initializing BattleSceneV2...');
     
     // Load battle audio
-    await this.audioManager.load('bgm_battle', '/assets/audio/bgm_battle.wav', 'music');
-    await this.audioManager.load('sfx_attack', '/assets/audio/sfx_attack.wav', 'sfx');
-    await this.audioManager.load('sfx_victory', '/assets/audio/sfx_victory.wav', 'sfx');
+    await this.audioManager.load('bgm_battle', resolveAudioPath('bgm_battle.wav'), 'music');
+    await this.audioManager.load('sfx_attack', resolveAudioPath('sfx_attack.wav'), 'sfx');
+    await this.audioManager.load('sfx_victory', resolveAudioPath('sfx_victory.wav'), 'sfx');
 
     // Create world container for camera
     this.worldContainer = new PIXI.Container();

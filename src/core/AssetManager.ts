@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import type { DragonBonesAsset } from './DragonBonesManager';
+import { resolveDragonBonesPath } from '../utils/paths';
 
 /**
  * Extended DragonBones asset with animation metadata and settings
@@ -236,30 +237,34 @@ export class AssetManager {
    * @private
    */
   private async loadCharacterAsset(characterName: string): Promise<ExtendedDragonBonesAsset> {
-    const basePath = `/assets/dragonbones_assets/`;
-
     try {
       console.log(`🔄 Loading DragonBones asset: ${characterName}...`);
       
+      // Resolve paths with Vite base
+      const skePath = resolveDragonBonesPath(characterName, 'ske.json');
+      const texPath = resolveDragonBonesPath(characterName, 'tex.json');
+      const texPngPath = resolveDragonBonesPath(characterName, 'tex.png');
+      const settingsPath = resolveDragonBonesPath(characterName, 'settings.txt');
+      
       // Load skeleton, texture atlas, texture, and optionally settings
       const [skeleton, textureAtlas, texture, settings] = await Promise.all([
-        fetch(`${basePath}${characterName}_ske.json`).then(r => {
+        fetch(skePath).then(r => {
           if (!r.ok) {
-            throw new Error(`Skeleton file not found: ${basePath}${characterName}_ske.json (${r.status})`);
+            throw new Error(`Skeleton file not found: ${skePath} (${r.status})`);
           }
           return r.json();
         }),
-        fetch(`${basePath}${characterName}_tex.json`).then(r => {
+        fetch(texPath).then(r => {
           if (!r.ok) {
-            throw new Error(`Texture atlas not found: ${basePath}${characterName}_tex.json (${r.status})`);
+            throw new Error(`Texture atlas not found: ${texPath} (${r.status})`);
           }
           return r.json();
         }),
-        PIXI.Assets.load(`${basePath}${characterName}_tex.png`).catch(err => {
-          throw new Error(`Texture image not found: ${basePath}${characterName}_tex.png - ${err.message}`);
+        PIXI.Assets.load(texPngPath).catch(err => {
+          throw new Error(`Texture image not found: ${texPngPath} - ${err.message}`);
         }),
         // Settings file is optional (about 54% have it)
-        fetch(`${basePath}${characterName}_settings.txt`)
+        fetch(settingsPath)
           .then(r => r.ok ? r.text() : null)
           .catch(() => null)
       ]);

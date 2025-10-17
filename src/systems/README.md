@@ -4,28 +4,104 @@ Gameplay systems that implement core mechanics.
 
 ## Files
 
-### Existing Files
-- `BattleSystem.js` (76 lines) - Turn-based combat system
-  - ✅ **GOOD SIZE**: Focused and clean
-  - Features: Speed-based turns, element advantages, damage calculation
+### Phase 1-3: Combat & Progression (Complete)
+- `BattleSystem.js` (77 lines) - Legacy turn-based combat (replaced by BattleSceneV2)
+- `CaptureSystem.js` (77 lines) - Legacy monster capture (integrated in BattleSceneV2)
+- `MapExplorer.js` (77 lines) - Legacy Phase 1 menu navigation
+- `ProgressionSystem.ts` (241 lines) - Player level, EXP, and captured monsters tracking
+  - ✅ **Singleton pattern**: Player progression management
+  - Features: Level system, EXP tracking, monster collection, save/load
+
+### Phase 2: Physics & Collision (Complete)
+- `CollisionSystem.ts` (275 lines) - Matter.js collision detection and handling
+  - ✅ **GOOD SIZE**: Focused collision logic
+  - Features: Collision callbacks, physics body management
+
+### Phase 5: NPCs & Dialogue (NEW - Complete) ✨
+- **`NPCSystem.ts`** (360 lines) - NPC placement, interaction, and proximity detection
+  - ✅ **Singleton pattern**: Manages all NPCs in the game world
+  - Features: NPC creation, proximity detection, interaction indicators
+  - Supports: villager, elder, merchant, trainer, guide types
+  - Integration: Works with DialogueSystem and QuestSystem
   
-- `CaptureSystem.js` (88 lines) - Monster capture mechanics
-  - ✅ **GOOD SIZE**: Single responsibility
-  - Features: Capture rate calculation, success/failure determination
-  
-- `MapExplorer.js` (95 lines) - Map navigation between locations
-  - ✅ **GOOD SIZE**: Well-organized
-  - Features: 6 locations, connections, travel system
+- **`DialogueSystem.ts`** (407 lines) - Dialogue display with typewriter effects
+  - ✅ **Singleton pattern**: Manages all dialogue UI
+  - Features: Typewriter animation (GSAP), dialogue choices, auto-close
+  - Vietnamese text: Full UTF-8 support for Vietnamese characters
+  - Visual: Smooth animations, choice buttons, NPC name display
 
-## Planned Files (Phase 2)
+### Phase 5: Quests & Tasks (NEW - Complete) ✨
+- **`QuestSystem.ts`** (456 lines) - Quest tracking and completion
+  - ✅ **Singleton pattern**: Manages all quests
+  - Features: Quest lifecycle, objectives tracking, prerequisites
+  - Quest types: main, side, daily, tutorial
+  - Rewards: exp, gold, items, monsters
+  - Save/Load: Full quest state persistence
 
-- `CollisionSystem.ts` (<300 lines) - Matter.js collision handling
-- `EncounterSystem.ts` (<250 lines) - Random encounters in overworld
-- `MovementSystem.ts` (<200 lines) - Player movement logic
-- `InventorySystem.ts` (<300 lines) - Item management
-- `EvolutionSystem.ts` (<200 lines) - Monster evolution mechanics
+## System Integration Examples
 
-## System Design Principles
+### NPCSystem + DialogueSystem
+```typescript
+// In OverworldScene.ts
+import { NPCSystem } from '../systems/NPCSystem';
+import { DialogueSystem } from '../systems/DialogueSystem';
+import { VILLAGE_NPCS } from '../data/sampleNPCs';
+import { getDialogue } from '../data/sampleDialogues';
+
+// Initialize systems
+const npcSystem = NPCSystem.getInstance();
+const dialogueSystem = DialogueSystem.getInstance();
+
+npcSystem.init(app);
+dialogueSystem.init(app);
+npcSystem.setWorldContainer(worldContainer);
+
+// Load NPCs
+npcSystem.loadNPCs(VILLAGE_NPCS);
+
+// Handle interaction in update loop
+const nearbyNPC = npcSystem.getNearbyNPC(player.x, player.y, 50);
+if (nearbyNPC && input.isKeyPressed('E')) {
+  npcSystem.interact(nearbyNPC.id);
+}
+
+// Listen for NPC interaction events
+eventBus.on('npc:interact', (data) => {
+  if (data.dialogue) {
+    const dialogue = getDialogue(data.dialogue);
+    if (dialogue) {
+      dialogueSystem.showDialogue(dialogue);
+    }
+  }
+});
+```
+
+### QuestSystem Integration
+```typescript
+import { QuestSystem } from '../systems/QuestSystem';
+import { ALL_SAMPLE_QUESTS } from '../data/sampleQuests';
+
+// Initialize quest system
+const questSystem = QuestSystem.getInstance();
+
+// Add quests
+ALL_SAMPLE_QUESTS.forEach(quest => questSystem.addQuest(quest));
+
+// Listen for quest events
+eventBus.on('quest:completed', (data) => {
+  console.log(`Quest ${data.questId} completed!`);
+  player.addExp(data.rewards.exp || 0);
+  player.addGold(data.rewards.gold || 0);
+});
+
+// Update quest progress
+questSystem.updateObjective('quest_001', 'talk_to_npc', 1);
+
+// Show quest log
+const questLog = new QuestLog();
+questLog.updateQuests(questSystem.getActiveQuests());
+app.stage.addChild(questLog.getContainer());
+```
 
 ### Independence
 Systems should be loosely coupled:

@@ -46,6 +46,22 @@ Khám phá thế giới Văn Lang với 6 địa điểm:
 5. **Hồ Tây** - Thần thú hiếm
 6. **Thánh Địa Hùng Vương** - Boss cuối cùng
 
+### 🎭 Story Campaign (Phase 5 - Coming Soon!)
+- **4 Acts Epic Narrative**: Complete story from Awakening to Final Battle
+- **Vietnamese Mythology**: Learn about Văn Lang, Hùng Kings, and ancient legends
+- **4 Companions**: Tộc Trưởng (Elder), Lạc Nhi (Scholar), Phong Dũng (Warrior), Diệp Linh (Scout)
+- **15+ Cutscenes**: Opening cinematic, boss intros, victory celebrations
+- **68 Voice Lines**: All in Vietnamese with melodic beep simulation
+- **Quest System**: Main quests + side quests with Vietnamese cultural themes
+- **6-8 Hours**: Complete story-driven gameplay experience
+
+### 🎵 Audio System (Phase 4 - Complete!)
+- **86 Code-Generated Audio Files**: 68 voice lines, 4 music tracks, 14 SFX
+- **Vietnamese Voice Acting**: Melodic beeps simulating Vietnamese tones
+- **Background Music**: Chiptune melodies with Vietnamese pentatonic scales
+- **Sound Effects**: Procedural synthesis for battles, captures, UI feedback
+- **Zero Dependencies**: 100% Web Audio API, no external files needed
+
 ### 🌐 Internationalization (i18n)
 - Hoàn toàn tiếng Việt
 - Hệ thống i18n modular, dễ mở rộng
@@ -165,6 +181,130 @@ All audio is code-generated using Web Audio API with:
 - `public/assets/audio/README.md` - Complete voice line catalog
 
 **Note**: Audio files are placeholder "melodic beeps" simulating Vietnamese tones. Replace with professional voice actors and SFX before production release.
+
+---
+
+## 📖 Phase 5: Narrative Integration & Visual Polish (Next Phase)
+
+### 🎯 Overview
+
+Phase 5 will transform the game from a technical demo into a complete story-driven Vietnamese mythology experience, building on the audio foundation from Phase 4.
+
+**Duration**: 9 days (2 work weeks)  
+**Goal**: Implement complete narrative arc with cutscenes, dialogs, and quests
+
+### 📚 Complete Story Documentation
+
+Three comprehensive guides created:
+
+1. **`docs/STORY_GUIDE.md`** (17.5 KB)
+   - Complete 4-act narrative (Awakening → Journey → Confrontation → Final Battle)
+   - Character profiles: Tộc Trưởng, Lạc Nhi, Phong Dũng, Diệp Linh
+   - 15 major scenes with full scripts in Vietnamese
+   - 5 elemental zones detailed (Rừng Thần, Sông Hồng, Kim Sơn, etc.)
+   - 6 boss battles with intro/defeat cutscenes
+   - 5 side quests outlined
+   - Total playtime: 6-8 hours (main) + 2-3 hours (side quests)
+
+2. **`docs/DIALOG_FORMAT.md`** (13.1 KB)
+   - JSON format specification for dialogs and cutscenes
+   - Dialog entry structure with Vietnamese/English
+   - Cutscene format with camera animations
+   - Quest data format
+   - Character voice profiles
+   - API usage examples
+
+3. **`docs/PHASE5_ROADMAP.md`** (17.1 KB)
+   - Day-by-day implementation plan (9 days)
+   - Task breakdown with estimates
+   - Success criteria per day
+   - File structure overview
+   - 40 new unit tests planned
+   - Risk management strategies
+
+4. **`docs/AI_AGENT_PHASE5_SUMMARY.md`** (21.2 KB)
+   - Complete summary for AI agents
+   - Copilot instructions review
+   - Detailed story overview
+   - Implementation guide
+   - FAQ and support
+
+### 🎭 Story Arc Summary
+
+**Setting**: Văn Lang, 2879-258 BCE (Hùng Vương dynasty)  
+**Hero**: Young Lạc Việt warrior chosen to master 200 Thần Thú  
+**Villain**: Ma Vương (Demon Lord) breaking the Ngũ Hành balance
+
+**Act 1 - Awakening**: Choose first Thần Thú, learn basics, first battle  
+**Act 2 - Journey**: Explore 5 elemental zones, defeat mini-bosses, collect stones  
+**Act 3 - Confrontation**: Discover Ma Vương's plan, face Sơn Tinh and Quỷ Hồ 9 Đuôi  
+**Act 4 - Final Battle**: March to Thánh Địa, defeat Ma Vương, save Văn Lang
+
+### 🛠️ What Will Be Created
+
+**New Files** (14 TypeScript + 4 JSON):
+- Story data: `story-main.json`, `story-npcs.json`, `story-zones.json`, `story-bosses.json`
+- Systems: `StoryManager.ts`, `QuestManager.ts`, `DialogSystem.ts`, `CutsceneManager.ts`
+- UI: `DialogBox.ts`, `Subtitles.ts`, `QuestLog.ts`, `UIAnimations.ts`
+- Scenes: `IntroScene.ts`, `EndingScene.ts`
+- Core: `VoiceManager.ts`, `NPCDialog.ts`
+
+**Enhanced Files**:
+- `ParticleSystem.ts` - Add 5 element-specific particle effects
+- `TransitionManager.ts` - Add wipe, flash, letterbox effects
+
+**New Tests**: 40 unit tests (StoryManager, DialogSystem, QuestManager)
+
+### ✨ Visual Polish Features
+
+**Particle Effects** (5 element types):
+- **Kim (Metal)**: Metallic sparks, clang effects
+- **Mộc (Wood)**: Leaf swirl, vine growth
+- **Thủy (Water)**: Water splash, wave ripples
+- **Hỏa (Fire)**: Fire sparks, ember glow
+- **Thổ (Earth)**: Rock debris, dust clouds
+
+**Screen Effects**:
+- Wipe transitions for battle entry/exit
+- Flash effects for super effective hits
+- Letterbox effect for cinematic cutscenes
+- Slow-motion for critical moments
+
+**UI Animations**:
+- Menu slide-in/out with GSAP
+- HP bar smooth depletion
+- EXP bar fill animation
+- Button hover effects
+
+### 🎯 Success Criteria
+
+- [ ] Opening cinematic plays on first launch
+- [ ] Story progresses through 4 acts
+- [ ] 5+ cutscenes fully implemented
+- [ ] Dialog system with typewriter effect
+- [ ] Branching choices functional
+- [ ] Quest system tracks objectives
+- [ ] Quest log accessible with Q key
+- [ ] Voice lines sync with subtitles
+- [ ] All 5 elements have unique particles
+- [ ] 224 tests passing (184 + 40 new)
+- [ ] All files <500 lines
+- [ ] Story playable start-to-finish
+
+### 📊 Progress Tracking
+
+**Current Status**: Phase 5 documentation complete, ready for implementation
+
+**Next Steps**:
+1. Create story data JSON files
+2. Implement dialog system
+3. Build cutscene engine
+4. Create quest system
+5. Add visual polish
+
+**Estimated Completion**: TBD + 9 days
+
+---
 
 ## 📝 License
 

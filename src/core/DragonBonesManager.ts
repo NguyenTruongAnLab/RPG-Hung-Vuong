@@ -27,6 +27,7 @@ export interface DragonBonesAsset {
  */
 export class DragonBonesManager {
   private factory: PixiFactory;
+  private loadedDataNames = new Set<string>(); // Track loaded data to prevent duplicates
 
   /**
    * Creates a new DragonBonesManager
@@ -51,11 +52,19 @@ export class DragonBonesManager {
     armatureName: string = 'armature'
   ): PixiArmatureDisplay {
     try {
-      // Parse the DragonBones skeleton data
-      this.factory.parseDragonBonesData(asset.skeleton);
+      // Check if this data has already been added to prevent duplicates
+      const dataKey = `${asset.id}_${armatureName}`;
+      
+      if (!this.loadedDataNames.has(dataKey)) {
+        // Parse the DragonBones skeleton data
+        this.factory.parseDragonBonesData(asset.skeleton);
 
-      // Parse the texture atlas data with the texture
-      this.factory.parseTextureAtlasData(asset.textureAtlas, asset.texture);
+        // Parse the texture atlas data with the texture
+        this.factory.parseTextureAtlasData(asset.textureAtlas, asset.texture);
+        
+        // Mark as loaded
+        this.loadedDataNames.add(dataKey);
+      }
 
       // Build and return the armature display
       const display = this.factory.buildArmatureDisplay(armatureName);

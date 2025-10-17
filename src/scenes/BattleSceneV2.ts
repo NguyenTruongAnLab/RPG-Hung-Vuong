@@ -23,6 +23,8 @@ import { ParticleSystem } from '../utils/ParticleSystem';
 import { Camera } from '../world/Camera';
 import { ProgressionSystem } from '../systems/ProgressionSystem';
 import { BattleAnimations } from './BattleAnimations';
+import { DragonBonesAnimation } from '../entities/components/DragonBonesAnimation';
+import monsterDB from '../data/monster-database.json';
 import gsap from 'gsap';
 
 // Element types for the Five Elements system
@@ -103,6 +105,10 @@ export class BattleSceneV2 extends Scene {
   private enemySprite: PIXI.Graphics | null = null;
   private battleText: PIXI.Text | null = null;
   
+  // DragonBones animations
+  private playerAnimation: DragonBonesAnimation | null = null;
+  private enemyAnimation: DragonBonesAnimation | null = null;
+  
   // Visual effects
   private particles: ParticleSystem | null = null;
   private camera: Camera | null = null;
@@ -145,7 +151,7 @@ export class BattleSceneV2 extends Scene {
     
     // Create battle UI
     this.createBackground();
-    this.createMonsters();
+    await this.createMonsters(); // Now async
     this.createBattleUI();
     
     // Add particles on top
@@ -175,57 +181,110 @@ export class BattleSceneV2 extends Scene {
   }
 
   /**
-   * Creates the monster sprites
+   * Creates the monster sprites with DragonBones
    */
-  private createMonsters(): void {
-    // Create player monster (temporary placeholder)
+  private async createMonsters(): Promise<void> {
+    // Get player party from localStorage
+    const savedParty = localStorage.getItem('playerParty');
+    let playerAssetName = 'Absolution'; // Default
+    
+    if (savedParty) {
+      try {
+        const party = JSON.parse(savedParty);
+        if (party.length > 0) {
+          playerAssetName = party[0];
+        }
+      } catch (e) {
+        console.warn('Failed to parse player party:', e);
+      }
+    }
+    
+    // Get player monster data
+    const playerMonsterData = monsterDB.monsters.find(m => m.assetName === playerAssetName);
+    
+    // Create player monster
     this.playerMonster = {
-      id: 'player_001',
-      name: 'Rồng Thần',
-      element: 'thuy',
+      id: playerAssetName,
+      name: playerMonsterData?.name || 'Player Monster',
+      element: (playerMonsterData?.element as Element) || 'thuy',
       stats: {
-        hp: 100,
-        maxHp: 100,
-        attack: 20,
-        defense: 10,
-        speed: 15
+        hp: playerMonsterData?.stats.hp || 100,
+        maxHp: playerMonsterData?.stats.hp || 100,
+        attack: playerMonsterData?.stats.attack || 20,
+        defense: playerMonsterData?.stats.defense || 10,
+        speed: playerMonsterData?.stats.speed || 15
       },
-      currentHP: 100,
+      currentHP: playerMonsterData?.stats.hp || 100,
       isPlayer: true
     };
 
     // Create enemy monster (temporary placeholder)
-    const enemyId = this.encounterData.enemyMonsterId || 'char001';
+    const enemyId = this.encounterData.enemyMonsterId || 'Agravain';
+    const enemyMonsterData = monsterDB.monsters.find(m => m.assetName === enemyId);
+    
     this.enemyMonster = {
       id: enemyId,
-      name: 'Wild Beast',
-      element: 'moc',
+      name: enemyMonsterData?.name || 'Wild Beast',
+      element: (enemyMonsterData?.element as Element) || 'moc',
       stats: {
-        hp: 80,
-        maxHp: 80,
-        attack: 15,
-        defense: 8,
-        speed: 12
+        hp: enemyMonsterData?.stats.hp || 80,
+        maxHp: enemyMonsterData?.stats.hp || 80,
+        attack: enemyMonsterData?.stats.attack || 15,
+        defense: enemyMonsterData?.stats.defense || 8,
+        speed: enemyMonsterData?.stats.speed || 12
       },
-      currentHP: 80,
+      currentHP: enemyMonsterData?.stats.hp || 80,
       isPlayer: false
     };
 
-    // Create player sprite (blue circle)
-    this.playerSprite = new PIXI.Graphics();
-    this.playerSprite.circle(0, 0, 40);
-    this.playerSprite.fill(0x0088ff);
-    this.playerSprite.x = 200;
-    this.playerSprite.y = this.app.screen.height - 150;
-    this.worldContainer!.addChild(this.playerSprite);
-
-    // Create enemy sprite (red circle)
-    this.enemySprite = new PIXI.Graphics();
-    this.enemySprite.circle(0, 0, 40);
-    this.enemySprite.fill(0xff4444);
-    this.enemySprite.x = this.app.screen.width - 200;
-    this.enemySprite.y = 150;
-    this.worldContainer!.addChild(this.enemySprite);
+    // Load player DragonBones animation
+    try {
+      this.playerAnimation = new DragonBonesAnimation(this.app);
+      await this.playerAnimation.loadCharacter(playerAssetName);
+      const playerDisplay = this.playerAnimation.getDisplay();
+      
+      if (playerDisplay) {
+        playerDisplay.x = 200;
+        playerDisplay.y = this.app.screen.height - 150;
+        playerDisplay.scale.set(0.4);
+        this.playerAnimation.play('Idle');
+        this.worldContainer!.addChild(playerDisplay);
+      }
+    } catch (error) {
+      console.error('Failed to load player animation, using fallback:', error);
+      // Fallback to circle
+      this.playerSprite = new PIXI.Graphics();
+      this.playerSprite.circle(0, 0, 40);
+      this.playerSprite.fill(0x0088ff);
+      this.playerSprite.x = 200;
+      this.playerSprite.y = this.app.screen.height - 150;
+      this.worldContainer!.addChild(this.playerSprite);
+    }
+    
+    // Load enemy DragonBones animation
+    try {
+      this.enemyAnimation = new DragonBonesAnimation(this.app);
+      await this.enemyAnimation.loadCharacter(enemyId);
+      const enemyDisplay = this.enemyAnimation.getDisplay();
+      
+      if (enemyDisplay) {
+        enemyDisplay.x = this.app.screen.width - 200;
+        enemyDisplay.y = 150;
+        enemyDisplay.scale.set(0.4);
+        this.enemyAnimation.setFlip(true); // Face left
+        this.enemyAnimation.play('Idle');
+        this.worldContainer!.addChild(enemyDisplay);
+      }
+    } catch (error) {
+      console.error('Failed to load enemy animation, using fallback:', error);
+      // Fallback to circle
+      this.enemySprite = new PIXI.Graphics();
+      this.enemySprite.circle(0, 0, 40);
+      this.enemySprite.fill(0xff4444);
+      this.enemySprite.x = this.app.screen.width - 200;
+      this.enemySprite.y = 150;
+      this.worldContainer!.addChild(this.enemySprite);
+    }
   }
 
   /**
@@ -429,14 +488,44 @@ export class BattleSceneV2 extends Scene {
    * Play attack animation
    */
   private async playAttackAnimation(isPlayerAttacking: boolean): Promise<void> {
-    if (!this.playerSprite || !this.enemySprite || !this.animations) {
-      return;
+    const attackerAnim = isPlayerAttacking ? this.playerAnimation : this.enemyAnimation;
+    const defenderAnim = isPlayerAttacking ? this.enemyAnimation : this.playerAnimation;
+    
+    // If we have DragonBones animations, use them
+    if (attackerAnim && defenderAnim) {
+      try {
+        // Play attack animation on attacker
+        const attackAnims = attackerAnim.listAnimations();
+        const attackAnim = attackAnims.find(a => a.toLowerCase().includes('attack')) || 'Attack A';
+        attackerAnim.play(attackAnim, 1);
+        
+        // Wait a bit, then play damage on defender
+        await new Promise(resolve => setTimeout(resolve, 500));
+        const damageAnim = defenderAnim.listAnimations().find(a => a.toLowerCase().includes('damage'));
+        if (damageAnim) {
+          defenderAnim.play(damageAnim, 1);
+        }
+        
+        // Wait for animations to complete
+        await new Promise(resolve => setTimeout(resolve, 800));
+        
+        // Return both to idle
+        attackerAnim.play('Idle');
+        defenderAnim.play('Idle');
+      } catch (error) {
+        console.error('Error playing DragonBones attack animation:', error);
+      }
+    } else {
+      // Fallback to old circle animation
+      if (!this.playerSprite || !this.enemySprite || !this.animations) {
+        return;
+      }
+
+      const attacker = isPlayerAttacking ? this.playerSprite : this.enemySprite;
+      const defender = isPlayerAttacking ? this.enemySprite : this.playerSprite;
+
+      await this.animations.playAttackAnimation(attacker, defender, isPlayerAttacking);
     }
-
-    const attacker = isPlayerAttacking ? this.playerSprite : this.enemySprite;
-    const defender = isPlayerAttacking ? this.enemySprite : this.playerSprite;
-
-    await this.animations.playAttackAnimation(attacker, defender, isPlayerAttacking);
   }
 
   /**
@@ -456,6 +545,17 @@ export class BattleSceneV2 extends Scene {
    */
   destroy(): void {
     console.log('Destroying BattleSceneV2...');
+    
+    // Cleanup DragonBones animations
+    if (this.playerAnimation) {
+      this.playerAnimation.destroy();
+      this.playerAnimation = null;
+    }
+    
+    if (this.enemyAnimation) {
+      this.enemyAnimation.destroy();
+      this.enemyAnimation = null;
+    }
     
     // Cleanup sprites
     if (this.background) {

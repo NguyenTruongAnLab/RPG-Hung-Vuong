@@ -2,6 +2,27 @@
 
 Game RPG đánh theo lượt lấy bối cảnh thời Hùng Vương - đất Văn Lang (2879-258 TCN). Người chơi là Chiến Sĩ Lạc Việt thu phục 200 Thần Thú từ truyền thuyết Việt Nam để bảo vệ bộ lạc.
 
+## 🎮 Quick Start
+
+**Play Now**: [Live Demo on GitHub Pages](https://nguyentruonganlab.github.io/RPG-Hung-Vuong/)
+
+**Or run locally**:
+```bash
+git clone https://github.com/NguyenTruongAnLab/RPG-Hung-Vuong.git
+cd RPG-Hung-Vuong
+npm install
+npm run dev
+```
+
+**Key Features**:
+- ✅ **200+ Monsters** with DragonBones animations
+- ✅ **Showcase Demo Mode** - Browse all monsters with interactive controls
+- ✅ **Turn-based Combat** with Ngũ Hành (Five Elements) system
+- ✅ **Full Audio System** - 86 voice lines, music, and SFX
+- ✅ **Character Selection** - Pick your starting party
+- ✅ **Overworld Exploration** - WASD movement, mouse wheel zoom
+- 🚧 **Story Campaign** - Coming in Phase 5!
+
 ## ✨ Tính năng chính
 
 ### 🐉 200 Thần Thú (Divine Beasts)
@@ -105,14 +126,51 @@ npm run preview      # Preview production build
 npm run test:e2e     # Chạy E2E tests (sau khi build)
 ```
 
-## 🎯 Cách chơi
+### Deployment to GitHub Pages
 
-1. **Bắt đầu game** - Nhận thần thú đầu tiên (char001)
-2. **Khám phá** - Di chuyển giữa các vùng đất
-3. **Chiến đấu** - Gặp thần thú hoang dã
-4. **Thu phục** - Bắt thần thú sau khi đánh bại
-5. **Tiến hóa** - Nâng cấp thần thú của bạn
-6. **Thu thập** - Hoàn thành bộ sưu tập 200 thần thú!
+The game is configured for GitHub Pages deployment:
+
+1. **Automatic Build**: The vite config automatically uses `/RPG-Hung-Vuong/` base path in production
+2. **Manual Deploy**:
+   ```bash
+   npm run build
+   # Copy dist/ contents to gh-pages branch or use GitHub Actions
+   ```
+
+3. **Environment Detection**: 
+   - Local dev: Uses `./` for relative paths
+   - Production: Uses `/RPG-Hung-Vuong/` for GitHub Pages
+
+**Live Demo**: https://nguyentruonganlab.github.io/RPG-Hung-Vuong/
+
+## 🎮 Cách chơi
+
+### Controls (Điều khiển)
+- **WASD / Arrow Keys** - Di chuyển nhân vật
+- **Space** - Tấn công
+- **E** - Tương tác
+- **Mouse Wheel** - Zoom in/out camera (0.5x - 2.0x)
+
+### Game Flow
+1. **Character Selection** - Chọn 3 thần thú khởi đầu từ 200 lựa chọn
+   - Browse by element (Kim, Mộc, Thủy, Hỏa, Thổ)
+   - View stats, tier, and preview animations
+   - Or click **DEMO MODE** to view all 207 monsters!
+
+2. **Demo/Showcase Mode** 🎨
+   - **Browse all 207 monsters** with full DragonBones animations
+   - **Filter by element** to see element-specific beasts
+   - **Interactive controls**:
+     - Play different animations (Idle, Attack, Damage, etc.)
+     - Flip and scale monsters
+     - Auto-play all animations
+   - Perfect for exploring the complete monster database!
+
+3. **Overworld Exploration** - Di chuyển giữa các vùng đất với zoom camera
+4. **Battle** - Gặp thần thú hoang dã và chiến đấu turn-based
+5. **Capture** - Thu phục thần thú sau khi đánh bại
+6. **Evolution** - Nâng cấp thần thú của bạn
+7. **Collection** - Hoàn thành bộ sưu tập 200 thần thú!
 
 ## 📊 Game Features Details
 

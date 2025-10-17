@@ -65,8 +65,8 @@ export class OverworldScene extends Scene {
     console.log('Initializing OverworldScene...');
 
     // Load overworld audio
-    await this.audioManager.load('bgm_overworld', '/assets/audio/bgm_overworld.mp3', 'music');
-    await this.audioManager.load('sfx_menu_select', '/assets/audio/sfx_menu_select.mp3', 'sfx');
+    await this.audioManager.load('bgm_overworld', '/assets/audio/bgm_overworld.wav', 'music');
+    await this.audioManager.load('sfx_menu_select', '/assets/audio/sfx_menu_select.wav', 'sfx');
 
     // Initialize systems
     this.physics.init();

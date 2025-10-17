@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo DragonBones - Thần Thú Văn Lang</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Arial', sans-serif;
+            color: white;
+        }
+        
+        #container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+        
+        #gameCanvas {
+            width: 100%;
+            max-width: 800px;
+            height: 600px;
+            margin: 20px auto;
+            display: block;
+            background: #2d3748;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        .controls {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            margin: 20px 0;
+        }
+        
+        .controls h2 {
+            margin-top: 0;
+            font-size: 1.5em;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .info-panel {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            margin: 20px 0;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .stat-box {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #4fd1c5;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+        
+        #characterSelect {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: none;
+            font-size: 16px;
+            background: white;
+            color: #333;
+        }
+        
+        .element-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 5px;
+        }
+        
+        .element-kim { background: linear-gradient(135deg, #c0c0c0 0%, #ffffff 100%); color: #333; }
+        .element-moc { background: linear-gradient(135deg, #38b000 0%, #70e000 100%); }
+        .element-thuy { background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%); }
+        .element-hoa { background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%); }
+        .element-tho { background: linear-gradient(135deg, #8b4513 0%, #cd853f 100%); }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>🐉 Thần Thú Văn Lang 🐉</h1>
+        <div class="subtitle">Demo DragonBones Integration - 207 Characters</div>
+        
+        <div class="controls">
+            <h2>🎮 Chọn Thần Thú</h2>
+            <select id="characterSelect">
+                <option value="">-- Chọn thần thú --</option>
+            </select>
+            
+            <div style="margin-top: 15px;">
+                <button onclick="playAnimation('Idle')">🧘 Nghỉ ngơi (Idle)</button>
+                <button onclick="playAnimation('Attack A')">⚔️ Tấn công A</button>
+                <button onclick="playAnimation('Attack B')">⚔️ Tấn công B</button>
+                <button onclick="playAnimation('Damage')">💥 Bị đánh (Damage)</button>
+            </div>
+            
+            <div style="margin-top: 15px;">
+                <button onclick="flipCharacter()">↔️ Lật mặt</button>
+                <button onclick="changeScale(0.3)">🔍 Thu nhỏ</button>
+                <button onclick="changeScale(0.5)">🔎 Vừa</button>
+                <button onclick="changeScale(0.7)">🔍 Phóng to</button>
+            </div>
+        </div>
+        
+        <canvas id="gameCanvas"></canvas>
+        
+        <div class="info-panel">
+            <h2>📊 Thông tin thần thú</h2>
+            <div id="monsterInfo">
+                <p style="opacity: 0.7;">Chọn một thần thú để xem thông tin...</p>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-value">207</div>
+                    <div class="stat-label">Tổng số thần thú</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">112</div>
+                    <div class="stat-label">Có Settings (54%)</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">5-6</div>
+                    <div class="stat-label">Animation trung bình</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">5</div>
+                    <div class="stat-label">Ngũ Hành</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-panel">
+            <h2>🌟 Ngũ Hành Distribution</h2>
+            <div>
+                <span class="element-badge element-moc">🌲 Mộc: 57 (27.5%)</span>
+                <span class="element-badge element-kim">⚔️ Kim: 45 (21.7%)</span>
+                <span class="element-badge element-thuy">🌊 Thủy: 39 (18.8%)</span>
+                <span class="element-badge element-hoa">🔥 Hỏa: 38 (18.4%)</span>
+                <span class="element-badge element-tho">🗿 Thổ: 28 (13.5%)</span>
+            </div>
+        </div>
+        
+        <div class="info-panel">
+            <h2>📝 Hướng dẫn</h2>
+            <ul>
+                <li>Chọn thần thú từ danh sách dropdown</li>
+                <li>Click các nút để chơi animation khác nhau</li>
+                <li>Lật mặt và thay đổi kích thước thần thú</li>
+                <li>Xem thông tin chi tiết về thần thú đã chọn</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script type="module">
+        import * as PIXI from 'https://cdn.jsdelivr.net/npm/pixi.js@8.0.0/dist/pixi.min.mjs';
+        import * as dragonBones from 'https://cdn.jsdelivr.net/npm/dragonbones.js@5.7.4/+esm';
+        
+        // Load monster database
+        const monsterDB = await fetch('./src/data/monster-database.json').then(r => r.json());
+        const vi = await fetch('./src/data/vi.json').then(r => r.json());
+        
+        console.log(`✅ Loaded ${monsterDB.totalMonsters} monsters`);
+        console.log('Vietnamese translations loaded:', vi);
+        
+        // Setup PixiJS
+        const app = new PIXI.Application();
+        await app.init({
+            canvas: document.getElementById('gameCanvas'),
+            width: 800,
+            height: 600,
+            backgroundColor: 0x1a202c
+        });
+        
+        // DragonBones factory
+        const factory = dragonBones.PixiFactory.factory;
+        
+        let currentDisplay = null;
+        let currentMonster = null;
+        let isFlipped = false;
+        
+        // Populate character select
+        const select = document.getElementById('characterSelect');
+        monsterDB.monsters.forEach(monster => {
+            const option = document.createElement('option');
+            option.value = monster.englishName;
+            option.textContent = `${monster.name} (${monster.englishName}) - ${getElementEmoji(monster.element)} ${getElementName(monster.element)}`;
+            select.appendChild(option);
+        });
+        
+        // Element helpers
+        function getElementEmoji(element) {
+            const emojis = { kim: '⚔️', moc: '🌲', thuy: '🌊', hoa: '🔥', tho: '🗿' };
+            return emojis[element] || '❓';
+        }
+        
+        function getElementName(element) {
+            return vi.elements[element] || element;
+        }
+        
+        function getRarityColor(rarity) {
+            const colors = {
+                common: '#9ca3af',
+                uncommon: '#10b981',
+                rare: '#3b82f6',
+                epic: '#8b5cf6',
+                legendary: '#f59e0b'
+            };
+            return colors[rarity] || '#ffffff';
+        }
+        
+        // Load character
+        async function loadCharacter(characterName) {
+            console.log(`Loading character: ${characterName}`);
+            
+            try {
+                // Remove old display
+                if (currentDisplay) {
+                    app.stage.removeChild(currentDisplay);
+                    currentDisplay.dispose();
+                }
+                
+                const basePath = `/assets/dragonbones_assets/`;
+                
+                // Load files
+                const [skeleton, textureAtlas, texture] = await Promise.all([
+                    fetch(`${basePath}${characterName}_ske.json`).then(r => r.json()),
+                    fetch(`${basePath}${characterName}_tex.json`).then(r => r.json()),
+                    PIXI.Assets.load(`${basePath}${characterName}_tex.png`)
+                ]);
+                
+                // Parse DragonBones data
+                factory.parseDragonBonesData(skeleton);
+                factory.parseTextureAtlasData(textureAtlas, texture);
+                
+                // Create display
+                currentDisplay = factory.buildArmatureDisplay(characterName);
+                
+                if (currentDisplay) {
+                    currentDisplay.scale.set(0.5);
+                    currentDisplay.x = 400;
+                    currentDisplay.y = 350;
+                    
+                    app.stage.addChild(currentDisplay);
+                    currentDisplay.animation.play('Idle', 0);
+                    
+                    // Get animations
+                    const animations = currentDisplay.animation.animationNames;
+                    console.log(`✅ Loaded ${characterName} with ${animations.length} animations:`, animations);
+                    
+                    // Update info panel
+                    currentMonster = monsterDB.monsters.find(m => m.englishName === characterName);
+                    updateInfoPanel();
+                    
+                    isFlipped = false;
+                }
+            } catch (error) {
+                console.error(`Failed to load ${characterName}:`, error);
+                alert(`Không thể tải ${characterName}. Xem console để biết thêm chi tiết.`);
+            }
+        }
+        
+        // Update info panel
+        function updateInfoPanel() {
+            if (!currentMonster) return;
+            
+            const elementClass = `element-${currentMonster.element}`;
+            const rarityColor = getRarityColor(currentMonster.rarity);
+            
+            const html = `
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <h3 style="margin-top: 0;">${currentMonster.name}</h3>
+                        <p><strong>English Name:</strong> ${currentMonster.englishName}</p>
+                        <p><strong>ID:</strong> ${currentMonster.id}</p>
+                        <p>
+                            <span class="element-badge ${elementClass}">
+                                ${getElementEmoji(currentMonster.element)} ${getElementName(currentMonster.element)}
+                            </span>
+                        </p>
+                        <p><strong>Tier:</strong> ${currentMonster.tier} / 5</p>
+                        <p style="color: ${rarityColor};"><strong>Rarity:</strong> ${currentMonster.rarity.toUpperCase()}</p>
+                        <p><strong>Region:</strong> ${currentMonster.region}</p>
+                        <p><strong>Has Settings:</strong> ${currentMonster.hasSettings ? '✅ Có' : '❌ Không'}</p>
+                    </div>
+                    <div>
+                        <h4>📊 Stats</h4>
+                        <p><strong>HP:</strong> ${currentMonster.stats.hp}</p>
+                        <p><strong>Attack:</strong> ${currentMonster.stats.attack}</p>
+                        <p><strong>Defense:</strong> ${currentMonster.stats.defense}</p>
+                        <p><strong>Speed:</strong> ${currentMonster.stats.speed}</p>
+                        <p><strong>Magic:</strong> ${currentMonster.stats.magic}</p>
+                        <p><strong>Capture Rate:</strong> ${currentMonster.captureRate}%</p>
+                    </div>
+                </div>
+                <div style="margin-top: 15px; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 5px;">
+                    <p><em>${currentMonster.description}</em></p>
+                </div>
+            `;
+            
+            document.getElementById('monsterInfo').innerHTML = html;
+        }
+        
+        // Play animation
+        window.playAnimation = function(animName) {
+            if (!currentDisplay) {
+                alert('Vui lòng chọn một thần thú trước!');
+                return;
+            }
+            
+            const animations = currentDisplay.animation.animationNames;
+            const matchedAnim = animations.find(a => 
+                a.toLowerCase().includes(animName.toLowerCase()) || 
+                animName.toLowerCase().includes(a.toLowerCase())
+            );
+            
+            if (matchedAnim) {
+                const loops = animName.toLowerCase().includes('idle') ? 0 : 1;
+                currentDisplay.animation.play(matchedAnim, loops);
+                console.log(`Playing: ${matchedAnim}`);
+            } else {
+                alert(`Animation "${animName}" không tìm thấy! Available: ${animations.join(', ')}`);
+            }
+        };
+        
+        // Flip character
+        window.flipCharacter = function() {
+            if (!currentDisplay) return;
+            isFlipped = !isFlipped;
+            currentDisplay.scale.x = Math.abs(currentDisplay.scale.x) * (isFlipped ? -1 : 1);
+        };
+        
+        // Change scale
+        window.changeScale = function(scale) {
+            if (!currentDisplay) return;
+            const sign = currentDisplay.scale.x < 0 ? -1 : 1;
+            currentDisplay.scale.set(scale * sign, scale);
+        };
+        
+        // Character select handler
+        select.addEventListener('change', (e) => {
+            if (e.target.value) {
+                loadCharacter(e.target.value);
+            }
+        });
+        
+        // Load first character by default
+        if (monsterDB.monsters.length > 0) {
+            select.value = monsterDB.monsters[0].englishName;
+            loadCharacter(monsterDB.monsters[0].englishName);
+        }
+    </script>
+</body>
+</html>

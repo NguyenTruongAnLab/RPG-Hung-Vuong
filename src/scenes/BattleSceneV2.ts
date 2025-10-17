@@ -20,6 +20,8 @@ import { EventBus } from '../core/EventBus';
 import { TransitionManager } from '../core/TransitionManager';
 import { AudioManager } from '../core/AudioManager';
 import { ParticleSystem } from '../utils/ParticleSystem';
+import { ParticleManager } from '../managers/ParticleManager';
+import { FilterManager } from '../managers/FilterManager';
 import { Camera } from '../world/Camera';
 import { ProgressionSystem } from '../systems/ProgressionSystem';
 import { BattleAnimations } from './BattleAnimations';
@@ -112,6 +114,8 @@ export class BattleSceneV2 extends Scene {
   
   // Visual effects
   private particles: ParticleSystem | null = null;
+  private particleManager: ParticleManager;
+  private filterManager: FilterManager;
   private camera: Camera | null = null;
   private worldContainer: PIXI.Container | null = null;
   private animations: BattleAnimations | null = null;
@@ -129,6 +133,8 @@ export class BattleSceneV2 extends Scene {
     this.eventBus = EventBus.getInstance();
     this.transitionManager = TransitionManager.getInstance();
     this.audioManager = AudioManager.getInstance();
+    this.particleManager = ParticleManager.getInstance();
+    this.filterManager = FilterManager.getInstance();
     this.sceneManager = sceneManager || null;
   }
 
@@ -137,6 +143,9 @@ export class BattleSceneV2 extends Scene {
    */
   async init(): Promise<void> {
     console.log('Initializing BattleSceneV2...');
+    
+    // Initialize particle manager
+    await this.particleManager.init(this.app);
     
     // Load battle audio
     await this.audioManager.load('bgm_battle', resolveAudioPath('bgm_battle.wav'), 'music');
@@ -264,8 +273,60 @@ export class BattleSceneV2 extends Scene {
       console.log(message);
       this.updateBattleText(message);
       
-      // Visual effects
+      // Visual effects with particles and filters
       await this.playAttackAnimation(true);
+      
+      // Emit elemental particles
+      if (this.enemySprite) {
+        this.particleManager.emitElementalEffect(
+          this.playerMonster.element,
+          this.enemySprite.x,
+          this.enemySprite.y,
+          this.worldContainer!
+        );
+        
+        // Hit impact particles
+        this.particleManager.emitBattleEffect(
+          'hit-impact',
+          this.enemySprite.x,
+          this.enemySprite.y,
+          this.worldContainer!
+        );
+        
+        // Apply damage flash filter
+        this.filterManager.applyDamageFlash(this.enemySprite);
+        
+        // Critical hit effect
+        if (result.isCritical) {
+          this.particleManager.emitBattleEffect(
+            'critical-hit',
+            this.enemySprite.x,
+            this.enemySprite.y,
+            this.worldContainer!
+          );
+          this.filterManager.applyCriticalGlow(this.enemySprite);
+        }
+        
+        // Super effective effect
+        if (result.advantage > 1.0) {
+          this.particleManager.emitBattleEffect(
+            'super-effective',
+            this.enemySprite.x,
+            this.enemySprite.y,
+            this.worldContainer!
+          );
+          this.filterManager.applySuperEffectiveGlow(this.enemySprite);
+          
+          // Shockwave for super effective
+          if (this.worldContainer) {
+            this.filterManager.applyShockwave(
+              this.enemySprite.x,
+              this.enemySprite.y,
+              this.worldContainer
+            );
+          }
+        }
+      }
       
       if (result.isKO) {
         console.log('Enemy defeated!');
@@ -279,8 +340,51 @@ export class BattleSceneV2 extends Scene {
       console.log(message);
       this.updateBattleText(message);
       
-      // Visual effects
+      // Visual effects with particles and filters
       await this.playAttackAnimation(false);
+      
+      // Emit elemental particles
+      if (this.playerSprite) {
+        this.particleManager.emitElementalEffect(
+          this.enemyMonster.element,
+          this.playerSprite.x,
+          this.playerSprite.y,
+          this.worldContainer!
+        );
+        
+        // Hit impact particles
+        this.particleManager.emitBattleEffect(
+          'hit-impact',
+          this.playerSprite.x,
+          this.playerSprite.y,
+          this.worldContainer!
+        );
+        
+        // Apply damage flash filter
+        this.filterManager.applyDamageFlash(this.playerSprite);
+        
+        // Critical hit effect
+        if (result.isCritical) {
+          this.particleManager.emitBattleEffect(
+            'critical-hit',
+            this.playerSprite.x,
+            this.playerSprite.y,
+            this.worldContainer!
+          );
+          this.filterManager.applyCriticalGlow(this.playerSprite);
+        }
+        
+        // Super effective effect
+        if (result.advantage > 1.0) {
+          this.particleManager.emitBattleEffect(
+            'super-effective',
+            this.playerSprite.x,
+            this.playerSprite.y,
+            this.worldContainer!
+          );
+          this.filterManager.applySuperEffectiveGlow(this.playerSprite);
+        }
+      }
       
       if (result.isKO) {
         console.log('Player defeated!');
@@ -372,6 +476,28 @@ export class BattleSceneV2 extends Scene {
       const expReward = progression.calculateExpReward(3, true);
       const leveledUp = progression.addExp(expReward);
       this.updateBattleText(`Victory! +${expReward} EXP${leveledUp ? ' - Level Up!' : ''}`);
+      
+      // Victory visual effects
+      this.particleManager.emitBattleEffect(
+        'victory',
+        this.app.screen.width / 2,
+        this.app.screen.height / 2,
+        this
+      );
+      
+      if (this.worldContainer) {
+        this.filterManager.applyVictoryBloom(this.worldContainer);
+      }
+      
+      // Level up effect
+      if (leveledUp && this.playerSprite) {
+        this.particleManager.emitBattleEffect(
+          'level-up',
+          this.playerSprite.x,
+          this.playerSprite.y,
+          this.worldContainer!
+        );
+      }
     } else {
       this.updateBattleText('Defeat!');
     }
@@ -443,6 +569,9 @@ export class BattleSceneV2 extends Scene {
     if (this.particles) {
       this.particles.update(dt / 16.67); // Convert to 60fps delta
     }
+    
+    // Update particle manager
+    this.particleManager.update(dt / 1000); // Convert to seconds
   }
 
   /**
@@ -482,6 +611,10 @@ export class BattleSceneV2 extends Scene {
       this.battleText.destroy();
       this.battleText = null;
     }
+    
+    // Cleanup particle and filter managers
+    this.particleManager.cleanup();
+    this.filterManager.cleanup();
     
     // Note: Don't remove event listeners as other scenes need them
   }

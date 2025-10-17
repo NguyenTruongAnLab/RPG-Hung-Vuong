@@ -24,7 +24,7 @@ import { Camera } from '../world/Camera';
 import { ProgressionSystem } from '../systems/ProgressionSystem';
 import { BattleAnimations } from './BattleAnimations';
 import { DragonBonesAnimation } from '../entities/components/DragonBonesAnimation';
-import monsterDB from '../data/monster-database.json';
+import { BattleMonsterLoader } from './BattleMonsterLoader';
 import gsap from 'gsap';
 
 // Element types for the Five Elements system
@@ -184,107 +184,30 @@ export class BattleSceneV2 extends Scene {
    * Creates the monster sprites with DragonBones
    */
   private async createMonsters(): Promise<void> {
-    // Get player party from localStorage
-    const savedParty = localStorage.getItem('playerParty');
-    let playerAssetName = 'Absolution'; // Default
-    
-    if (savedParty) {
-      try {
-        const party = JSON.parse(savedParty);
-        if (party.length > 0) {
-          playerAssetName = party[0];
-        }
-      } catch (e) {
-        console.warn('Failed to parse player party:', e);
-      }
-    }
-    
-    // Get player monster data
-    const playerMonsterData = monsterDB.monsters.find(m => m.assetName === playerAssetName);
-    
-    // Create player monster
-    this.playerMonster = {
-      id: playerAssetName,
-      name: playerMonsterData?.name || 'Player Monster',
-      element: (playerMonsterData?.element as Element) || 'thuy',
-      stats: {
-        hp: playerMonsterData?.stats.hp || 100,
-        maxHp: playerMonsterData?.stats.hp || 100,
-        attack: playerMonsterData?.stats.attack || 20,
-        defense: playerMonsterData?.stats.defense || 10,
-        speed: playerMonsterData?.stats.speed || 15
-      },
-      currentHP: playerMonsterData?.stats.hp || 100,
-      isPlayer: true
-    };
-
-    // Create enemy monster (temporary placeholder)
     const enemyId = this.encounterData.enemyMonsterId || 'Agravain';
-    const enemyMonsterData = monsterDB.monsters.find(m => m.assetName === enemyId);
     
-    this.enemyMonster = {
-      id: enemyId,
-      name: enemyMonsterData?.name || 'Wild Beast',
-      element: (enemyMonsterData?.element as Element) || 'moc',
-      stats: {
-        hp: enemyMonsterData?.stats.hp || 80,
-        maxHp: enemyMonsterData?.stats.hp || 80,
-        attack: enemyMonsterData?.stats.attack || 15,
-        defense: enemyMonsterData?.stats.defense || 8,
-        speed: enemyMonsterData?.stats.speed || 12
-      },
-      currentHP: enemyMonsterData?.stats.hp || 80,
-      isPlayer: false
-    };
-
-    // Load player DragonBones animation
-    try {
-      this.playerAnimation = new DragonBonesAnimation(this.app);
-      await this.playerAnimation.loadCharacter(playerAssetName);
-      const playerDisplay = this.playerAnimation.getDisplay();
-      
-      if (playerDisplay) {
-        playerDisplay.x = 200;
-        playerDisplay.y = this.app.screen.height - 150;
-        playerDisplay.scale.set(0.4);
-        this.playerAnimation.play('Idle');
-        this.worldContainer!.addChild(playerDisplay);
-      }
-    } catch (error) {
-      console.error('Failed to load player animation, using fallback:', error);
-      // Fallback to circle
-      this.playerSprite = new PIXI.Graphics();
-      this.playerSprite.circle(0, 0, 40);
-      this.playerSprite.fill(0x0088ff);
-      this.playerSprite.x = 200;
-      this.playerSprite.y = this.app.screen.height - 150;
-      this.worldContainer!.addChild(this.playerSprite);
-    }
+    // Load player monster
+    const playerResult = await BattleMonsterLoader.loadPlayerMonster(
+      this.app,
+      this.worldContainer!,
+      200,
+      this.app.screen.height - 150
+    );
+    this.playerMonster = playerResult.monster;
+    this.playerAnimation = playerResult.animation;
+    this.playerSprite = playerResult.sprite;
     
-    // Load enemy DragonBones animation
-    try {
-      this.enemyAnimation = new DragonBonesAnimation(this.app);
-      await this.enemyAnimation.loadCharacter(enemyId);
-      const enemyDisplay = this.enemyAnimation.getDisplay();
-      
-      if (enemyDisplay) {
-        enemyDisplay.x = this.app.screen.width - 200;
-        enemyDisplay.y = 150;
-        enemyDisplay.scale.set(0.4);
-        this.enemyAnimation.setFlip(true); // Face left
-        this.enemyAnimation.play('Idle');
-        this.worldContainer!.addChild(enemyDisplay);
-      }
-    } catch (error) {
-      console.error('Failed to load enemy animation, using fallback:', error);
-      // Fallback to circle
-      this.enemySprite = new PIXI.Graphics();
-      this.enemySprite.circle(0, 0, 40);
-      this.enemySprite.fill(0xff4444);
-      this.enemySprite.x = this.app.screen.width - 200;
-      this.enemySprite.y = 150;
-      this.worldContainer!.addChild(this.enemySprite);
-    }
+    // Load enemy monster
+    const enemyResult = await BattleMonsterLoader.loadEnemyMonster(
+      this.app,
+      this.worldContainer!,
+      enemyId,
+      this.app.screen.width - 200,
+      150
+    );
+    this.enemyMonster = enemyResult.monster;
+    this.enemyAnimation = enemyResult.animation;
+    this.enemySprite = enemyResult.sprite;
   }
 
   /**
@@ -441,45 +364,26 @@ export class BattleSceneV2 extends Scene {
     this.battleActive = false;
     console.log(`Battle ended: ${result}`);
     
-    // Play victory sound
+    // Handle victory/defeat
     if (result === 'victory') {
       this.audioManager.playSFX('sfx_victory');
-      
-      // Award EXP
       const progression = ProgressionSystem.getInstance();
-      const enemyLevel = 3; // Could be from enemy monster data
-      const expReward = progression.calculateExpReward(enemyLevel, true);
+      const expReward = progression.calculateExpReward(3, true);
       const leveledUp = progression.addExp(expReward);
-      
-      if (leveledUp) {
-        this.updateBattleText(`Victory! +${expReward} EXP - Level Up!`);
-      } else {
-        this.updateBattleText(`Victory! +${expReward} EXP`);
-      }
+      this.updateBattleText(`Victory! +${expReward} EXP${leveledUp ? ' - Level Up!' : ''}`);
     } else {
       this.updateBattleText('Defeat!');
     }
     
-    // Emit battle end event
     this.eventBus.emit('battle:end', result);
-    
-    // Wait a moment
-    console.log('Waiting 2 seconds before returning to overworld...');
     await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // Fade out
-    console.log('Fading out battle scene...');
     await this.transitionManager.fadeOut(this, 0.5);
     
     // Return to overworld
     if (this.sceneManager) {
-      console.log('Loading overworld scene...');
       const { OverworldScene } = await import('./OverworldScene');
       const overworldScene = new OverworldScene(this.app, this.sceneManager);
       await this.sceneManager.switchTo(overworldScene);
-      
-      // Fade in overworld
-      console.log('Fading in overworld scene...');
       await this.transitionManager.fadeIn(overworldScene, 0.5);
     }
   }

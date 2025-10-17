@@ -37,6 +37,7 @@ export class CharacterSelectionScene extends Scene {
     this.createMonsterGrid(this.currentElement);
     this.createPartyPanel();
     this.createStartButton();
+    this.createDemoButton(); // Add demo button
   }
 
   private createBackground(): void {
@@ -381,6 +382,36 @@ export class CharacterSelectionScene extends Scene {
     button.addChild(label);
     
     this.addChild(button);
+  }
+  
+  private createDemoButton(): void {
+    const button = new PIXI.Graphics();
+    button.beginFill(0x9C27B0); // Purple color
+    button.drawRoundedRect(0, 0, 240, 50, 10);
+    button.endFill();
+    button.position.set(420, 560);
+    button.interactive = true;
+    button.cursor = 'pointer';
+    (button as any).name = 'demo-button';
+    
+    button.on('pointerdown', () => this.openDemoMode());
+    
+    const label = new PIXI.Text('💡 DEMO MODE', {
+      fontSize: 20,
+      fill: 0xFFFFFF,
+      fontWeight: 'bold'
+    });
+    label.anchor.set(0.5);
+    label.position.set(120, 25);
+    button.addChild(label);
+    
+    this.addChild(button);
+  }
+  
+  private async openDemoMode(): Promise<void> {
+    const { ShowcaseDemoScene } = await import('./ShowcaseDemoScene');
+    const demoScene = new ShowcaseDemoScene(this.app, this.sceneManager);
+    await this.sceneManager.switchTo(demoScene);
   }
   
   private refreshDisplay(): void {

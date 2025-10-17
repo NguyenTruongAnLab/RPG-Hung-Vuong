@@ -170,6 +170,7 @@ export class TutorialOverlay extends PIXI.Container {
   
   destroy(): void {
     this.removeAllListeners();
-    super.destroy();
+    // Don't call super.destroy() since it's abstract in Scene
+    PIXI.Container.prototype.destroy.call(this);
   }
 }

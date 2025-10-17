@@ -21,6 +21,8 @@ import { TransitionManager } from '../core/TransitionManager';
 import { AudioManager } from '../core/AudioManager';
 import { ParticleSystem } from '../utils/ParticleSystem';
 import { Camera } from '../world/Camera';
+import { ProgressionSystem } from '../systems/ProgressionSystem';
+import { BattleAnimations } from './BattleAnimations';
 import gsap from 'gsap';
 
 // Element types for the Five Elements system
@@ -105,6 +107,7 @@ export class BattleSceneV2 extends Scene {
   private particles: ParticleSystem | null = null;
   private camera: Camera | null = null;
   private worldContainer: PIXI.Container | null = null;
+  private animations: BattleAnimations | null = null;
 
   /**
    * Creates a new BattleSceneV2
@@ -148,6 +151,9 @@ export class BattleSceneV2 extends Scene {
     // Add particles on top
     this.particles = new ParticleSystem();
     this.worldContainer.addChild(this.particles);
+
+    // Create animation helper
+    this.animations = new BattleAnimations(this.particles, this.camera);
 
     // Play battle music
     this.audioManager.playMusic('bgm_battle', 500);
@@ -379,10 +385,21 @@ export class BattleSceneV2 extends Scene {
     // Play victory sound
     if (result === 'victory') {
       this.audioManager.playSFX('sfx_victory');
+      
+      // Award EXP
+      const progression = ProgressionSystem.getInstance();
+      const enemyLevel = 3; // Could be from enemy monster data
+      const expReward = progression.calculateExpReward(enemyLevel, true);
+      const leveledUp = progression.addExp(expReward);
+      
+      if (leveledUp) {
+        this.updateBattleText(`Victory! +${expReward} EXP - Level Up!`);
+      } else {
+        this.updateBattleText(`Victory! +${expReward} EXP`);
+      }
+    } else {
+      this.updateBattleText('Defeat!');
     }
-    
-    // Update battle text
-    this.updateBattleText(result === 'victory' ? 'Victory!' : 'Defeat!');
     
     // Emit battle end event
     this.eventBus.emit('battle:end', result);
@@ -409,47 +426,17 @@ export class BattleSceneV2 extends Scene {
   }
 
   /**
-   * Play attack animation with visual effects
+   * Play attack animation
    */
   private async playAttackAnimation(isPlayerAttacking: boolean): Promise<void> {
-    if (!this.playerSprite || !this.enemySprite || !this.particles || !this.camera) {
+    if (!this.playerSprite || !this.enemySprite || !this.animations) {
       return;
     }
 
     const attacker = isPlayerAttacking ? this.playerSprite : this.enemySprite;
     const defender = isPlayerAttacking ? this.enemySprite : this.playerSprite;
-    const originalX = attacker.x;
 
-    // Play attack sound
-    this.audioManager.playSFX('sfx_attack');
-
-    // Lunge forward
-    await gsap.to(attacker, {
-      x: attacker.x + (isPlayerAttacking ? 100 : -100),
-      duration: 0.2,
-      ease: 'power2.out'
-    });
-
-    // Impact effects
-    this.particles.emit(defender.x, defender.y, 20, 0xFF6600, { speed: 8, size: 4 });
-    
-    // Screen shake
-    this.camera.shake(8, 0.3);
-
-    // Damage flash
-    gsap.to(defender, {
-      alpha: 0.3,
-      duration: 0.1,
-      yoyo: true,
-      repeat: 3
-    });
-
-    // Return to position
-    await gsap.to(attacker, {
-      x: originalX,
-      duration: 0.3,
-      ease: 'power2.in'
-    });
+    await this.animations.playAttackAnimation(attacker, defender, isPlayerAttacking);
   }
 
   /**

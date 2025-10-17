@@ -50,8 +50,7 @@ export class CharacterSelectionScene extends Scene {
       fontSize: 36,
       fill: 0xFFD700,
       fontWeight: 'bold',
-      stroke: 0x000000,
-      strokeThickness: 4
+      stroke: { color: 0x000000, width: 4 }
     });
     title.anchor.set(0.5);
     title.position.set(480, 40);
@@ -396,6 +395,7 @@ export class CharacterSelectionScene extends Scene {
   
   destroy(): void {
     this.removeAllListeners();
-    super.destroy();
+    // Don't call super.destroy() since it's abstract in Scene
+    PIXI.Container.prototype.destroy.call(this);
   }
 }

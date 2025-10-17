@@ -37,10 +37,10 @@ export class ParticleSystem extends PIXI.Container {
    * 
    * @example
    * ```typescript
-   * particles.emit(400, 300, 20, 0xFF6600, { speed: 8, size: 4 });
+   * particles.emitParticles(400, 300, 20, 0xFF6600, { speed: 8, size: 4 });
    * ```
    */
-  emit(
+  emitParticles(
     x: number, 
     y: number, 
     count: number, 

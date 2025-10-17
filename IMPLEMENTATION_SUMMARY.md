@@ -57,27 +57,27 @@ The repository had critical issues preventing the game from loading properly in 
 **Files Changed**: `tests/unit/MonsterDatabase.test.ts`
 
 - Created comprehensive monster database validation tests:
-  - ✅ 207 monsters verified
+  - ✅ 207 monsters verified (200 base + 7 special)
   - ✅ All elements represented (Kim, Mộc, Thủy, Hỏa, Thổ)
   - ✅ Valid stats for all monsters
   - ✅ Tier validation (1-5 for legendary)
   - ✅ Unique asset names
   - ✅ Vietnamese & English names present
   - ✅ Descriptions present
-- **All 192 tests passing** (184 existing + 8 new)
+- **All 192 test cases passing** (184 existing + 8 new in MonsterDatabase.test.ts)
 
 ## Key Features Now Working
 
 ### 🎮 Gameplay
-- ✅ Character Selection with 207 monsters
-- ✅ Demo/Showcase Mode to browse all monsters
+- ✅ Character Selection with 207 monsters (200 base + 7 special)
+- ✅ Demo/Showcase Mode to browse all 207 monsters
 - ✅ Overworld exploration with WASD movement
 - ✅ Mouse wheel zoom (0.5x - 2.0x)
 - ✅ Turn-based battle system
 - ✅ Audio system (music + SFX)
 
 ### 🐉 Monster System
-- ✅ 207 monsters with DragonBones animations
+- ✅ 207 total monsters with DragonBones animations (200 base + 7 special/legendary)
 - ✅ 5 elements (Kim, Mộc, Thủy, Hỏa, Thổ)
 - ✅ 5 tier rarities (including legendary)
 - ✅ All monster data validated

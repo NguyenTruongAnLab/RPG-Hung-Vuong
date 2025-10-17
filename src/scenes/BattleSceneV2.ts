@@ -215,12 +215,14 @@ export class BattleSceneV2 extends Scene {
   private startBattle(): void {
     this.turn = 0;
     this.battleActive = true;
+    console.log('Battle started!');
     this.eventBus.emit('battle:start', { 
       playerMonster: this.playerMonster,
       enemyMonster: this.enemyMonster
     });
     
     // Auto-attack for demo (will be replaced with player input)
+    console.log('Scheduling first turn in 1 second...');
     setTimeout(() => this.executeTurn(), 1000);
   }
 
@@ -229,26 +231,34 @@ export class BattleSceneV2 extends Scene {
    */
   private executeTurn(): void {
     if (!this.battleActive || !this.playerMonster || !this.enemyMonster) {
+      console.log('Battle not active or monsters missing');
       return;
     }
 
     this.turn++;
+    console.log(`Turn ${this.turn}`);
 
     if (this.isPlayerTurn) {
       // Player attacks
       const result = this.attack(this.playerMonster, this.enemyMonster);
-      this.updateBattleText(`Player attacks for ${result.damage} damage!`);
+      const message = `Player attacks for ${result.damage} damage!`;
+      console.log(message);
+      this.updateBattleText(message);
       
       if (result.isKO) {
+        console.log('Enemy defeated!');
         this.endBattle('victory');
         return;
       }
     } else {
       // Enemy attacks
       const result = this.attack(this.enemyMonster, this.playerMonster);
-      this.updateBattleText(`Enemy attacks for ${result.damage} damage!`);
+      const message = `Enemy attacks for ${result.damage} damage!`;
+      console.log(message);
+      this.updateBattleText(message);
       
       if (result.isKO) {
+        console.log('Player defeated!');
         this.endBattle('defeat');
         return;
       }
@@ -256,6 +266,7 @@ export class BattleSceneV2 extends Scene {
 
     // Switch turn
     this.isPlayerTurn = !this.isPlayerTurn;
+    console.log(`Next turn: ${this.isPlayerTurn ? 'Player' : 'Enemy'}`);
     
     // Continue battle
     setTimeout(() => this.executeTurn(), 1500);
@@ -327,6 +338,7 @@ export class BattleSceneV2 extends Scene {
    */
   private async endBattle(result: 'victory' | 'defeat'): Promise<void> {
     this.battleActive = false;
+    console.log(`Battle ended: ${result}`);
     
     // Update battle text
     this.updateBattleText(result === 'victory' ? 'Victory!' : 'Defeat!');
@@ -335,18 +347,22 @@ export class BattleSceneV2 extends Scene {
     this.eventBus.emit('battle:end', result);
     
     // Wait a moment
+    console.log('Waiting 2 seconds before returning to overworld...');
     await new Promise(resolve => setTimeout(resolve, 2000));
     
     // Fade out
+    console.log('Fading out battle scene...');
     await this.transitionManager.fadeOut(this, 0.5);
     
     // Return to overworld
     if (this.sceneManager) {
+      console.log('Loading overworld scene...');
       const { OverworldScene } = await import('./OverworldScene');
       const overworldScene = new OverworldScene(this.app, this.sceneManager);
       await this.sceneManager.switchTo(overworldScene);
       
       // Fade in overworld
+      console.log('Fading in overworld scene...');
       await this.transitionManager.fadeIn(overworldScene, 0.5);
     }
   }

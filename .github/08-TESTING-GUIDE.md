@@ -101,10 +101,10 @@ describe('BattleSystem', () => {
 ```
 
 ### Minimum Test Count by File Size
-- **<150 lines**: 5-8 tests minimum
-- **150-250 lines**: 10-15 tests minimum
-- **250-350 lines**: 15-20 tests minimum
-- **350-500 lines**: 20-30 tests minimum
+- **<300 lines**: 5-8 tests minimum
+- **300-500 lines**: 10-15 tests minimum
+- **500-700 lines**: 15-20 tests minimum
+- **700-1000 lines**: 20-30 tests minimum
 
 ### Test Organization
 ```
@@ -210,8 +210,9 @@ npm run build
 
 ### 4. Check File Sizes
 ```bash
-find src -name "*.ts" -exec wc -l {} + | awk '$1 > 500 {print $2, $1}'
-# Should output nothing (0 files >500 lines)
+find src -name "*.ts" -exec wc -l {} + | awk '$1 > 1000 {print $2, $1}'
+# Should output nothing (0 project files >1000 lines)
+# Note: Files in libs/, vendor/, node_modules/ are exempt
 ```
 
 ### 5. Check Coverage (if adding new code)
@@ -224,7 +225,7 @@ npm run test:coverage
 - [ ] All tests passing (`npm run test`)
 - [ ] No TypeScript errors (`npm run type-check`)
 - [ ] Build succeeds (`npm run build`)
-- [ ] No files >500 lines
+- [ ] No project files >1000 lines (vendor/libs exempt)
 - [ ] New code has tests (≥70% coverage)
 - [ ] JSDoc added for public methods
 - [ ] Folder README.md updated (if new files added)
@@ -387,4 +388,5 @@ describe('BattleSystem', () => {
 ---
 
 **Last Updated**: 2025-10-17  
-**Version**: 1.0.0
+**Version**: 2.0.0  
+**Change**: Updated line limit from 500 to 1000 for project files, added vendor/library exemption

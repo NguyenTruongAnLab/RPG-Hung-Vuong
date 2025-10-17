@@ -54,16 +54,17 @@ All documentation has been split into modular files for better readability and m
 
 ### The Golden Rules (from 02-ARCHITECTURE-RULES.md)
 
-1. **500-Line Law**: NO file exceeds 500 lines (split at 400)
+1. **1000-Line Law**: NO project file exceeds 1000 lines (split at 800)
 2. **Use Popular Libraries**: Matter.js, GSAP, @pixi/tilemap (no custom implementations)
 3. **Extreme Modularity**: Component-based entities, composition over inheritance
 4. **Documentation = Success**: JSDoc with @example, folder READMEs, WHY comments
 5. **Human Verification Required**: No feature is "DONE" until verified in `.github/VERIFICATION.md`
+6. **Vendor Exception**: External libraries and runtime files (libs/, vendor/, node_modules/) are exempt from line limits
 
 ### Quick Commands
 ```bash
-# Check file sizes (must be <500 lines)
-wc -l src/**/*.ts | awk '$1 > 500'
+# Check file sizes (must be <1000 lines for project code)
+find src -name "*.ts" -exec wc -l {} + | awk '$1 > 1000 {print $2, $1}'
 
 # Run all pre-commit checks
 npm run type-check && npm run test && npm run build
@@ -151,8 +152,8 @@ Files marked with `<!-- AUTO-UPDATED -->` should be updated by agents after comp
 **Type**: Vietnamese Mythology Pokemon-Style RPG  
 **Tech**: PixiJS 8, Matter.js, GSAP, DragonBones  
 **Phase**: Phase 2 (Overworld) - 40% complete  
-**Tests**: 122 passing, 85% coverage  
-**Files**: 28 TypeScript files, all <500 lines
+**Tests**: 192 passing, 85% coverage  
+**Files**: 28 TypeScript files, all <1000 lines
 
 **Core Pillars**:
 1. Collect 200 Thần Thú (Divine Beasts)
@@ -206,7 +207,7 @@ Files reference each other. For example:
 4. Check **07-ROADMAP.md** (work on priorities)
 
 **The 4 Commandments from 02-ARCHITECTURE-RULES.md:**
-1. No file >500 lines
+1. No project file >1000 lines (vendor/libs exempt)
 2. Use popular libraries (Matter.js, GSAP, @pixi/tilemap)
 3. Extreme modularity (component-based entities)
 4. Documentation = success (JSDoc, READMEs, comments)

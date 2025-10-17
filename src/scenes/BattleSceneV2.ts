@@ -18,6 +18,12 @@ import * as PIXI from 'pixi.js';
 import { Scene, SceneManager } from '../core/SceneManager';
 import { EventBus } from '../core/EventBus';
 import { TransitionManager } from '../core/TransitionManager';
+import { AudioManager } from '../core/AudioManager';
+import { ParticleSystem } from '../utils/ParticleSystem';
+import { Camera } from '../world/Camera';
+import { ProgressionSystem } from '../systems/ProgressionSystem';
+import { BattleAnimations } from './BattleAnimations';
+import gsap from 'gsap';
 
 // Element types for the Five Elements system
 export type Element = 'kim' | 'moc' | 'thuy' | 'hoa' | 'tho';
@@ -80,6 +86,7 @@ export interface AttackResult {
 export class BattleSceneV2 extends Scene {
   private eventBus: EventBus;
   private transitionManager: TransitionManager;
+  private audioManager: AudioManager;
   private sceneManager: SceneManager | null = null;
   private encounterData: EncounterData;
   
@@ -95,6 +102,12 @@ export class BattleSceneV2 extends Scene {
   private playerSprite: PIXI.Graphics | null = null;
   private enemySprite: PIXI.Graphics | null = null;
   private battleText: PIXI.Text | null = null;
+  
+  // Visual effects
+  private particles: ParticleSystem | null = null;
+  private camera: Camera | null = null;
+  private worldContainer: PIXI.Container | null = null;
+  private animations: BattleAnimations | null = null;
 
   /**
    * Creates a new BattleSceneV2
@@ -108,6 +121,7 @@ export class BattleSceneV2 extends Scene {
     this.encounterData = encounterData;
     this.eventBus = EventBus.getInstance();
     this.transitionManager = TransitionManager.getInstance();
+    this.audioManager = AudioManager.getInstance();
     this.sceneManager = sceneManager || null;
   }
 
@@ -117,10 +131,32 @@ export class BattleSceneV2 extends Scene {
   async init(): Promise<void> {
     console.log('Initializing BattleSceneV2...');
     
+    // Load battle audio
+    await this.audioManager.load('bgm_battle', '/assets/audio/bgm_battle.mp3', 'music');
+    await this.audioManager.load('sfx_attack', '/assets/audio/sfx_attack.mp3', 'sfx');
+    await this.audioManager.load('sfx_victory', '/assets/audio/sfx_victory.mp3', 'sfx');
+
+    // Create world container for camera
+    this.worldContainer = new PIXI.Container();
+    this.addChild(this.worldContainer);
+
+    // Setup camera
+    this.camera = new Camera(this.worldContainer, this.app.screen.width, this.app.screen.height);
+    
     // Create battle UI
     this.createBackground();
     this.createMonsters();
     this.createBattleUI();
+    
+    // Add particles on top
+    this.particles = new ParticleSystem();
+    this.worldContainer.addChild(this.particles);
+
+    // Create animation helper
+    this.animations = new BattleAnimations(this.particles, this.camera);
+
+    // Play battle music
+    this.audioManager.playMusic('bgm_battle', 500);
     
     // Start battle
     this.startBattle();
@@ -135,7 +171,7 @@ export class BattleSceneV2 extends Scene {
     this.background = new PIXI.Graphics();
     this.background.rect(0, 0, this.app.screen.width, this.app.screen.height);
     this.background.fill(0x88aa88); // Green background
-    this.addChild(this.background);
+    this.worldContainer!.addChild(this.background);
   }
 
   /**
@@ -181,7 +217,7 @@ export class BattleSceneV2 extends Scene {
     this.playerSprite.fill(0x0088ff);
     this.playerSprite.x = 200;
     this.playerSprite.y = this.app.screen.height - 150;
-    this.addChild(this.playerSprite);
+    this.worldContainer!.addChild(this.playerSprite);
 
     // Create enemy sprite (red circle)
     this.enemySprite = new PIXI.Graphics();
@@ -189,7 +225,7 @@ export class BattleSceneV2 extends Scene {
     this.enemySprite.fill(0xff4444);
     this.enemySprite.x = this.app.screen.width - 200;
     this.enemySprite.y = 150;
-    this.addChild(this.enemySprite);
+    this.worldContainer!.addChild(this.enemySprite);
   }
 
   /**
@@ -229,7 +265,7 @@ export class BattleSceneV2 extends Scene {
   /**
    * Executes a battle turn
    */
-  private executeTurn(): void {
+  private async executeTurn(): Promise<void> {
     if (!this.battleActive || !this.playerMonster || !this.enemyMonster) {
       console.log('Battle not active or monsters missing');
       return;
@@ -245,6 +281,9 @@ export class BattleSceneV2 extends Scene {
       console.log(message);
       this.updateBattleText(message);
       
+      // Visual effects
+      await this.playAttackAnimation(true);
+      
       if (result.isKO) {
         console.log('Enemy defeated!');
         this.endBattle('victory');
@@ -256,6 +295,9 @@ export class BattleSceneV2 extends Scene {
       const message = `Enemy attacks for ${result.damage} damage!`;
       console.log(message);
       this.updateBattleText(message);
+      
+      // Visual effects
+      await this.playAttackAnimation(false);
       
       if (result.isKO) {
         console.log('Player defeated!');
@@ -340,8 +382,24 @@ export class BattleSceneV2 extends Scene {
     this.battleActive = false;
     console.log(`Battle ended: ${result}`);
     
-    // Update battle text
-    this.updateBattleText(result === 'victory' ? 'Victory!' : 'Defeat!');
+    // Play victory sound
+    if (result === 'victory') {
+      this.audioManager.playSFX('sfx_victory');
+      
+      // Award EXP
+      const progression = ProgressionSystem.getInstance();
+      const enemyLevel = 3; // Could be from enemy monster data
+      const expReward = progression.calculateExpReward(enemyLevel, true);
+      const leveledUp = progression.addExp(expReward);
+      
+      if (leveledUp) {
+        this.updateBattleText(`Victory! +${expReward} EXP - Level Up!`);
+      } else {
+        this.updateBattleText(`Victory! +${expReward} EXP`);
+      }
+    } else {
+      this.updateBattleText('Defeat!');
+    }
     
     // Emit battle end event
     this.eventBus.emit('battle:end', result);
@@ -368,12 +426,29 @@ export class BattleSceneV2 extends Scene {
   }
 
   /**
+   * Play attack animation
+   */
+  private async playAttackAnimation(isPlayerAttacking: boolean): Promise<void> {
+    if (!this.playerSprite || !this.enemySprite || !this.animations) {
+      return;
+    }
+
+    const attacker = isPlayerAttacking ? this.playerSprite : this.enemySprite;
+    const defender = isPlayerAttacking ? this.enemySprite : this.playerSprite;
+
+    await this.animations.playAttackAnimation(attacker, defender, isPlayerAttacking);
+  }
+
+  /**
    * Updates the battle scene
    * 
    * @param dt - Delta time in milliseconds
    */
   update(dt: number): void {
-    // Update animations here if needed
+    // Update particles
+    if (this.particles) {
+      this.particles.update(dt / 16.67); // Convert to 60fps delta
+    }
   }
 
   /**

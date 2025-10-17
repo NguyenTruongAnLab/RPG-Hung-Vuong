@@ -1,4 +1,4 @@
-import { PixiFactory, PixiArmatureDisplay } from 'dragonbones-pixijs';
+import { PixiFactory, PixiArmatureDisplay } from 'pixi-dragonbones-runtime';
 import * as PIXI from 'pixi.js';
 
 /**
@@ -33,7 +33,7 @@ export class DragonBonesManager {
    * @param app - The PixiJS application instance
    */
   constructor(app: PIXI.Application) {
-    // Use the static factory instance from dragonbones-pixijs
+    // Use the static factory instance from pixi-dragonbones-runtime
     this.factory = PixiFactory.factory;
   }
 

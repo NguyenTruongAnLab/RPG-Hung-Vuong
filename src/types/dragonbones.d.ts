@@ -1,12 +1,12 @@
-// Type definitions for dragonbones-pixijs
+// Type definitions for pixi-dragonbones-runtime
 // Extended type definitions for DragonBones Pixi 8.x runtime
-// Package: dragonbones-pixijs v1.0.5+
+// Package: pixi-dragonbones-runtime v8.0.3+
 
 import type * as PIXI from 'pixi.js';
 
-declare module 'dragonbones-pixijs' {
+declare module 'pixi-dragonbones-runtime' {
   // Re-export the base types
-  import type { Animation } from 'dragonbones-pixijs';
+  import type { Animation } from 'pixi-dragonbones-runtime';
   
   export class PixiFactory {
     static readonly factory: PixiFactory;

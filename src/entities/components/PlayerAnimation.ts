@@ -11,7 +11,7 @@
  * animation.setDirection('right');
  * ```
  */
-import { PixiArmatureDisplay } from 'dragonbones-pixijs';
+import { PixiArmatureDisplay } from 'pixi-dragonbones-runtime';
 import * as PIXI from 'pixi.js';
 
 export type AnimationState = 'idle' | 'walk' | 'attack';

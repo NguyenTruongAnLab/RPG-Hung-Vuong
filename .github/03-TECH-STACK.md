@@ -73,19 +73,23 @@ tilemap.tile(texture, x, y);
 
 ### Skeletal Animation
 ```bash
-npm install dragonbones-pixijs
+npm install pixi-dragonbones-runtime
 ```
 
 **Purpose**: Skeletal animation for monsters (Pixi 8.x compatible)  
 **When to use**: Animating 200 Thần Thú characters  
-**Documentation**: https://github.com/SGGames/DragonBones-Pixi
+**Documentation**: https://h1ve2.github.io/pixi-dragonbones-runtime/
 
-**Version**: 1.0.5+ (actively maintained for Pixi v8)  
-**Note**: This replaces the legacy `dragonbones.js` package which only supports Pixi v4-5.
+**Version**: 8.0.3+ (published April 17, 2025, actively maintained for Pixi v8)  
+**GitHub**: https://github.com/h1ve2/pixi-dragonbones-runtime  
+**API Reference**: https://h1ve2.github.io/pixi-dragonbones-runtime/api/8.x/  
+**Quickstart Guide**: https://h1ve2.github.io/pixi-dragonbones-runtime/guide/
+
+**Note**: This is the official DragonBones runtime for PixiJS 8.x, replacing legacy packages like `dragonbones.js` (Pixi v4-5) and `dragonbones-pixijs` (community package).
 
 **Example**:
 ```typescript
-import { PixiFactory } from 'dragonbones-pixijs';
+import { PixiFactory } from 'pixi-dragonbones-runtime';
 const factory = PixiFactory.factory;
 factory.parseDragonBonesData(skeletonData);
 factory.parseTextureAtlasData(textureAtlasData, texture);
@@ -398,7 +402,7 @@ npm view matter-js versions
     "matter-js": "^0.19.0",
     "gsap": "^3.12.0",
     "@pixi/tilemap": "^5.0.0",
-    "dragonbones-pixijs": "^1.0.5",
+    "pixi-dragonbones-runtime": "^8.0.3",
     "lodash": "^4.17.0"
   },
   "devDependencies": {

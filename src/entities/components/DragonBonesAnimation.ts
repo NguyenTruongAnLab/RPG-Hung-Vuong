@@ -1,4 +1,4 @@
-import { PixiArmatureDisplay } from 'dragonbones-pixijs';
+import { PixiArmatureDisplay } from 'pixi-dragonbones-runtime';
 import { AssetManager, type ExtendedDragonBonesAsset } from '../../core/AssetManager';
 import { DragonBonesManager } from '../../core/DragonBonesManager';
 import * as PIXI from 'pixi.js';

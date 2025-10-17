@@ -138,9 +138,9 @@ export class BattleSceneV2 extends Scene {
     console.log('Initializing BattleSceneV2...');
     
     // Load battle audio
-    await this.audioManager.load('bgm_battle', '/assets/audio/bgm_battle.mp3', 'music');
-    await this.audioManager.load('sfx_attack', '/assets/audio/sfx_attack.mp3', 'sfx');
-    await this.audioManager.load('sfx_victory', '/assets/audio/sfx_victory.mp3', 'sfx');
+    await this.audioManager.load('bgm_battle', '/assets/audio/bgm_battle.wav', 'music');
+    await this.audioManager.load('sfx_attack', '/assets/audio/sfx_attack.wav', 'sfx');
+    await this.audioManager.load('sfx_victory', '/assets/audio/sfx_victory.wav', 'sfx');
 
     // Create world container for camera
     this.worldContainer = new PIXI.Container();

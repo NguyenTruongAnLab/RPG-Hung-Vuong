@@ -201,7 +201,7 @@ export class OverworldScene extends Scene {
         canEscape: true
       };
       
-      const battleScene = new BattleSceneV2(this.app, encounterData);
+      const battleScene = new BattleSceneV2(this.app, encounterData, this.sceneManager);
       await this.sceneManager.switchTo(battleScene);
       
       // Fade in battle scene

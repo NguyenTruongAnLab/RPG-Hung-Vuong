@@ -55,17 +55,15 @@ export class TutorialOverlay extends PIXI.Container {
   private createUI(): void {
     // Semi-transparent overlay
     this.overlay = new PIXI.Graphics();
-    this.overlay.beginFill(0x000000, 0.6);
-    this.overlay.drawRect(0, 0, 960, 640);
-    this.overlay.endFill();
+    this.overlay.rect(0, 0, 960, 640);
+    this.overlay.fill({ color: 0x000000, alpha: 0.6 });
     this.addChild(this.overlay);
     
     // Message box
     this.messageBox = new PIXI.Graphics();
-    this.messageBox.beginFill(0x222222, 0.95);
-    this.messageBox.lineStyle(3, 0xFFD700);
-    this.messageBox.drawRoundedRect(0, 0, 600, 180, 20);
-    this.messageBox.endFill();
+    this.messageBox.roundRect(0, 0, 600, 180, 20);
+    this.messageBox.fill({ color: 0x222222, alpha: 0.95 });
+    this.messageBox.stroke({ width: 3, color: 0xFFD700 });
     this.addChild(this.messageBox);
     
     // Text

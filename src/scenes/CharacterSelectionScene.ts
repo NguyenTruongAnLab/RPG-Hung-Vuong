@@ -42,9 +42,8 @@ export class CharacterSelectionScene extends Scene {
 
   private createBackground(): void {
     const bg = new PIXI.Graphics();
-    bg.beginFill(0x1a1a2e);
-    bg.drawRect(0, 0, 960, 640);
-    bg.endFill();
+    bg.rect(0, 0, 960, 640);
+    bg.fill(0x1a1a2e);
     this.addChild(bg);
   }
   
@@ -68,9 +67,8 @@ export class CharacterSelectionScene extends Scene {
       const tab = new PIXI.Graphics();
       const isSelected = element === this.currentElement;
       
-      tab.beginFill(isSelected ? colors[index] : 0x333333);
-      tab.drawRoundedRect(0, 0, 100, 50, 10);
-      tab.endFill();
+      tab.roundRect(0, 0, 100, 50, 10);
+      tab.fill(isSelected ? colors[index] : 0x333333);
       tab.position.set(80 + index * 120, 80);
       tab.interactive = true;
       tab.cursor = 'pointer';
@@ -125,14 +123,13 @@ export class CharacterSelectionScene extends Scene {
     // Card background
     const isSelected = this.selectedMonsters.includes(monster.assetName);
     const bg = new PIXI.Graphics();
-    bg.beginFill(isSelected ? 0x4CAF50 : 0x333333);
-    bg.drawRoundedRect(0, 0, 130, 130, 10);
-    bg.endFill();
+    bg.roundRect(0, 0, 130, 130, 10);
+    bg.fill(isSelected ? 0x4CAF50 : 0x333333);
     
     // Border highlight
     if (isSelected) {
-      bg.lineStyle(3, 0xFFD700);
-      bg.drawRoundedRect(0, 0, 130, 130, 10);
+      bg.roundRect(0, 0, 130, 130, 10);
+      bg.stroke({ width: 3, color: 0xFFD700 });
     }
     
     card.addChild(bg);
@@ -226,9 +223,8 @@ export class CharacterSelectionScene extends Scene {
       // Fallback to colored circle
       const preview = new PIXI.Graphics();
       const monster = monsterDB.monsters.find(m => m.assetName === assetName);
-      preview.beginFill(this.getElementColor(monster?.element || 'kim'));
-      preview.drawCircle(65, 45, 30);
-      preview.endFill();
+      preview.circle(65, 45, 30);
+      preview.fill(this.getElementColor(monster?.element || 'kim'));
       (preview as any).name = 'fallback-preview';
       card.addChild(preview);
     }
@@ -250,9 +246,8 @@ export class CharacterSelectionScene extends Scene {
   
   private createPartyPanel(): void {
     const panel = new PIXI.Graphics();
-    panel.beginFill(0x222222, 0.9);
-    panel.drawRoundedRect(640, 160, 280, 380, 10);
-    panel.endFill();
+    panel.roundRect(640, 160, 280, 380, 10);
+    panel.fill({ color: 0x222222, alpha: 0.9 });
     (panel as any).name = 'party-panel';
     this.addChild(panel);
     
@@ -279,9 +274,8 @@ export class CharacterSelectionScene extends Scene {
       
       const member = new PIXI.Graphics();
       (member as any).name = 'party-member';
-      member.beginFill(0x444444);
-      member.drawRoundedRect(0, 0, 240, 70, 10);
-      member.endFill();
+      member.roundRect(0, 0, 240, 70, 10);
+      member.fill(0x444444);
       member.position.set(660, 220 + index * 85);
       
       const nameText = new PIXI.Text(monster.name, {
@@ -374,9 +368,8 @@ export class CharacterSelectionScene extends Scene {
   
   private createStartButton(): void {
     const button = new PIXI.Graphics();
-    button.beginFill(0x4CAF50);
-    button.drawRoundedRect(0, 0, 240, 50, 10);
-    button.endFill();
+    button.roundRect(0, 0, 240, 50, 10);
+    button.fill(0x4CAF50);
     button.position.set(670, 560);
     button.interactive = true;
     button.cursor = 'pointer';
@@ -398,9 +391,8 @@ export class CharacterSelectionScene extends Scene {
   
   private createDemoButton(): void {
     const button = new PIXI.Graphics();
-    button.beginFill(0x9C27B0); // Purple color
-    button.drawRoundedRect(0, 0, 240, 50, 10);
-    button.endFill();
+    button.roundRect(0, 0, 240, 50, 10);
+    button.fill(0x9C27B0); // Purple color
     button.position.set(420, 560);
     button.interactive = true;
     button.cursor = 'pointer';
@@ -464,9 +456,8 @@ export class CharacterSelectionScene extends Scene {
     (toast as any).name = 'error-toast';
     
     const bg = new PIXI.Graphics();
-    bg.beginFill(0xFF5555, 0.9);
-    bg.drawRoundedRect(0, 0, 400, 60, 10);
-    bg.endFill();
+    bg.roundRect(0, 0, 400, 60, 10);
+    bg.fill({ color: 0xFF5555, alpha: 0.9 });
     toast.addChild(bg);
     
     const text = new PIXI.Text(message, {

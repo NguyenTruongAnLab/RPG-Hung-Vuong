@@ -8,6 +8,20 @@
     "settings": "Cài đặt",
     "quit": "Thoát"
   },
+  "ui": {
+    "gameTitle": "Thần Thú Văn Lang",
+    "loading": "Đang tải...",
+    "pressStart": "Nhấn phím bất kỳ để bắt đầu",
+    "controls": {
+      "move": "Di chuyển: WASD/Mũi tên",
+      "attack": "Tấn công: Space",
+      "interact": "Tương tác: E",
+      "menu": "Menu: ESC"
+    },
+    "hp": "HP",
+    "level": "Cấp độ",
+    "exp": "Kinh nghiệm"
+  },
   "elements": {
     "kim": "Kim (Kim Loại)",
     "moc": "Mộc (Gỗ)",
@@ -16,18 +30,50 @@
     "tho": "Thổ (Đất)"
   },
   "battle": {
+    "wildAppeared": "Thần Thú hoang dã xuất hiện!",
+    "playerTurn": "Lượt của bạn",
+    "enemyTurn": "Lượt đối thủ",
     "turn": "Lượt",
     "attack": "Tấn công",
     "skill": "Kỹ năng",
+    "item": "Vật phẩm",
     "capture": "Thu phục",
     "flee": "Chạy trốn",
+    "run": "Chạy trốn",
     "victory": "Chiến thắng!",
     "defeat": "Thất bại!",
+    "expGained": "Nhận được {exp} kinh nghiệm",
     "captureSuccess": "Thu phục thành công!",
     "captureFailed": "Thu phục thất bại!",
     "hp": "HP",
     "speed": "Tốc độ",
-    "level": "Cấp độ"
+    "level": "Cấp độ",
+    "actions": {
+      "attack": "Tấn công",
+      "skill": "Kỹ năng",
+      "item": "Vật phẩm",
+      "run": "Chạy trốn",
+      "capture": "Thu phục"
+    },
+    "effectiveness": {
+      "superEffective": "Siêu hiệu quả!",
+      "notVeryEffective": "Không hiệu quả lắm...",
+      "critical": "Đòn chí mạng!"
+    }
+  },
+  "capture": {
+    "attempting": "Đang thu phục...",
+    "success": "Đã thu phục {name}!",
+    "failed": "Thu phục thất bại!",
+    "almostCaught": "Suýt nữa...",
+    "ballShake": "Rung lắc {count} lần..."
+  },
+  "regions": {
+    "kimSon": "Núi Kim Sơn",
+    "mocLam": "Rừng Mộc Lâm",
+    "thuyTrach": "Đầm Thủy Trạch",
+    "hoaSon": "Núi Hỏa Sơn",
+    "thoNguyen": "Đồng Bằng Thổ Nguyên"
   },
   "monster": {
     "captured": "Đã thu phục",

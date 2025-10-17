@@ -2,6 +2,26 @@ import * as PIXI from 'pixi.js';
 import type { DragonBonesAsset } from './DragonBonesManager';
 
 /**
+ * Extended DragonBones asset with animation metadata and settings
+ */
+export interface ExtendedDragonBonesAsset extends DragonBonesAsset {
+  characterName: string;
+  animations: string[];
+  settings?: BattleSettings;
+}
+
+/**
+ * Battle settings parsed from _settings.txt files
+ */
+export interface BattleSettings {
+  availableMotions: string[];
+  actionSequence: {
+    wholeAction: string[];
+    targetAction: string[];
+  };
+}
+
+/**
  * AssetManager - Handles lazy loading and caching of game assets
  * 
  * The AssetManager is responsible for loading and caching the 200 monster
@@ -12,6 +32,9 @@ import type { DragonBonesAsset } from './DragonBonesManager';
  * const assetManager = AssetManager.getInstance();
  * const asset = await assetManager.loadMonsterAsset('char001');
  * 
+ * // Load by character name
+ * const charAsset = await assetManager.loadDragonBonesCharacter('Absolution');
+ * 
  * // Preload multiple monsters
  * await assetManager.preloadMonsters(['char001', 'char002', 'char003']);
  * ```
@@ -20,6 +43,8 @@ export class AssetManager {
   private static instance: AssetManager;
   private loadedAssets = new Map<string, DragonBonesAsset>();
   private loadingPromises = new Map<string, Promise<DragonBonesAsset>>();
+  private loadedCharacters = new Map<string, ExtendedDragonBonesAsset>();
+  private loadingCharacters = new Map<string, Promise<ExtendedDragonBonesAsset>>();
 
   private constructor() {
     // Singleton pattern
@@ -169,6 +194,198 @@ export class AssetManager {
    */
   getLoadedCount(): number {
     return this.loadedAssets.size;
+  }
+
+  /**
+   * Load DragonBones character by asset name from dragonbones_assets folder
+   * Automatically detects all available animations from skeleton data
+   * 
+   * @param characterName - e.g., "Absolution", "Agravain"
+   * @returns ExtendedDragonBonesAsset with animations and settings
+   * 
+   * @example
+   * const asset = await AssetManager.getInstance().loadDragonBonesCharacter('Absolution');
+   * console.log('Available animations:', asset.animations);
+   */
+  async loadDragonBonesCharacter(characterName: string): Promise<ExtendedDragonBonesAsset> {
+    // Check cache
+    if (this.loadedCharacters.has(characterName)) {
+      return this.loadedCharacters.get(characterName)!;
+    }
+
+    // Return existing loading promise if already loading
+    if (this.loadingCharacters.has(characterName)) {
+      return this.loadingCharacters.get(characterName)!;
+    }
+
+    // Start loading
+    const loadingPromise = this.loadCharacterAsset(characterName);
+    this.loadingCharacters.set(characterName, loadingPromise);
+
+    try {
+      const asset = await loadingPromise;
+      this.loadedCharacters.set(characterName, asset);
+      return asset;
+    } finally {
+      this.loadingCharacters.delete(characterName);
+    }
+  }
+
+  /**
+   * Internal method to load DragonBones character files
+   * @private
+   */
+  private async loadCharacterAsset(characterName: string): Promise<ExtendedDragonBonesAsset> {
+    const basePath = `/assets/dragonbones_assets/`;
+
+    try {
+      // Load skeleton, texture atlas, texture, and optionally settings
+      const [skeleton, textureAtlas, texture, settings] = await Promise.all([
+        fetch(`${basePath}${characterName}_ske.json`).then(r => {
+          if (!r.ok) throw new Error(`Failed to load skeleton for ${characterName}`);
+          return r.json();
+        }),
+        fetch(`${basePath}${characterName}_tex.json`).then(r => {
+          if (!r.ok) throw new Error(`Failed to load texture atlas for ${characterName}`);
+          return r.json();
+        }),
+        PIXI.Assets.load(`${basePath}${characterName}_tex.png`),
+        // Settings file is optional (about 54% have it)
+        fetch(`${basePath}${characterName}_settings.txt`)
+          .then(r => r.ok ? r.text() : null)
+          .catch(() => null)
+      ]);
+
+      // Extract animation names from skeleton data
+      const animations: string[] = [];
+      if (skeleton.armature && skeleton.armature[0] && skeleton.armature[0].animation) {
+        animations.push(...skeleton.armature[0].animation.map((anim: any) => anim.name));
+      }
+
+      // Parse settings if available
+      const parsedSettings = settings ? this.parseSettings(settings) : undefined;
+
+      const asset: ExtendedDragonBonesAsset = {
+        id: characterName,
+        skeleton,
+        textureAtlas,
+        texture,
+        characterName,
+        animations,
+        settings: parsedSettings
+      };
+
+      console.log(`✅ Loaded ${characterName}:`, {
+        animations: animations.length,
+        hasSettings: !!parsedSettings,
+        animationList: animations
+      });
+
+      return asset;
+    } catch (error) {
+      console.error(`❌ Failed to load ${characterName}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Parse settings.txt file for battle animation sequences
+   * @private
+   */
+  private parseSettings(settingsText: string): BattleSettings {
+    const lines = settingsText.split('\n');
+    const motions: string[] = [];
+    const wholeAction: string[] = [];
+    const targetAction: string[] = [];
+    
+    let inMotions = false;
+    let inWholeAction = false;
+    let inTargetAction = false;
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+
+      // Detect sections
+      if (trimmed.includes('Available Motions:')) {
+        inMotions = true;
+        inWholeAction = false;
+        inTargetAction = false;
+        continue;
+      }
+      
+      if (trimmed.startsWith('<whole action>')) {
+        inWholeAction = true;
+        inMotions = false;
+        inTargetAction = false;
+        continue;
+      }
+      
+      if (trimmed.startsWith('</whole action>')) {
+        inWholeAction = false;
+        continue;
+      }
+      
+      if (trimmed.startsWith('<target action>')) {
+        inTargetAction = true;
+        inMotions = false;
+        inWholeAction = false;
+        continue;
+      }
+      
+      if (trimmed.startsWith('</target action>')) {
+        inTargetAction = false;
+        continue;
+      }
+
+      // Parse content
+      if (inMotions && trimmed && !trimmed.startsWith('Sample')) {
+        // Extract motion name (e.g., "Attack A - Left Claw Crush")
+        const match = trimmed.match(/^([^-]+)/);
+        if (match) {
+          const motionName = match[1].trim();
+          if (motionName && !motions.includes(motionName)) {
+            motions.push(motionName);
+          }
+        }
+      }
+      
+      if (inWholeAction && trimmed) {
+        wholeAction.push(trimmed);
+      }
+      
+      if (inTargetAction && trimmed) {
+        targetAction.push(trimmed);
+      }
+    }
+
+    return {
+      availableMotions: motions,
+      actionSequence: {
+        wholeAction,
+        targetAction
+      }
+    };
+  }
+
+  /**
+   * Get animation duration from skeleton data (estimated)
+   * @param characterName - The character name
+   * @param animationName - The animation name
+   * @returns Duration in seconds (default 1.0 if not found)
+   */
+  getAnimationDuration(characterName: string, animationName: string): number {
+    const asset = this.loadedCharacters.get(characterName);
+    if (!asset || !asset.skeleton.armature) return 1.0;
+
+    const armature = asset.skeleton.armature[0];
+    if (!armature || !armature.animation) return 1.0;
+
+    const animation = armature.animation.find((anim: any) => anim.name === animationName);
+    if (!animation || !animation.duration) return 1.0;
+
+    // DragonBones duration is in frames at frameRate (default 24fps)
+    const frameRate = asset.skeleton.frameRate || 24;
+    return animation.duration / frameRate;
   }
 
   /**

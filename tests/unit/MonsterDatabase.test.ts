@@ -5,6 +5,8 @@
 import { describe, it, expect } from 'vitest';
 import monsterDB from '../../src/data/monster-database.json';
 
+const MAX_TIER = 5; // Tier 5 for legendary/special monsters
+
 describe('Monster Database', () => {
   it('should have 207 monsters', () => {
     expect(monsterDB.monsters).toBeDefined();
@@ -18,9 +20,8 @@ describe('Monster Database', () => {
     );
 
     // Each element should have monsters
-    monstersByElement.forEach((monsters, index) => {
+    monstersByElement.forEach((monsters) => {
       expect(monsters.length).toBeGreaterThan(0);
-      console.log(`Element ${elements[index]}: ${monsters.length} monsters`);
     });
   });
 
@@ -37,7 +38,7 @@ describe('Monster Database', () => {
   it('should have valid tier for all monsters', () => {
     monsterDB.monsters.forEach(monster => {
       expect(monster.tier).toBeGreaterThanOrEqual(1);
-      expect(monster.tier).toBeLessThanOrEqual(5); // Tier 5 for legendary monsters
+      expect(monster.tier).toBeLessThanOrEqual(MAX_TIER);
     });
   });
 

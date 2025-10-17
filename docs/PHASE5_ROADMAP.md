@@ -1,6 +1,19 @@
 # Phase 5 Roadmap: Narrative Integration & Visual Polish
 
-## 🎯 Phase Overview
+> **⚠️ IMPORTANT UPDATE**: This roadmap has been superseded by the plugin-based approach.  
+> **See `.github/07-ROADMAP.md` Phase 5+ section** for the updated implementation plan using mature PixiJS plugins.
+
+**Migration Note**: The original Phase 5 plan focused on custom implementations. The new approach leverages:
+- @pixi/particle-emitter for all particle effects
+- @pixi/filters for visual effects and atmosphere
+- @pixi/ui for professional UI components
+- pixi-lights for advanced lighting
+
+This reduces development time while increasing visual quality and maintainability.
+
+---
+
+## 🎯 Phase Overview (LEGACY - See .github/07-ROADMAP.md for updated plan)
 
 **Goal**: Transform the game from a technical demo into a complete, story-driven Vietnamese mythology experience.
 

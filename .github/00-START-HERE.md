@@ -99,6 +99,23 @@ All documentation lives in `.github/` folder:
 ├── 07-ROADMAP.md                    # Task list and priorities
 ├── 08-TESTING-GUIDE.md              # Testing requirements
 ├── 09-COMMON-TASKS.md               # Code recipes and examples
+├── 10-TROUBLESHOOTING.md            # Debug guide
+├── 11-DRAGONBONES-GUIDE.md          # DragonBones integration
+├── 12-PLUGIN-GUIDE-FX.md            # Particles & filters plugins
+├── 12-PLUGIN-GUIDE-UI.md            # UI & lighting plugins
+├── VERIFICATION.md                  # Human playability checklist
+└── copilot-instructions.md          # Index file
+```
+
+### Plugin Usage (Phase 5+)
+
+**NEW**: Before implementing any visual feature, check these plugin guides:
+
+- **12-PLUGIN-GUIDE-FX.md** - Particle effects (@pixi/particle-emitter) and visual filters (@pixi/filters)
+- **12-PLUGIN-GUIDE-UI.md** - UI components (@pixi/ui), layouts (@pixi/layout), and lighting (pixi-lights)
+
+**Golden Rule**: Use proven plugins for generic features. Build custom code only for Vietnamese content and game-specific logic.
+├── 09-COMMON-TASKS.md               # Code recipes and examples
 ├── 10-TROUBLESHOOTING.md            # Debugging guide
 └── copilot-instructions.md          # Index pointing to these files
 ```

@@ -45,6 +45,8 @@ All documentation has been split into modular files for better readability and m
 ├── 09-COMMON-TASKS.md            # Code recipes & examples
 ├── 10-TROUBLESHOOTING.md         # Debug guide
 ├── 11-DRAGONBONES-GUIDE.md       # DragonBones runtime integration guide
+├── 12-PLUGIN-GUIDE-FX.md         # Particles & filters plugin guide (NEW)
+├── 12-PLUGIN-GUIDE-UI.md         # UI & lighting plugin guide (NEW)
 ├── VERIFICATION.md               # Human playability checklist (REQUIRED)
 └── copilot-instructions.md       # This file (index)
 ```
@@ -220,8 +222,8 @@ Files reference each other. For example:
 
 ---
 
-**System Version**: 1.0.0  
+**System Version**: 1.1.0  
 **Last Updated**: 2025-10-17  
-**Migration**: Single file (1,581 lines) → 12 modular files (~317 lines avg)
+**Migration**: Single file (1,581 lines) → 14 modular files (~320 lines avg)
 
 **Start your journey**: Open **.github/00-START-HERE.md** now! 🚀

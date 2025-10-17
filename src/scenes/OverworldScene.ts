@@ -16,6 +16,7 @@ import { PhysicsManager } from '../core/PhysicsManager';
 import { InputManager } from '../core/InputManager';
 import { EventBus } from '../core/EventBus';
 import { TransitionManager } from '../core/TransitionManager';
+import { AudioManager } from '../core/AudioManager';
 import { Player } from '../entities/Player';
 import { Tilemap } from '../world/Tilemap';
 import { TilemapCollision } from '../world/TilemapCollision';
@@ -23,6 +24,7 @@ import { TilemapEncounters } from '../world/TilemapEncounters';
 import { Camera } from '../world/Camera';
 import { OverworldUI } from './OverworldUI';
 import { BattleSceneV2, EncounterData } from './BattleSceneV2';
+import { TutorialOverlay } from '../ui/TutorialOverlay';
 import testMapData from '../data/maps/test-map.json';
 
 export class OverworldScene extends Scene {
@@ -30,6 +32,7 @@ export class OverworldScene extends Scene {
   private input: InputManager;
   private eventBus: EventBus;
   private transitionManager: TransitionManager;
+  private audioManager: AudioManager;
   private sceneManager: SceneManager | null = null;
   private player: Player | null = null;
   private tilemap: Tilemap | null = null;
@@ -39,6 +42,7 @@ export class OverworldScene extends Scene {
   private ui: OverworldUI | null = null;
   private worldContainer: PIXI.Container;
   private playerPosition: { x: number; y: number } = { x: 320, y: 240 };
+  private tutorial: TutorialOverlay | null = null;
 
   constructor(app: PIXI.Application, sceneManager?: SceneManager) {
     super(app);
@@ -50,6 +54,7 @@ export class OverworldScene extends Scene {
     this.input = InputManager.getInstance();
     this.eventBus = EventBus.getInstance();
     this.transitionManager = TransitionManager.getInstance();
+    this.audioManager = AudioManager.getInstance();
     this.sceneManager = sceneManager || null;
   }
 
@@ -58,6 +63,10 @@ export class OverworldScene extends Scene {
    */
   async init(): Promise<void> {
     console.log('Initializing OverworldScene...');
+
+    // Load overworld audio
+    await this.audioManager.load('bgm_overworld', '/assets/audio/bgm_overworld.mp3', 'music');
+    await this.audioManager.load('sfx_menu_select', '/assets/audio/sfx_menu_select.mp3', 'sfx');
 
     // Initialize systems
     this.physics.init();
@@ -80,6 +89,14 @@ export class OverworldScene extends Scene {
 
     // Create UI
     this.createUI();
+
+    // Play overworld music
+    this.audioManager.playMusic('bgm_overworld', 1000);
+
+    // Show tutorial if first time
+    if (!TutorialOverlay.isComplete()) {
+      this.showTutorial();
+    }
 
     // Listen for battle end events
     this.eventBus.on('battle:end', this.onBattleEnd.bind(this));
@@ -243,6 +260,21 @@ export class OverworldScene extends Scene {
    * 
    * @param dt - Delta time in milliseconds
    */
+  /**
+   * Show tutorial overlay
+   */
+  private showTutorial(): void {
+    this.tutorial = new TutorialOverlay();
+    this.addChild(this.tutorial);
+    
+    this.tutorial.on('tutorial-complete', () => {
+      if (this.tutorial) {
+        this.removeChild(this.tutorial);
+        this.tutorial = null;
+      }
+    });
+  }
+
   update(dt: number): void {
     // Update physics
     this.physics.update(dt);

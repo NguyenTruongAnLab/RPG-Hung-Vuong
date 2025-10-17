@@ -1,8 +1,9 @@
 import { defineConfig } from 'vite';
 
-export default defineConfig({
+export default defineConfig(({ command, mode }) => ({
   // Use repo name for GitHub Pages, './' for local development
-  base: process.env.NODE_ENV === 'production' ? '/RPG-Hung-Vuong/' : './',
+  // command is 'build' or 'serve'
+  base: command === 'build' ? '/RPG-Hung-Vuong/' : './',
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
@@ -21,4 +22,4 @@ export default defineConfig({
     port: 3000,
     open: true
   }
-});
+}));

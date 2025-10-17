@@ -350,19 +350,30 @@ wc -l src/**/*.ts | awk '$1 > 500 { print "❌ " $2 " exceeds 500 lines"; exit 1
 - [x] ~~Migrate remaining .js files to TypeScript~~ - Deferred to Phase 4
 - [ ] Enable strict TypeScript mode
 - [x] ~~Add E2E tests for overworld~~ - COMPLETE (7 test files)
+- [x] ~~Fix PixiJS v8 deprecated API usage~~ - COMPLETE (2025-10-17)
+- [ ] **Split CharacterSelectionScene.ts** (527 lines, exceeds 500-line limit)
 
 ### Medium Priority
 - [ ] Complete JSDoc coverage for all public methods
 - [ ] Add folder README.md for all src/ subdirectories
 - [x] ~~Performance profiling and optimization~~ - Currently 60 FPS stable
+- [x] ~~Fix DragonBones initialization order~~ - COMPLETE (2025-10-17)
 
 ### Low Priority
 - [ ] Refactor legacy BattleSystem.js (replaced by BattleSceneV2.ts)
 - [ ] Improve error handling in AssetManager
 - [ ] Add debug mode toggle
 
+### Fixed Issues (2025-10-17)
+- ✅ PixiJS v8 API compliance - All deprecated methods updated
+  - Changed `beginFill/drawRect/drawRoundedRect` → `rect/roundRect/fill`
+  - Updated 5 files: CharacterSelectionScene, ShowcaseDemoScene, TutorialOverlay, ProgressBar, ParticleSystem
+- ✅ DragonBones initialization - Module now properly exposed to window after dynamic import
+- ✅ Audio path resolution - Already using `import.meta.env.BASE_URL` correctly
+- ✅ Graceful audio fallback - Already resolves promises on 404 errors
+
 ### Non-Critical Warnings
-- ⚠️ DragonBones animation warnings (cosmetic, using placeholders)
+- ⚠️ DragonBones animation warnings (cosmetic, using placeholders) - **RESOLVED**
 - ⚠️ Matter.js delta warnings (not affecting gameplay)
 
 ---

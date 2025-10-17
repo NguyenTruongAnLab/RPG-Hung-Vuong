@@ -125,21 +125,19 @@ export class ProgressBar extends PIXI.Container {
     this.bar.clear();
     
     // Draw background
-    this.background.beginFill(this.bgColor);
-    this.background.drawRoundedRect(0, 0, this.barWidth, this.barHeight, this.barHeight / 2);
-    this.background.endFill();
+    this.background.roundRect(0, 0, this.barWidth, this.barHeight, this.barHeight / 2);
+    this.background.fill(this.bgColor);
     
     // Draw bar
     if (this.progress > 0) {
-      this.bar.beginFill(this.barColor);
-      this.bar.drawRoundedRect(
+      this.bar.roundRect(
         0, 
         0, 
         this.barWidth * this.progress, 
         this.barHeight, 
         this.barHeight / 2
       );
-      this.bar.endFill();
+      this.bar.fill(this.barColor);
     }
   }
   

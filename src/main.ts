@@ -76,8 +76,10 @@ async function startGame() {
 }
 
 // Load DragonBones dynamically, then start game
-import('dragonbones.js').then(() => {
+import('dragonbones.js').then((module) => {
   console.log('DragonBones loaded successfully');
+  // Make DragonBones available globally
+  (window as any).dragonBones = module;
   startGame();
 }).catch(err => {
   console.error('Failed to load DragonBones:', err);

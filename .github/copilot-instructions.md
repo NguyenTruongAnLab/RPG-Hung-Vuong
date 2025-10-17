@@ -44,6 +44,7 @@ All documentation has been split into modular files for better readability and m
 ├── 08-TESTING-GUIDE.md           # Testing requirements
 ├── 09-COMMON-TASKS.md            # Code recipes & examples
 ├── 10-TROUBLESHOOTING.md         # Debug guide
+├── VERIFICATION.md               # Human playability checklist (REQUIRED)
 └── copilot-instructions.md       # This file (index)
 ```
 
@@ -57,6 +58,7 @@ All documentation has been split into modular files for better readability and m
 2. **Use Popular Libraries**: Matter.js, GSAP, @pixi/tilemap (no custom implementations)
 3. **Extreme Modularity**: Component-based entities, composition over inheritance
 4. **Documentation = Success**: JSDoc with @example, folder READMEs, WHY comments
+5. **Human Verification Required**: No feature is "DONE" until verified in `.github/VERIFICATION.md`
 
 ### Quick Commands
 ```bash
@@ -65,6 +67,10 @@ wc -l src/**/*.ts | awk '$1 > 500'
 
 # Run all pre-commit checks
 npm run type-check && npm run test && npm run build
+
+# Human playability test
+npm run build && npm run preview
+# Then follow .github/VERIFICATION.md checklist
 ```
 
 ---
@@ -94,6 +100,7 @@ npm run type-check && npm run test && npm run build
 - **Mark complete** → Update **06-CURRENT-STATE.md**
 - **Check off task** → Update **07-ROADMAP.md**
 - **Commit format** → Follow **04-CODING-STANDARDS.md**
+- **Verify playability** → Complete **VERIFICATION.md** checklist
 
 ---
 

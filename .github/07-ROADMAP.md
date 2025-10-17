@@ -310,6 +310,11 @@ wc -l src/world/Tilemap*.ts
 ### Current Blockers
 None currently
 
+### Recently Resolved (2025-10-17)
+- ✅ PixiJS v8 deprecation warnings - All updated to new API
+- ✅ DragonBones initialization errors - Module properly exposed to window
+- ✅ Audio 404 errors - Already handled gracefully, no code changes needed
+
 ### Potential Risks
 1. **Performance**: Large tilemaps may impact FPS
    - **Mitigation**: Use @pixi/tilemap, optimize rendering
@@ -319,15 +324,18 @@ None currently
    - **Mitigation**: Gradual migration, @ts-ignore as needed
    - **Status**: Acceptable technical debt
 
-3. **Testing Coverage**: E2E tests not yet written
-   - **Mitigation**: Add after core features stable
-   - **Status**: Scheduled for Week 3
+3. **Testing Coverage**: E2E tests need expansion
+   - **Mitigation**: Add human playability verification (VERIFICATION.md)
+   - **Status**: Documentation added 2025-10-17
 
 ---
 
 ## 📝 Notes & Decisions
 
 ### Recent Decisions
+- **2025-10-17**: Added human playability verification checklist (VERIFICATION.md)
+- **2025-10-17**: Fixed PixiJS v8 API deprecations across 5 files
+- **2025-10-17**: Fixed DragonBones initialization order
 - **2025-10-17**: Modular documentation system adopted
 - **2025-10-16**: Component-based player entity confirmed
 - **2025-10-15**: Matter.js chosen over custom physics
@@ -336,6 +344,7 @@ None currently
 - Splitting files early prevents refactoring pain
 - JSDoc with examples greatly helps AI agents
 - Automated tests catch regressions immediately
+- **Human playability testing is critical** - automated tests alone are insufficient
 
 ---
 

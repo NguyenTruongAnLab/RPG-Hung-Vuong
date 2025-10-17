@@ -61,9 +61,8 @@ export class ParticleSystem extends PIXI.Container {
 
     for (let i = 0; i < count; i++) {
       const particle = new PIXI.Graphics() as Particle;
-      particle.beginFill(color);
-      particle.drawCircle(0, 0, Math.random() * size + 1);
-      particle.endFill();
+      particle.circle(0, 0, Math.random() * size + 1);
+      particle.fill(color);
       
       particle.position.set(x, y);
       particle.alpha = 1;
@@ -102,9 +101,8 @@ export class ParticleSystem extends PIXI.Container {
   ): void {
     for (let i = 0; i < count; i++) {
       const particle = new PIXI.Graphics() as Particle;
-      particle.beginFill(color);
-      particle.drawCircle(0, 0, Math.random() * 3 + 2);
-      particle.endFill();
+      particle.circle(0, 0, Math.random() * 3 + 2);
+      particle.fill(color);
       
       particle.position.set(x, y);
       particle.alpha = 1;
@@ -141,9 +139,8 @@ export class ParticleSystem extends PIXI.Container {
       const particle = new PIXI.Graphics() as Particle;
       const color = colors[Math.floor(Math.random() * colors.length)];
       
-      particle.beginFill(color);
-      particle.drawCircle(0, 0, Math.random() * 4 + 2);
-      particle.endFill();
+      particle.circle(0, 0, Math.random() * 4 + 2);
+      particle.fill(color);
       
       particle.position.set(x, y);
       particle.alpha = 1;

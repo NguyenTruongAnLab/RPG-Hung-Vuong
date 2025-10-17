@@ -55,9 +55,8 @@ export class ShowcaseDemoScene extends Scene {
 
   private createBackground(): void {
     const bg = new PIXI.Graphics();
-    bg.beginFill(0x1a1a2e);
-    bg.drawRect(0, 0, 960, 640);
-    bg.endFill();
+    bg.rect(0, 0, 960, 640);
+    bg.fill(0x1a1a2e);
     this.addChild(bg);
   }
 
@@ -88,9 +87,8 @@ export class ShowcaseDemoScene extends Scene {
       const isSelected = element === this.currentElement;
       const btn = new PIXI.Graphics();
       
-      btn.beginFill(isSelected ? colors[index] : 0x333333);
-      btn.drawRoundedRect(0, 0, 100, 40, 8);
-      btn.endFill();
+      btn.roundRect(0, 0, 100, 40, 8);
+      btn.fill(isSelected ? colors[index] : 0x333333);
       btn.position.set(140 + index * 110, 70);
       btn.interactive = true;
       btn.cursor = 'pointer';
@@ -120,9 +118,8 @@ export class ShowcaseDemoScene extends Scene {
     
     // Display area background
     const displayBg = new PIXI.Graphics();
-    displayBg.beginFill(0x2d3748, 0.5);
-    displayBg.drawRoundedRect(-250, -150, 500, 300, 10);
-    displayBg.endFill();
+    displayBg.roundRect(-250, -150, 500, 300, 10);
+    displayBg.fill({ color: 0x2d3748, alpha: 0.5 });
     this.monsterDisplay.addChild(displayBg);
   }
 
@@ -132,9 +129,8 @@ export class ShowcaseDemoScene extends Scene {
     this.addChild(this.infoPanel);
     
     const panelBg = new PIXI.Graphics();
-    panelBg.beginFill(0x333333, 0.9);
-    panelBg.drawRoundedRect(0, 0, 600, 140);
-    panelBg.endFill();
+    panelBg.roundRect(0, 0, 600, 140);
+    panelBg.fill({ color: 0x333333, alpha: 0.9 });
     this.infoPanel.addChild(panelBg);
   }
 
@@ -144,9 +140,8 @@ export class ShowcaseDemoScene extends Scene {
     this.addChild(this.controlPanel);
     
     const panelBg = new PIXI.Graphics();
-    panelBg.beginFill(0x333333, 0.9);
-    panelBg.drawRoundedRect(0, 0, 300, 140);
-    panelBg.endFill();
+    panelBg.roundRect(0, 0, 300, 140);
+    panelBg.fill({ color: 0x333333, alpha: 0.9 });
     this.controlPanel.addChild(panelBg);
     
     // Animation controls
@@ -213,9 +208,8 @@ export class ShowcaseDemoScene extends Scene {
     btn.position.set(x, y);
     
     const bg = new PIXI.Graphics();
-    bg.beginFill(color);
-    bg.drawRoundedRect(0, 0, width, 35, 8);
-    bg.endFill();
+    bg.roundRect(0, 0, width, 35, 8);
+    bg.fill(color);
     btn.addChild(bg);
     
     const label = new PIXI.Text(text, {

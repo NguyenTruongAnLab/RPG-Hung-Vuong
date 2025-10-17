@@ -80,12 +80,12 @@ npm install pixi-dragonbones-runtime
 **When to use**: Animating 200 Thần Thú characters  
 **Documentation**: https://h1ve2.github.io/pixi-dragonbones-runtime/
 
-**Version**: 8.0.3+ (published April 2025, actively maintained for Pixi v8)  
+**Version**: 8.0.3+ (published April 17, 2025, actively maintained for Pixi v8)  
 **GitHub**: https://github.com/h1ve2/pixi-dragonbones-runtime  
 **API Reference**: https://h1ve2.github.io/pixi-dragonbones-runtime/api/8.x/  
 **Quickstart Guide**: https://h1ve2.github.io/pixi-dragonbones-runtime/guide/
 
-**Note**: This is the official DragonBones runtime for PixiJS 8.x, replacing legacy packages like `dragonbones.js` (Pixi v4-5) and `dragonbones-pixijs`.
+**Note**: This is the official DragonBones runtime for PixiJS 8.x, replacing legacy packages like `dragonbones.js` (Pixi v4-5) and `dragonbones-pixijs` (community package).
 
 **Example**:
 ```typescript

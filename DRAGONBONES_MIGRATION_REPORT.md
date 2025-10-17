@@ -16,14 +16,14 @@ Successfully migrated from `dragonbones-pixijs@1.0.5` to the official `pixi-drag
 
 ### Old Package (dragonbones-pixijs)
 - **Version**: 1.0.5
-- **Published**: May 2025
-- **Status**: Functional but not the official recommended package
+- **Published**: May 21, 2025
+- **Status**: Functional but not the official recommended package for PixiJS 8.x
 - **Documentation**: Limited
 
-### New Package (pixi-dragonbones-runtime)
+### New Package (pixi-dragonbones-runtime) ⭐ Official
 - **Version**: 8.0.3
-- **Published**: April 2025
-- **Status**: Official recommended runtime for PixiJS 8.x
+- **Published**: April 17, 2025
+- **Status**: Official recommended runtime for PixiJS 8.x (per issue requirements)
 - **GitHub**: https://github.com/h1ve2/pixi-dragonbones-runtime
 - **Documentation**: 
   - Homepage: https://h1ve2.github.io/pixi-dragonbones-runtime/

@@ -1,0 +1,56 @@
+<Static Level: 99>
+<Attack animation: 7>
+<DragonBone Settings>
+Battler: Sobek
+Scalex: -1.0
+Scaley: 1.0
+Width: 100
+Height: 220
+
+Ani Wait: Idle
+Ani Walk: Idle
+Ani Attack: Attack A
+Ani Swing: Attack B
+Ani Thrust: Attack C
+Ani Missile: Attack A
+Ani Skill: Attack A
+Ani Chant: Idle
+Ani Spell: Attack A
+Ani Item: Attack A
+Ani Guard: Idle
+Ani Evade: Idle
+Ani Damage: Damage
+Ani Abnormal: Idle 
+Ani Sleep: Idle 
+Ani Dying: Idle
+Ani Dead: Damage
+Ani Victory: Idle
+Ani Escape: Idle
+
+Replace Sprite
+</DragonBone Settings>
+
+
+Available Motions
+Attack A - Quick Bite Attack
+Attack B - Quick Spell Cast
+Attack C - Regular Bite Attack
+Attack D - Tail Attack
+Damage
+Idle
+
+Sample Action Sequence:
+-Tail Attack-
+<whole action>
+</whole action>
+
+<target action>
+move user: targets, front, 10, offset x -100
+motion Attack D: user
+wait: 40
+animation 10: target
+animation 17: target
+action effect
+wait: 50
+move user: return, 10
+</target action>

@@ -1,0 +1,113 @@
+<Attack animation: 7>
+<DragonBone Settings>
+Battler: DEKnight
+Scalex: -1.0
+Scaley: 1.0
+Width: 100
+Height: 220
+
+Ani Wait: Idle
+Ani Walk: Idle
+Ani Attack: Attack A
+Ani Swing: Attack B
+Ani Thrust: Attack C
+Ani Missile: Attack A
+Ani Skill: Attack A
+Ani Chant: Idle
+Ani Spell: Attack A
+Ani Item: Attack A
+Ani Guard: Idle
+Ani Evade: Idle
+Ani Damage: Damage
+Ani Abnormal: Idle 
+Ani Sleep: Idle 
+Ani Dying: Idle
+Ani Dead: Damage
+Ani Victory: Idle
+Ani Escape: Idle
+
+Replace Sprite
+</DragonBone Settings>
+
+Available Motions:
+Attack A - Regular Slash
+Attack B - Regular Thrust
+Attack C - Fierce Slash
+Attack D - Fierce Thrust
+Damage
+Idle
+
+SAmple Action Sequences:
+AttackA
+<setup action>
+display action
+immortal: targets, true
+</setup action>
+
+<target action>
+move user: targets, front, 15, auto offset x -200
+wait: 6
+motion Attack A: user
+wait: 30
+animation 7: target
+animation 8: target
+animation 9: target
+animation 10: target
+action effect
+wait: 45
+move user: return, 30
+</target action>
+
+AttackB
+<setup action>
+display action
+immortal: targets, true
+</setup action>
+
+<target action>
+move user: targets, front, 15, auto offset x -200
+wait: 6
+motion Attack B: user
+wait: 30
+animation 11: target
+animation 12: target
+animation 6: target
+action effect
+wait: 45
+move user: return, 30
+</target action>
+
+Attack C
+<setup action>
+display action
+immortal: targets, true
+</setup action>
+
+<target action>
+move user: targets, front, 15, auto offset x -200
+wait: 6
+motion Attack C: user
+wait: 30
+animation 26: target
+animation 7: target
+animation 8: target
+animation 9: target
+animation 10: target
+action effect
+wait: 75
+move user: return, 15
+</target action>
+
+Attack D
+<setup action>
+display action
+immortal: targets, true
+</setup action>
+
+<target action>
+motion Attack D: user
+wait: 40
+animation 24: target
+wait: 15
+action effect
+</target action>

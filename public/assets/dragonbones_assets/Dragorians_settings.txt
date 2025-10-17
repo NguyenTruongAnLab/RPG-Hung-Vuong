@@ -1,0 +1,55 @@
+<Attack animation: 7>
+<DragonBone Settings>
+Battler: Dragorians
+Scalex: -1.0
+Scaley: 1.0
+Width: 100
+Height: 220
+
+Ani Wait: Idle
+Ani Walk: Idle
+Ani Attack: Attack A
+Ani Swing: Attack B
+Ani Thrust: Attack C
+Ani Missile: Attack A
+Ani Skill: Attack A
+Ani Chant: Idle
+Ani Spell: Attack A
+Ani Item: Attack A
+Ani Guard: Idle
+Ani Evade: Idle
+Ani Damage: Damage
+Ani Abnormal: Idle 
+Ani Sleep: Idle 
+Ani Dying: Idle
+Ani Dead: Damage
+Ani Victory: Idle
+Ani Escape: Idle
+
+Replace Sprite
+</DragonBone Settings>
+
+Available Motions:
+Attack A - Dragon Arm Spell A
+Attack B - Dragon Arm Spell B
+Attack C - Dragon Arm Claw Attack
+Attack D - Powerup
+Attack E - Left Arm Attack
+Damage
+Idle
+
+Sample Action Sequence:
+<setup action>
+display action
+immortal: targets, true
+</setup action>
+
+<target action>
+motion Attack A: user
+wait: 35
+animation 8: target
+animation 15: target
+action effect
+wait: 30
+move user: return, 30
+</target action>

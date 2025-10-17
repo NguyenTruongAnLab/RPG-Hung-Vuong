@@ -1,0 +1,76 @@
+<Attack animation: 7>
+<DragonBone Settings>
+Battler: Virgel
+Scalex: -1.0
+Scaley: 1.0
+Width: 100
+Height: 220
+
+Ani Wait: Idle
+Ani Walk: Idle
+Ani Attack: Attack A
+Ani Swing: Attack B
+Ani Thrust: Attack C
+Ani Missile: Attack A
+Ani Skill: Attack A
+Ani Chant: Idle
+Ani Spell: Attack A
+Ani Item: Attack A
+Ani Guard: Idle
+Ani Evade: Idle
+Ani Damage: Damage
+Ani Abnormal: Idle 
+Ani Sleep: Idle 
+Ani Dying: Idle
+Ani Dead: Damage
+Ani Victory: Idle
+Ani Escape: Idle
+
+Replace Sprite
+</DragonBone Settings>
+
+Available Motions:
+Attack A - Saber Slash
+Attack B - 4 swords stab
+Attack C - Spell Finger Snap
+Attack D - Single Sword Thrust
+Attack E - Double Sword Thrust
+Attack F - Triple Sword Thrust
+Attack G - Quadra Sword Thrust
+Attack H - Double Sword Thrust B
+Attack I - Sword Formation thrust
+Attack J - Saber Slash B
+Attack K - Triple Saber Slash
+Damage
+Idle
+
+Sample Action Sequence
+Attack D
+<whole action>
+move user: targets, front, 10, offset x -200
+</whole action>
+
+<target action>
+wait: 10
+motion Attack D: user
+wait: 35
+animation 3: target
+animation 67: target
+action effect
+wait: 40
+</target action>
+
+Attack J
+<whole action>
+move user: targets, front, 10, offset x -150
+</whole action>
+
+<target action>
+wait: 10
+motion Attack J: user
+wait: 25
+animation 3: target
+animation 101: target
+action effect
+wait: 20
+</target action>

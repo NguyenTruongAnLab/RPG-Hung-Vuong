@@ -1,0 +1,56 @@
+<Attack animation: 7>
+<DragonBone Settings>
+Battler: DreamSlime
+Scalex: -1.0
+Scaley: 1.0
+Width: 100
+Height: 220
+
+Ani Wait: Idle
+Ani Walk: Idle
+Ani Attack: Attack A
+Ani Swing: Attack B
+Ani Thrust: Attack C
+Ani Missile: Attack A
+Ani Skill: Attack A
+Ani Chant: Idle
+Ani Spell: Attack A
+Ani Item: Attack A
+Ani Guard: Idle
+Ani Evade: Idle
+Ani Damage: Damage
+Ani Abnormal: Idle 
+Ani Sleep: Idle 
+Ani Dying: Idle
+Ani Dead: Damage
+Ani Victory: Idle
+Ani Escape: Idle
+
+Replace Sprite
+</DragonBone Settings>
+
+Available Motions:
+Attack A - Single Brush Stroke
+Attack B - Single Brush Stroke No Paint
+Attack C - Triple Brush Stroke
+Attack D - Triple Brush Stroke No Paint
+Attack E - Sword Painting
+Attack F - Hammer Painting
+Idle
+Damage
+
+Sample Action Sequence:
+<whole action>
+move user: targets, front, 10, offset x -200
+</whole action>
+
+<target action>
+wait: 10
+motion Attack A: user
+wait: 25
+animation 3: target
+animation 67: target
+action effect
+wait: 40
+move user: return, 10
+</target action>

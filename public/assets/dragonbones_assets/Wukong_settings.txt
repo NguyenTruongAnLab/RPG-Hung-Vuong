@@ -1,0 +1,89 @@
+<Attack animation: 7>
+<DragonBone Settings>
+Battler: Wukong
+Scalex: -1.0
+Scaley: 1.0
+Width: 100
+Height: 220
+
+Ani Wait: Idle
+Ani Walk: Idle
+Ani Attack: Attack A
+Ani Swing: Attack B
+Ani Thrust: Attack C
+Ani Missile: Attack A
+Ani Skill: Attack A
+Ani Chant: Idle
+Ani Spell: Attack A
+Ani Item: Attack A
+Ani Guard: Idle
+Ani Evade: Idle
+Ani Damage: Damage
+Ani Abnormal: Idle 
+Ani Sleep: Idle 
+Ani Dying: Idle
+Ani Dead: Damage
+Ani Victory: Idle
+Ani Escape: Idle
+
+Replace Sprite
+</DragonBone Settings>
+
+Available Motions:
+Attack A - Pillar Slam
+Attack B - Fierce Pillar Slam
+Attack C - Pillar Horizontal Slash
+Attack D - Pillar Extension
+Attack E - Spell Cast
+Damage
+Idle
+
+Sample Action Sequences:
+Blazing Strike
+<whole action>
+move user: targets, front, 10, offset x -200
+</whole action>
+
+<target action>
+wait: 10
+motion Attack A: user
+wait: 30
+animation 3: target
+animation 13: target
+action effect
+wait: 35
+move user: return, 10
+</target action>
+
+Inferno Strike
+<whole action>
+move user: targets, front, 10, offset x -200
+</whole action>
+
+<target action>
+wait: 10
+motion Attack B: user
+wait: 30
+animation 3: target
+animation 13: target
+animation 66: target
+action effect
+wait: 35
+move user: return, 10
+</target action>
+
+Wide Blaze Strike
+<whole action>
+move user: targets, front, 10, offset x -200
+</whole action>
+
+<target action>
+wait: 10
+motion Attack C: user
+wait: 30
+animation 3: target
+animation 67: target
+action effect
+wait: 35
+move user: return, 10
+</target action>

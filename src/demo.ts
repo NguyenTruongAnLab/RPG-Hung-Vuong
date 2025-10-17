@@ -5,6 +5,9 @@
 import { Application } from 'pixi.js';
 import { SceneManager } from './core/SceneManager';
 import { TransitionManager } from './core/TransitionManager';
+import { PhysicsManager } from './core/PhysicsManager';
+import { InputManager } from './core/InputManager';
+import { EventBus } from './core/EventBus';
 import { OverworldScene } from './scenes/OverworldScene';
 
 async function startDemo() {
@@ -39,6 +42,14 @@ async function startDemo() {
     app.ticker.add((ticker) => {
         sceneManager.update(ticker.deltaMS);
     });
+
+    // Expose for debugging
+    (window as any).app = app;
+    (window as any).sceneManager = sceneManager;
+    (window as any).scene = overworldScene;
+    (window as any).PhysicsManager = PhysicsManager;
+    (window as any).InputManager = InputManager;
+    (window as any).EventBus = EventBus;
 
     console.log('Phase 3 Demo Started!');
     console.log('Controls: WASD/Arrows = Move, Space = Attack');

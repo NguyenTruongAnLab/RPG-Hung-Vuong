@@ -51,25 +51,34 @@ export class DragonBonesAnimation {
 
       // Create armature display
       this.armatureDisplay = this.dragonBonesManager.createDisplay(asset, characterName);
+      
+      if (!this.armatureDisplay) {
+        throw new Error(`Failed to create armature display for ${characterName}`);
+      }
+
       this.characterName = characterName;
       this.availableAnimations = asset.animations;
       this.settings = asset.settings;
 
       // Set default scale (adjust per character if needed)
-      if (this.armatureDisplay) {
-        this.armatureDisplay.scale.set(0.5);
+      this.armatureDisplay.scale.set(0.5);
 
-        // Play idle by default
-        this.play('Idle');
+      // Validate animation controller before playing
+      if (!this.armatureDisplay.animation) {
+        throw new Error(`Animation controller not initialized for ${characterName}`);
       }
+
+      // Play idle by default
+      this.play('Idle');
 
       console.log(`✅ Character loaded: ${characterName}`, {
         animations: this.availableAnimations,
         hasSettings: !!this.settings
       });
     } catch (error) {
-      console.error(`Failed to load character ${characterName}:`, error);
-      throw error;
+      const errorMsg = `Failed to load character ${characterName}: ${error instanceof Error ? error.message : String(error)}`;
+      console.error(errorMsg);
+      throw new Error(errorMsg);
     }
   }
 
@@ -87,8 +96,16 @@ export class DragonBonesAnimation {
    */
   play(animationName: string, loops: number = 0): void {
     if (!this.armatureDisplay) {
-      console.warn('Cannot play animation: armature display not loaded');
-      return;
+      const error = `Cannot play animation: armature display not set for character "${this.characterName}"`;
+      console.error(error);
+      throw new Error(error);
+    }
+
+    // Validate animation object exists
+    if (!this.armatureDisplay.animation) {
+      const error = `Cannot play animation: animation controller not initialized for "${this.characterName}"`;
+      console.error(error);
+      throw new Error(error);
     }
 
     // Find best match if exact name not found

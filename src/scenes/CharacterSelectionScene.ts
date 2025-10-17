@@ -189,23 +189,35 @@ export class CharacterSelectionScene extends Scene {
       await dbAnim.loadCharacter(assetName);
       
       const display = dbAnim.getDisplay();
-      if (display) {
-        display.position.set(65, 45);
-        display.scale.set(0.12);
-        dbAnim.play('Idle');
-        (display as any).name = 'db-preview';
-        card.addChild(display);
-        
-        // Store for cleanup
-        this.loadedAnimations.set(assetName, dbAnim);
+      if (!display) {
+        throw new Error(`DragonBones display not created for ${assetName}`);
       }
+      
+      display.position.set(65, 45);
+      display.scale.set(0.12);
+      
+      // Validate before playing
+      if (!display.animation) {
+        throw new Error(`Animation controller missing for ${assetName}`);
+      }
+      
+      dbAnim.play('Idle');
+      (display as any).name = 'db-preview';
+      card.addChild(display);
+      
+      // Store for cleanup
+      this.loadedAnimations.set(assetName, dbAnim);
       
       // Remove loading text
       const loading = card.children.find(c => (c as any).name === 'loading');
       if (loading) card.removeChild(loading);
       
     } catch (error) {
-      console.error(`Failed to load preview for ${assetName}:`, error);
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      console.error(`❌ Failed to load preview for ${assetName}:`, errorMsg);
+      
+      // Show user-friendly error on card
+      this.showErrorToast(`Failed to load ${assetName}: Using fallback`);
       
       // Remove loading text
       const loading = card.children.find(c => (c as any).name === 'loading');
@@ -442,6 +454,41 @@ export class CharacterSelectionScene extends Scene {
       tho: 0x795548
     };
     return colors[element] || 0xFFFFFF;
+  }
+  
+  /**
+   * Show error toast notification to user
+   */
+  private showErrorToast(message: string): void {
+    const toast = new PIXI.Container();
+    (toast as any).name = 'error-toast';
+    
+    const bg = new PIXI.Graphics();
+    bg.beginFill(0xFF5555, 0.9);
+    bg.drawRoundedRect(0, 0, 400, 60, 10);
+    bg.endFill();
+    toast.addChild(bg);
+    
+    const text = new PIXI.Text(message, {
+      fontSize: 14,
+      fill: 0xFFFFFF,
+      wordWrap: true,
+      wordWrapWidth: 380,
+      align: 'center'
+    });
+    text.anchor.set(0.5);
+    text.position.set(200, 30);
+    toast.addChild(text);
+    
+    toast.position.set(280, 20);
+    this.addChild(toast);
+    
+    // Auto-remove after 3 seconds
+    setTimeout(() => {
+      if (this.children.includes(toast)) {
+        this.removeChild(toast);
+      }
+    }, 3000);
   }
   
   private startGame(): void {

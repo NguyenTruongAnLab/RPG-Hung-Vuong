@@ -66,15 +66,29 @@ export class BattleMonsterLoader {
       await animation.loadCharacter(playerAssetName);
       const display = animation.getDisplay();
       
-      if (display) {
-        display.x = x;
-        display.y = y;
-        display.scale.set(0.4);
-        animation.play('Idle');
-        container.addChild(display);
+      if (!display) {
+        throw new Error(`DragonBones display not created for player ${playerAssetName}`);
       }
+      
+      // Validate animation controller
+      if (!display.animation) {
+        throw new Error(`Animation controller missing for player ${playerAssetName}`);
+      }
+      
+      display.x = x;
+      display.y = y;
+      display.scale.set(0.4);
+      animation.play('Idle');
+      container.addChild(display);
+      
+      console.log(`✅ Player monster loaded: ${playerAssetName}`);
     } catch (error) {
-      console.error('Failed to load player animation, using fallback:', error);
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      console.error(`❌ Failed to load player animation: ${errorMsg}`);
+      
+      // Show alert to user
+      alert(`⚠️ Failed to load monster "${playerAssetName}":\n${errorMsg}\n\nUsing fallback placeholder.`);
+      
       // Fallback to circle
       sprite = new PIXI.Graphics();
       sprite.circle(0, 0, 40);
@@ -127,16 +141,30 @@ export class BattleMonsterLoader {
       await animation.loadCharacter(enemyId);
       const display = animation.getDisplay();
       
-      if (display) {
-        display.x = x;
-        display.y = y;
-        display.scale.set(0.4);
-        animation.setFlip(true); // Face left
-        animation.play('Idle');
-        container.addChild(display);
+      if (!display) {
+        throw new Error(`DragonBones display not created for enemy ${enemyId}`);
       }
+      
+      // Validate animation controller
+      if (!display.animation) {
+        throw new Error(`Animation controller missing for enemy ${enemyId}`);
+      }
+      
+      display.x = x;
+      display.y = y;
+      display.scale.set(0.4);
+      animation.setFlip(true); // Face left
+      animation.play('Idle');
+      container.addChild(display);
+      
+      console.log(`✅ Enemy monster loaded: ${enemyId}`);
     } catch (error) {
-      console.error('Failed to load enemy animation, using fallback:', error);
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      console.error(`❌ Failed to load enemy animation: ${errorMsg}`);
+      
+      // Show alert to user
+      alert(`⚠️ Failed to load enemy monster "${enemyId}":\n${errorMsg}\n\nUsing fallback placeholder.`);
+      
       // Fallback to circle
       sprite = new PIXI.Graphics();
       sprite.circle(0, 0, 40);

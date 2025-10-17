@@ -239,27 +239,44 @@ export class AssetManager {
     const basePath = `/assets/dragonbones_assets/`;
 
     try {
+      console.log(`🔄 Loading DragonBones asset: ${characterName}...`);
+      
       // Load skeleton, texture atlas, texture, and optionally settings
       const [skeleton, textureAtlas, texture, settings] = await Promise.all([
         fetch(`${basePath}${characterName}_ske.json`).then(r => {
-          if (!r.ok) throw new Error(`Failed to load skeleton for ${characterName}`);
+          if (!r.ok) {
+            throw new Error(`Skeleton file not found: ${basePath}${characterName}_ske.json (${r.status})`);
+          }
           return r.json();
         }),
         fetch(`${basePath}${characterName}_tex.json`).then(r => {
-          if (!r.ok) throw new Error(`Failed to load texture atlas for ${characterName}`);
+          if (!r.ok) {
+            throw new Error(`Texture atlas not found: ${basePath}${characterName}_tex.json (${r.status})`);
+          }
           return r.json();
         }),
-        PIXI.Assets.load(`${basePath}${characterName}_tex.png`),
+        PIXI.Assets.load(`${basePath}${characterName}_tex.png`).catch(err => {
+          throw new Error(`Texture image not found: ${basePath}${characterName}_tex.png - ${err.message}`);
+        }),
         // Settings file is optional (about 54% have it)
         fetch(`${basePath}${characterName}_settings.txt`)
           .then(r => r.ok ? r.text() : null)
           .catch(() => null)
       ]);
 
+      // Validate skeleton data
+      if (!skeleton || !skeleton.armature || !skeleton.armature[0]) {
+        throw new Error(`Invalid skeleton data for ${characterName}`);
+      }
+
       // Extract animation names from skeleton data
       const animations: string[] = [];
-      if (skeleton.armature && skeleton.armature[0] && skeleton.armature[0].animation) {
+      if (skeleton.armature[0].animation) {
         animations.push(...skeleton.armature[0].animation.map((anim: any) => anim.name));
+      }
+
+      if (animations.length === 0) {
+        throw new Error(`No animations found in skeleton data for ${characterName}`);
       }
 
       // Parse settings if available
@@ -283,8 +300,9 @@ export class AssetManager {
 
       return asset;
     } catch (error) {
-      console.error(`❌ Failed to load ${characterName}:`, error);
-      throw error;
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      console.error(`❌ Failed to load ${characterName}:`, errorMsg);
+      throw new Error(`DragonBones asset load failed for "${characterName}": ${errorMsg}`);
     }
   }
 

@@ -351,6 +351,7 @@ wc -l src/**/*.ts | awk '$1 > 500 { print "❌ " $2 " exceeds 500 lines"; exit 1
 - [ ] Enable strict TypeScript mode
 - [x] ~~Add E2E tests for overworld~~ - COMPLETE (7 test files)
 - [x] ~~Fix PixiJS v8 deprecated API usage~~ - COMPLETE (2025-10-17)
+- [ ] **Split CharacterSelectionScene.ts** (527 lines, exceeds 500-line limit)
 
 ### Medium Priority
 - [ ] Complete JSDoc coverage for all public methods

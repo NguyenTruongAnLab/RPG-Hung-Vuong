@@ -165,6 +165,203 @@ const grouped = _.groupBy(monsters, 'element');
 
 ---
 
+## 🎨 Visual Polish & Effects (Phase 5+)
+
+### Particle System
+```bash
+npm install @pixi/particle-emitter
+```
+
+**Purpose**: Advanced particle effects for battles, weather, magic, and UI polish  
+**When to use**: Explosions, rain, snow, hit impacts, magic effects, damage bursts  
+**Documentation**: https://github.com/pixijs/particle-emitter
+
+**Example**:
+```typescript
+import { Emitter, upgradeConfig } from '@pixi/particle-emitter';
+
+// Create emitter
+const emitter = new Emitter(
+  container,
+  upgradeConfig(particleConfig, [texture])
+);
+
+// Start emission
+emitter.emit = true;
+
+// Update in game loop
+emitter.update(deltaTime * 0.001);
+```
+
+**Use Cases**:
+- Battle hit impacts (sparks, explosions)
+- Weather effects (rain, snow, leaves)
+- Magic skill animations
+- Victory/capture celebrations
+- UI feedback (level up bursts, item pickup sparkles)
+
+### Filters & Shaders
+```bash
+npm install @pixi/filter-glow
+npm install @pixi/filter-bloom
+npm install @pixi/filter-blur
+npm install @pixi/filter-adjustment
+npm install @pixi/filter-crt
+npm install @pixi/filter-godray
+npm install @pixi/filter-shockwave
+npm install @pixi/filter-old-film
+npm install @pixi/filter-pixelate
+```
+
+**Purpose**: Visual effects, atmosphere, and screen FX  
+**When to use**: Elemental effects, damage feedback, atmosphere, retro style  
+**Documentation**: https://github.com/pixijs/filters
+
+**Key Filters**:
+```typescript
+import { GlowFilter } from '@pixi/filter-glow';
+import { AdvancedBloomFilter } from '@pixi/filter-bloom';
+import { ShockwaveFilter } from '@pixi/filter-shockwave';
+import { GodrayFilter } from '@pixi/filter-godray';
+import { AdjustmentFilter } from '@pixi/filter-adjustment';
+
+// Glow for skills and critical hits
+const glowFilter = new GlowFilter({
+  distance: 15,
+  outerStrength: 2,
+  color: 0xffaa00
+});
+sprite.filters = [glowFilter];
+
+// Bloom for magical/legendary effects
+const bloomFilter = new AdvancedBloomFilter({
+  threshold: 0.5,
+  bloomScale: 1.5,
+  brightness: 1.2
+});
+
+// Shockwave for powerful impacts
+const shockwave = new ShockwaveFilter(
+  [centerX, centerY],
+  { radius: 100, wavelength: 30 }
+);
+```
+
+**Filter Usage by Feature**:
+| Feature | Filter(s) |
+|---------|----------|
+| Critical hits | GlowFilter, AdvancedBloomFilter |
+| Super effective | ShockwaveFilter, GlowFilter |
+| Sacred zones | GodrayFilter, AdjustmentFilter |
+| Poison/status | AdjustmentFilter (color shift) |
+| Flashback cutscenes | OldFilmFilter, PixelateFilter |
+| Victory screen | AdvancedBloomFilter |
+| Nightmare zones | CRTFilter, AdjustmentFilter |
+
+### UI Framework
+```bash
+npm install @pixi/ui
+```
+
+**Purpose**: Professional UI controls (buttons, sliders, checkboxes, panels)  
+**When to use**: Inventory, menus, settings, dialog boxes  
+**Documentation**: https://pixijs.io/ui/
+
+**Example**:
+```typescript
+import { Button, CheckBox, ScrollBox } from '@pixi/ui';
+
+// Create button with hover/press states
+const button = new Button({
+  text: 'Start Battle',
+  textStyle: { fill: 0xffffff },
+  background: buttonTexture,
+  hoverBackground: buttonHoverTexture
+});
+
+button.onPress.connect(() => {
+  console.log('Button pressed!');
+});
+
+// Checkbox for settings
+const checkbox = new CheckBox({
+  checked: true,
+  text: 'Sound Effects'
+});
+
+// Scrollable list for inventory
+const scrollBox = new ScrollBox({
+  width: 300,
+  height: 400,
+  items: itemList
+});
+```
+
+### UI Layout
+```bash
+npm install @pixi/layout
+```
+
+**Purpose**: Responsive, adaptive UI layouts  
+**When to use**: Complex menus, grid layouts, responsive design  
+**Documentation**: https://github.com/pixijs/layout
+
+**Example**:
+```typescript
+import { Layout } from '@pixi/layout';
+
+// Create responsive layout
+const layout = new Layout({
+  content: {
+    inventoryPanel: {
+      content: {
+        id: 'inventory',
+        styles: {
+          position: 'center',
+          maxWidth: '80%',
+          maxHeight: '90%'
+        }
+      }
+    }
+  }
+});
+```
+
+### Advanced Lighting
+```bash
+npm install pixi-lights
+```
+
+**Purpose**: Dynamic lighting, shadows, day/night cycles (Don't Starve vibe)  
+**When to use**: Atmospheric scenes, dungeons, night exploration, torch effects  
+**Documentation**: https://github.com/pixijs/pixi-lights
+
+**Example**:
+```typescript
+import { diffuseGroup, normalGroup, lightGroup } from 'pixi-lights';
+
+// Create light layer
+const lightLayer = new PIXI.display.Layer(lightGroup);
+
+// Add point light (torch, campfire)
+const light = new PIXI.lights.PointLight(0xffaa00, 1);
+light.position.set(playerX, playerY);
+lightLayer.addChild(light);
+
+// Add ambient light (day/night)
+const ambient = new PIXI.lights.AmbientLight(null, 0.3);
+lightLayer.addChild(ambient);
+```
+
+**Lighting Use Cases**:
+- Torch following player in caves
+- Day/night cycle transitions
+- Campfire glow
+- Sacred shrine aura
+- Boss arena dramatic lighting
+
+---
+
 ## 📚 Library Usage Rules
 
 ### Matter.js (Physics)
@@ -331,9 +528,55 @@ const debounced = _.debounce(fn, 300); // Delay until idle
 
 ---
 
+## ⚙️ Plugin Usage Philosophy
+
+### Golden Rule: Use Mature Plugins First
+
+**ALWAYS check if a mainstream, maintained PixiJS plugin exists before writing custom code.**
+
+**Why?**
+- ✅ Battle-tested by community
+- ✅ Better performance optimizations
+- ✅ Regular updates and bug fixes
+- ✅ Comprehensive documentation
+- ✅ AI assistants know them well
+- ✅ Faster development time
+
+**When to build custom:**
+- ✅ Game-specific logic (monster stats, battle rules, story)
+- ✅ Vietnamese localization and content
+- ✅ Unique gameplay mechanics
+- ✅ Integration/wrapper code for plugins
+- ❌ Generic visual effects (use filters)
+- ❌ Particle systems (use @pixi/particle-emitter)
+- ❌ UI controls (use @pixi/ui)
+- ❌ Standard animations (use GSAP)
+
+### Plugin Selection Criteria
+
+Before adding any plugin, verify:
+
+1. **Maintained**: Last commit within 6 months
+2. **Compatible**: Works with PixiJS 8.x
+3. **Documented**: Has examples and API docs
+4. **Popular**: 100+ GitHub stars OR official PixiJS org
+5. **TypeScript**: Has type definitions
+
 ## 🚫 What NOT to Install
 
 Never install these:
+
+❌ **Custom particle engines**
+- Don't write your own particle system
+- Use: @pixi/particle-emitter
+
+❌ **Custom shader/filter libraries**
+- Don't write raw WebGL shaders
+- Use: @pixi/filters (official filters package)
+
+❌ **Custom UI frameworks**
+- Don't build buttons/sliders from scratch
+- Use: @pixi/ui or @pixi/layout
 
 ❌ **Alternative physics libraries**
 - Box2D, Planck.js, etc.
@@ -403,7 +646,8 @@ npm view matter-js versions
     "gsap": "^3.12.0",
     "@pixi/tilemap": "^5.0.0",
     "pixi-dragonbones-runtime": "^8.0.3",
-    "lodash": "^4.17.0"
+    "lodash": "^4.17.0",
+    "howler": "^2.2.4"
   },
   "devDependencies": {
     "typescript": "^5.0.0",
@@ -411,10 +655,39 @@ npm view matter-js versions
     "vitest": "^1.0.0",
     "playwright": "^1.40.0",
     "@types/matter-js": "*",
-    "@types/lodash": "*"
+    "@types/lodash": "*",
+    "@types/howler": "*"
   }
 }
 ```
+
+### Phase 5+ Additional Plugins (Install as needed)
+
+**Visual Polish & Effects**:
+```bash
+# Particles
+npm install @pixi/particle-emitter
+
+# Filters (install individually as needed)
+npm install @pixi/filter-glow
+npm install @pixi/filter-bloom
+npm install @pixi/filter-blur
+npm install @pixi/filter-adjustment
+npm install @pixi/filter-shockwave
+npm install @pixi/filter-godray
+npm install @pixi/filter-old-film
+npm install @pixi/filter-crt
+npm install @pixi/filter-pixelate
+
+# UI Framework
+npm install @pixi/ui
+npm install @pixi/layout
+
+# Lighting (advanced)
+npm install pixi-lights
+```
+
+**Note**: Install plugins only when implementing their corresponding features. Don't install all at once.
 
 ---
 

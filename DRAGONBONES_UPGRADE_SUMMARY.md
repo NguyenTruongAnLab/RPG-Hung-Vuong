@@ -2,7 +2,9 @@
 
 ## Overview
 
-This document summarizes the successful upgrade of the DragonBones runtime to support Pixi 8.x and the updated file length policy for the project.
+This document summarizes 2 key tasks completed in this update:
+1. The successful upgrade of the DragonBones runtime to support Pixi 8.x
+2. The updated file length policy for the project
 
 ---
 
@@ -68,7 +70,7 @@ const factory = PixiFactory.factory;
 - **Name**: `dragonbones-pixijs`
 - **Version**: 1.0.5
 - **Publisher**: SGGames (@atomixnmc)
-- **Last Published**: 4 months ago
+- **Published**: 2024-06 (actively maintained)
 - **Repository**: https://github.com/SGGames/DragonBones-Pixi
 - **Documentation**: https://github.com/SGGames/DragonBones-Pixi#readme
 - **License**: MIT (same as original DragonBones)

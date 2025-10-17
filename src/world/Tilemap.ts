@@ -100,8 +100,6 @@ export class Tilemap {
   private renderLayer(layer: TilemapLayer): void {
     if (!this.tileset) return;
 
-    let tileCount = 0;
-    
     for (let i = 0; i < layer.data.length; i++) {
       const gid = layer.data[i];
       
@@ -129,13 +127,6 @@ export class Tilemap {
           v: Math.floor((tileIndex * this.tileWidth) / this.tileset.width) * this.tileHeight
         }
       );
-      
-      tileCount++;
-    }
-    
-    // Log for debugging
-    if (tileCount > 0) {
-      console.log(`Rendered layer "${layer.name}" with ${tileCount} tiles`);
     }
   }
 

@@ -23,6 +23,8 @@ import { ParticleSystem } from '../utils/ParticleSystem';
 import { Camera } from '../world/Camera';
 import { ProgressionSystem } from '../systems/ProgressionSystem';
 import { BattleAnimations } from './BattleAnimations';
+import { DragonBonesAnimation } from '../entities/components/DragonBonesAnimation';
+import { BattleMonsterLoader } from './BattleMonsterLoader';
 import gsap from 'gsap';
 
 // Element types for the Five Elements system
@@ -103,6 +105,10 @@ export class BattleSceneV2 extends Scene {
   private enemySprite: PIXI.Graphics | null = null;
   private battleText: PIXI.Text | null = null;
   
+  // DragonBones animations
+  private playerAnimation: DragonBonesAnimation | null = null;
+  private enemyAnimation: DragonBonesAnimation | null = null;
+  
   // Visual effects
   private particles: ParticleSystem | null = null;
   private camera: Camera | null = null;
@@ -145,7 +151,7 @@ export class BattleSceneV2 extends Scene {
     
     // Create battle UI
     this.createBackground();
-    this.createMonsters();
+    await this.createMonsters(); // Now async
     this.createBattleUI();
     
     // Add particles on top
@@ -175,57 +181,33 @@ export class BattleSceneV2 extends Scene {
   }
 
   /**
-   * Creates the monster sprites
+   * Creates the monster sprites with DragonBones
    */
-  private createMonsters(): void {
-    // Create player monster (temporary placeholder)
-    this.playerMonster = {
-      id: 'player_001',
-      name: 'Rồng Thần',
-      element: 'thuy',
-      stats: {
-        hp: 100,
-        maxHp: 100,
-        attack: 20,
-        defense: 10,
-        speed: 15
-      },
-      currentHP: 100,
-      isPlayer: true
-    };
-
-    // Create enemy monster (temporary placeholder)
-    const enemyId = this.encounterData.enemyMonsterId || 'char001';
-    this.enemyMonster = {
-      id: enemyId,
-      name: 'Wild Beast',
-      element: 'moc',
-      stats: {
-        hp: 80,
-        maxHp: 80,
-        attack: 15,
-        defense: 8,
-        speed: 12
-      },
-      currentHP: 80,
-      isPlayer: false
-    };
-
-    // Create player sprite (blue circle)
-    this.playerSprite = new PIXI.Graphics();
-    this.playerSprite.circle(0, 0, 40);
-    this.playerSprite.fill(0x0088ff);
-    this.playerSprite.x = 200;
-    this.playerSprite.y = this.app.screen.height - 150;
-    this.worldContainer!.addChild(this.playerSprite);
-
-    // Create enemy sprite (red circle)
-    this.enemySprite = new PIXI.Graphics();
-    this.enemySprite.circle(0, 0, 40);
-    this.enemySprite.fill(0xff4444);
-    this.enemySprite.x = this.app.screen.width - 200;
-    this.enemySprite.y = 150;
-    this.worldContainer!.addChild(this.enemySprite);
+  private async createMonsters(): Promise<void> {
+    const enemyId = this.encounterData.enemyMonsterId || 'Agravain';
+    
+    // Load player monster
+    const playerResult = await BattleMonsterLoader.loadPlayerMonster(
+      this.app,
+      this.worldContainer!,
+      200,
+      this.app.screen.height - 150
+    );
+    this.playerMonster = playerResult.monster;
+    this.playerAnimation = playerResult.animation;
+    this.playerSprite = playerResult.sprite;
+    
+    // Load enemy monster
+    const enemyResult = await BattleMonsterLoader.loadEnemyMonster(
+      this.app,
+      this.worldContainer!,
+      enemyId,
+      this.app.screen.width - 200,
+      150
+    );
+    this.enemyMonster = enemyResult.monster;
+    this.enemyAnimation = enemyResult.animation;
+    this.enemySprite = enemyResult.sprite;
   }
 
   /**
@@ -382,45 +364,26 @@ export class BattleSceneV2 extends Scene {
     this.battleActive = false;
     console.log(`Battle ended: ${result}`);
     
-    // Play victory sound
+    // Handle victory/defeat
     if (result === 'victory') {
       this.audioManager.playSFX('sfx_victory');
-      
-      // Award EXP
       const progression = ProgressionSystem.getInstance();
-      const enemyLevel = 3; // Could be from enemy monster data
-      const expReward = progression.calculateExpReward(enemyLevel, true);
+      const expReward = progression.calculateExpReward(3, true);
       const leveledUp = progression.addExp(expReward);
-      
-      if (leveledUp) {
-        this.updateBattleText(`Victory! +${expReward} EXP - Level Up!`);
-      } else {
-        this.updateBattleText(`Victory! +${expReward} EXP`);
-      }
+      this.updateBattleText(`Victory! +${expReward} EXP${leveledUp ? ' - Level Up!' : ''}`);
     } else {
       this.updateBattleText('Defeat!');
     }
     
-    // Emit battle end event
     this.eventBus.emit('battle:end', result);
-    
-    // Wait a moment
-    console.log('Waiting 2 seconds before returning to overworld...');
     await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // Fade out
-    console.log('Fading out battle scene...');
     await this.transitionManager.fadeOut(this, 0.5);
     
     // Return to overworld
     if (this.sceneManager) {
-      console.log('Loading overworld scene...');
       const { OverworldScene } = await import('./OverworldScene');
       const overworldScene = new OverworldScene(this.app, this.sceneManager);
       await this.sceneManager.switchTo(overworldScene);
-      
-      // Fade in overworld
-      console.log('Fading in overworld scene...');
       await this.transitionManager.fadeIn(overworldScene, 0.5);
     }
   }
@@ -429,14 +392,44 @@ export class BattleSceneV2 extends Scene {
    * Play attack animation
    */
   private async playAttackAnimation(isPlayerAttacking: boolean): Promise<void> {
-    if (!this.playerSprite || !this.enemySprite || !this.animations) {
-      return;
+    const attackerAnim = isPlayerAttacking ? this.playerAnimation : this.enemyAnimation;
+    const defenderAnim = isPlayerAttacking ? this.enemyAnimation : this.playerAnimation;
+    
+    // If we have DragonBones animations, use them
+    if (attackerAnim && defenderAnim) {
+      try {
+        // Play attack animation on attacker
+        const attackAnims = attackerAnim.listAnimations();
+        const attackAnim = attackAnims.find(a => a.toLowerCase().includes('attack')) || 'Attack A';
+        attackerAnim.play(attackAnim, 1);
+        
+        // Wait a bit, then play damage on defender
+        await new Promise(resolve => setTimeout(resolve, 500));
+        const damageAnim = defenderAnim.listAnimations().find(a => a.toLowerCase().includes('damage'));
+        if (damageAnim) {
+          defenderAnim.play(damageAnim, 1);
+        }
+        
+        // Wait for animations to complete
+        await new Promise(resolve => setTimeout(resolve, 800));
+        
+        // Return both to idle
+        attackerAnim.play('Idle');
+        defenderAnim.play('Idle');
+      } catch (error) {
+        console.error('Error playing DragonBones attack animation:', error);
+      }
+    } else {
+      // Fallback to old circle animation
+      if (!this.playerSprite || !this.enemySprite || !this.animations) {
+        return;
+      }
+
+      const attacker = isPlayerAttacking ? this.playerSprite : this.enemySprite;
+      const defender = isPlayerAttacking ? this.enemySprite : this.playerSprite;
+
+      await this.animations.playAttackAnimation(attacker, defender, isPlayerAttacking);
     }
-
-    const attacker = isPlayerAttacking ? this.playerSprite : this.enemySprite;
-    const defender = isPlayerAttacking ? this.enemySprite : this.playerSprite;
-
-    await this.animations.playAttackAnimation(attacker, defender, isPlayerAttacking);
   }
 
   /**
@@ -456,6 +449,17 @@ export class BattleSceneV2 extends Scene {
    */
   destroy(): void {
     console.log('Destroying BattleSceneV2...');
+    
+    // Cleanup DragonBones animations
+    if (this.playerAnimation) {
+      this.playerAnimation.destroy();
+      this.playerAnimation = null;
+    }
+    
+    if (this.enemyAnimation) {
+      this.enemyAnimation.destroy();
+      this.enemyAnimation = null;
+    }
     
     // Cleanup sprites
     if (this.background) {

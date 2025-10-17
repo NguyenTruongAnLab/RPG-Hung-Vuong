@@ -13,6 +13,9 @@ export default defineConfig({
       }
     }
   },
+  optimizeDeps: {
+    exclude: ['dragonbones.js'] // Don't pre-bundle DragonBones
+  },
   server: {
     port: 3000,
     open: true

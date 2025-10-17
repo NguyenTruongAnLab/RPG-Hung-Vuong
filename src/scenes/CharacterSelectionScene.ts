@@ -14,6 +14,7 @@ import * as PIXI from 'pixi.js';
 import { Scene, SceneManager } from '../core/SceneManager';
 import monsterDB from '../data/monster-database.json';
 import vi from '../data/vi.json';
+import { DragonBonesAnimation } from '../entities/components/DragonBonesAnimation';
 
 export class CharacterSelectionScene extends Scene {
   private selectedMonsters: string[] = [];
@@ -22,6 +23,7 @@ export class CharacterSelectionScene extends Scene {
   private currentPage = 0;
   private monstersPerPage = 12;
   private sceneManager: SceneManager;
+  private loadedAnimations: Map<string, DragonBonesAnimation> = new Map();
   
   constructor(app: PIXI.Application, sceneManager: SceneManager) {
     super(app);
@@ -35,6 +37,7 @@ export class CharacterSelectionScene extends Scene {
     this.createMonsterGrid(this.currentElement);
     this.createPartyPanel();
     this.createStartButton();
+    this.createDemoButton(); // Add demo button
   }
 
   private createBackground(): void {
@@ -134,12 +137,8 @@ export class CharacterSelectionScene extends Scene {
     
     card.addChild(bg);
     
-    // Monster preview (colored circle)
-    const preview = new PIXI.Graphics();
-    preview.beginFill(this.getElementColor(monster.element));
-    preview.drawCircle(65, 45, 30);
-    preview.endFill();
-    card.addChild(preview);
+    // Load DragonBones animation (async)
+    this.loadMonsterPreview(monster.assetName, card);
     
     // Name
     const name = new PIXI.Text(monster.name, {
@@ -168,6 +167,59 @@ export class CharacterSelectionScene extends Scene {
     card.on('pointerdown', () => this.selectMonster(monster.assetName));
     
     return card;
+  }
+  
+  /**
+   * Load DragonBones preview for a monster card
+   */
+  private async loadMonsterPreview(assetName: string, card: PIXI.Container): Promise<void> {
+    try {
+      // Show loading indicator
+      const loadingText = new PIXI.Text('...', {
+        fontSize: 16,
+        fill: 0xFFFFFF
+      });
+      loadingText.anchor.set(0.5);
+      loadingText.position.set(65, 45);
+      (loadingText as any).name = 'loading';
+      card.addChild(loadingText);
+      
+      // Create DragonBones animation
+      const dbAnim = new DragonBonesAnimation(this.app);
+      await dbAnim.loadCharacter(assetName);
+      
+      const display = dbAnim.getDisplay();
+      if (display) {
+        display.position.set(65, 45);
+        display.scale.set(0.12);
+        dbAnim.play('Idle');
+        (display as any).name = 'db-preview';
+        card.addChild(display);
+        
+        // Store for cleanup
+        this.loadedAnimations.set(assetName, dbAnim);
+      }
+      
+      // Remove loading text
+      const loading = card.children.find(c => (c as any).name === 'loading');
+      if (loading) card.removeChild(loading);
+      
+    } catch (error) {
+      console.error(`Failed to load preview for ${assetName}:`, error);
+      
+      // Remove loading text
+      const loading = card.children.find(c => (c as any).name === 'loading');
+      if (loading) card.removeChild(loading);
+      
+      // Fallback to colored circle
+      const preview = new PIXI.Graphics();
+      const monster = monsterDB.monsters.find(m => m.assetName === assetName);
+      preview.beginFill(this.getElementColor(monster?.element || 'kim'));
+      preview.drawCircle(65, 45, 30);
+      preview.endFill();
+      (preview as any).name = 'fallback-preview';
+      card.addChild(preview);
+    }
   }
   
   private selectMonster(assetName: string): void {
@@ -332,6 +384,36 @@ export class CharacterSelectionScene extends Scene {
     this.addChild(button);
   }
   
+  private createDemoButton(): void {
+    const button = new PIXI.Graphics();
+    button.beginFill(0x9C27B0); // Purple color
+    button.drawRoundedRect(0, 0, 240, 50, 10);
+    button.endFill();
+    button.position.set(420, 560);
+    button.interactive = true;
+    button.cursor = 'pointer';
+    (button as any).name = 'demo-button';
+    
+    button.on('pointerdown', () => this.openDemoMode());
+    
+    const label = new PIXI.Text('💡 DEMO MODE', {
+      fontSize: 20,
+      fill: 0xFFFFFF,
+      fontWeight: 'bold'
+    });
+    label.anchor.set(0.5);
+    label.position.set(120, 25);
+    button.addChild(label);
+    
+    this.addChild(button);
+  }
+  
+  private async openDemoMode(): Promise<void> {
+    const { ShowcaseDemoScene } = await import('./ShowcaseDemoScene');
+    const demoScene = new ShowcaseDemoScene(this.app, this.sceneManager);
+    await this.sceneManager.switchTo(demoScene);
+  }
+  
   private refreshDisplay(): void {
     // Recreate element tabs (to show selection)
     this.children
@@ -394,6 +476,12 @@ export class CharacterSelectionScene extends Scene {
   }
   
   destroy(): void {
+    // Cleanup loaded animations
+    for (const [_, anim] of this.loadedAnimations) {
+      anim.destroy();
+    }
+    this.loadedAnimations.clear();
+    
     this.removeAllListeners();
     // Don't call super.destroy() since it's abstract in Scene
     PIXI.Container.prototype.destroy.call(this);

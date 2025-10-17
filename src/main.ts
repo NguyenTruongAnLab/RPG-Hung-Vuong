@@ -4,9 +4,13 @@
  * Modern entry using SceneManager and CharacterSelectionScene
  */
 import { Application } from 'pixi.js';
+import * as PIXI from 'pixi.js';
 import { SceneManager } from './core/SceneManager';
 import { CharacterSelectionScene } from './scenes/CharacterSelectionScene';
 import { OverworldScene } from './scenes/OverworldScene';
+
+// Make PIXI available globally for DragonBones
+(window as any).PIXI = PIXI;
 
 /**
  * Initialize and start the game
@@ -71,5 +75,11 @@ async function startGame() {
   }
 }
 
-// Start the game
-startGame();
+// Load DragonBones dynamically, then start game
+import('dragonbones.js').then(() => {
+  console.log('DragonBones loaded successfully');
+  startGame();
+}).catch(err => {
+  console.error('Failed to load DragonBones:', err);
+  startGame(); // Start anyway, will use fallbacks
+});

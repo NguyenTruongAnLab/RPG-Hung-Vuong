@@ -1,7 +1,8 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  base: './',
+  // Use repo name for GitHub Pages, './' for local development
+  base: process.env.NODE_ENV === 'production' ? '/RPG-Hung-Vuong/' : './',
   build: {
     outDir: 'dist',
     assetsDir: 'assets',

@@ -33,8 +33,15 @@ export class DragonBonesManager {
    * @param app - The PixiJS application instance
    */
   constructor(app: PIXI.Application) {
-    // Initialize the DragonBones factory for PixiJS
-    this.factory = dragonBones.PixiFactory.factory;
+    // Get DragonBones from window (loaded globally)
+    const db = (window as any).dragonBones;
+    
+    if (!db || !db.PixiFactory) {
+      throw new Error('DragonBones not found. Ensure PIXI is loaded globally before DragonBones.');
+    }
+    
+    // Use the static factory instance
+    this.factory = db.PixiFactory.factory;
   }
 
   /**

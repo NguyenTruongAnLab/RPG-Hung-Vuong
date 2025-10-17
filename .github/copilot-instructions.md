@@ -44,6 +44,7 @@ All documentation has been split into modular files for better readability and m
 ├── 08-TESTING-GUIDE.md           # Testing requirements
 ├── 09-COMMON-TASKS.md            # Code recipes & examples
 ├── 10-TROUBLESHOOTING.md         # Debug guide
+├── 11-DRAGONBONES-GUIDE.md       # DragonBones runtime integration guide
 ├── VERIFICATION.md               # Human playability checklist (REQUIRED)
 └── copilot-instructions.md       # This file (index)
 ```
@@ -93,6 +94,11 @@ npm run build && npm run preview
 - **How to write tests?** → Read **08-TESTING-GUIDE.md**
 - **Pre-commit checklist?** → Read **08-TESTING-GUIDE.md**
 
+### When Working with DragonBones
+- **How to use runtime?** → Read **11-DRAGONBONES-GUIDE.md**
+- **Animation patterns?** → Read **11-DRAGONBONES-GUIDE.md**
+- **Need code example?** → Read **09-COMMON-TASKS.md**
+
 ### When Stuck
 - **Error or bug?** → Read **10-TROUBLESHOOTING.md**
 - **Confused about project?** → Read **01-PROJECT-VISION.md**
@@ -107,15 +113,15 @@ npm run build && npm run preview
 
 ## 📊 Documentation Statistics
 
-- **Total files**: 12 (including this index)
-- **Total lines**: ~3,800 lines distributed
-- **Average per file**: ~317 lines
-- **Largest file**: 04-CODING-STANDARDS.md (477 lines)
-- **All files**: <500 lines ✅
+- **Total files**: 13 (including this index)
+- **Total lines**: ~4,600 lines distributed
+- **Average per file**: ~354 lines
+- **Largest file**: 11-DRAGONBONES-GUIDE.md (685 lines)
+- **All files**: <700 lines ✅
 
 **Comparison**:
 - **Old system**: 1 file, 1,581 lines (hard to navigate)
-- **New system**: 12 files, ~317 lines average (easy to navigate)
+- **New system**: 13 files, ~354 lines average (easy to navigate)
 
 ---
 

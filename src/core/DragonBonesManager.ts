@@ -77,6 +77,15 @@ export class DragonBonesManager {
    * @param display - The armature display
    * @param animationName - Name of the animation to play
    * @param playTimes - Number of times to play (0 = infinite loop, default 0)
+   * 
+   * @example
+   * ```typescript
+   * // Loop idle infinitely
+   * manager.playAnimation(display, 'Idle', 0);
+   * 
+   * // Play attack once
+   * manager.playAnimation(display, 'Attack A', 1);
+   * ```
    */
   public playAnimation(
     display: PixiArmatureDisplay,
@@ -89,6 +98,34 @@ export class DragonBonesManager {
     }
 
     display.animation.play(animationName, playTimes);
+  }
+
+  /**
+   * Fades in an animation with smooth blending
+   * 
+   * @param display - The armature display
+   * @param animationName - Name of the animation to fade in
+   * @param fadeInTime - Fade in duration in seconds (default 0.3)
+   * @param playTimes - Number of times to play (0 = infinite loop, default 0)
+   * 
+   * @example
+   * ```typescript
+   * // Smoothly transition from walk to run
+   * manager.fadeInAnimation(display, 'run', 0.3, 0);
+   * ```
+   */
+  public fadeInAnimation(
+    display: PixiArmatureDisplay,
+    animationName: string,
+    fadeInTime: number = 0.3,
+    playTimes: number = 0
+  ): void {
+    if (!display || !display.animation) {
+      console.warn('Invalid armature display or missing animation');
+      return;
+    }
+
+    display.animation.fadeIn(animationName, fadeInTime, playTimes);
   }
 
   /**
@@ -112,6 +149,76 @@ export class DragonBonesManager {
     }
 
     return display.animation.animationNames;
+  }
+
+  /**
+   * Gets a bone from the armature for manipulation
+   * 
+   * @param display - The armature display
+   * @param boneName - Name of the bone
+   * @returns The bone object or null if not found
+   * 
+   * @example
+   * ```typescript
+   * const armBone = manager.getBone(display, 'arm');
+   * if (armBone) {
+   *   armBone.offset.rotation = Math.PI / 4;
+   *   armBone.invalidUpdate();
+   * }
+   * ```
+   */
+  public getBone(display: PixiArmatureDisplay, boneName: string): any {
+    if (!display || !display.armature) {
+      return null;
+    }
+
+    return display.armature.getBone(boneName);
+  }
+
+  /**
+   * Enables frame caching for performance optimization
+   * 
+   * @param display - The armature display
+   * @param frameRate - Frame rate for caching (default 24)
+   * 
+   * @example
+   * ```typescript
+   * // Enable caching for smoother animation
+   * manager.enableCaching(display, 24);
+   * ```
+   */
+  public enableCaching(display: PixiArmatureDisplay, frameRate: number = 24): void {
+    if (display && display.armature) {
+      display.armature.cacheFrameRate = frameRate;
+    }
+  }
+
+  /**
+   * Adds the armature to the global WorldClock for automatic time advancement
+   * 
+   * @param display - The armature display
+   * 
+   * @example
+   * ```typescript
+   * // Add to clock for automatic updates
+   * manager.addToClock(display);
+   * ```
+   */
+  public addToClock(display: PixiArmatureDisplay): void {
+    if (display && display.armature) {
+      display.armature.clock = this.factory.clock;
+    }
+  }
+
+  /**
+   * Removes the armature from the global WorldClock
+   * 
+   * @param display - The armature display
+   */
+  public removeFromClock(display: PixiArmatureDisplay): void {
+    if (display && display.armature) {
+      display.armature.clock = null;
+    }
   }
 
   /**

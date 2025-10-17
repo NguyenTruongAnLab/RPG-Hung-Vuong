@@ -1,4 +1,4 @@
-import * as dragonBones from 'dragonbones.js';
+import { PixiFactory, PixiArmatureDisplay } from 'dragonbones-pixijs';
 import * as PIXI from 'pixi.js';
 
 /**
@@ -26,22 +26,15 @@ export interface DragonBonesAsset {
  * ```
  */
 export class DragonBonesManager {
-  private factory: dragonBones.PixiFactory;
+  private factory: PixiFactory;
 
   /**
    * Creates a new DragonBonesManager
    * @param app - The PixiJS application instance
    */
   constructor(app: PIXI.Application) {
-    // Get DragonBones from window (loaded globally)
-    const db = (window as any).dragonBones;
-    
-    if (!db || !db.PixiFactory) {
-      throw new Error('DragonBones not found. Ensure PIXI is loaded globally before DragonBones.');
-    }
-    
-    // Use the static factory instance
-    this.factory = db.PixiFactory.factory;
+    // Use the static factory instance from dragonbones-pixijs
+    this.factory = PixiFactory.factory;
   }
 
   /**
@@ -56,7 +49,7 @@ export class DragonBonesManager {
   public createDisplay(
     asset: DragonBonesAsset,
     armatureName: string = 'armature'
-  ): dragonBones.PixiArmatureDisplay {
+  ): PixiArmatureDisplay {
     try {
       // Parse the DragonBones skeleton data
       this.factory.parseDragonBonesData(asset.skeleton);
@@ -86,7 +79,7 @@ export class DragonBonesManager {
    * @param playTimes - Number of times to play (0 = infinite loop, default 0)
    */
   public playAnimation(
-    display: dragonBones.PixiArmatureDisplay,
+    display: PixiArmatureDisplay,
     animationName: string,
     playTimes: number = 0
   ): void {
@@ -102,7 +95,7 @@ export class DragonBonesManager {
    * Stops all animations on a DragonBones armature display
    * @param display - The armature display
    */
-  public stopAnimation(display: dragonBones.PixiArmatureDisplay): void {
+  public stopAnimation(display: PixiArmatureDisplay): void {
     if (display && display.animation) {
       display.animation.stop();
     }
@@ -113,7 +106,7 @@ export class DragonBonesManager {
    * @param display - The armature display
    * @returns Array of animation names
    */
-  public getAnimationNames(display: dragonBones.PixiArmatureDisplay): string[] {
+  public getAnimationNames(display: PixiArmatureDisplay): string[] {
     if (!display || !display.animation) {
       return [];
     }

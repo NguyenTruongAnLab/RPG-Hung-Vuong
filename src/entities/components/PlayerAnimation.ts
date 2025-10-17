@@ -11,7 +11,7 @@
  * animation.setDirection('right');
  * ```
  */
-import * as dragonBones from 'dragonbones.js';
+import { PixiArmatureDisplay } from 'dragonbones-pixijs';
 import * as PIXI from 'pixi.js';
 
 export type AnimationState = 'idle' | 'walk' | 'attack';
@@ -23,7 +23,7 @@ export type Direction = 'up' | 'down' | 'left' | 'right';
  * Manages animation state and playback for the player character.
  */
 export class PlayerAnimation {
-  private armatureDisplay: dragonBones.PixiArmatureDisplay | null = null;
+  private armatureDisplay: PixiArmatureDisplay | null = null;
   private currentAnimation: AnimationState = 'idle';
   private currentDirection: Direction = 'down';
   private isPlaying: boolean = false;
@@ -48,7 +48,7 @@ export class PlayerAnimation {
    * animation.setArmatureDisplay(display);
    * ```
    */
-  setArmatureDisplay(armatureDisplay: dragonBones.PixiArmatureDisplay): void {
+  setArmatureDisplay(armatureDisplay: PixiArmatureDisplay): void {
     this.armatureDisplay = armatureDisplay;
     
     // Start with idle animation
@@ -202,7 +202,7 @@ export class PlayerAnimation {
    * 
    * @returns The DragonBones armature display or null
    */
-  getArmatureDisplay(): dragonBones.PixiArmatureDisplay | null {
+  getArmatureDisplay(): PixiArmatureDisplay | null {
     return this.armatureDisplay;
   }
 

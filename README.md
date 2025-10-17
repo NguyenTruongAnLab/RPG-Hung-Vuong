@@ -108,6 +108,7 @@ Mỗi thần thú có các chỉ số:
 - **Speed** - Tốc độ (quyết định turn order)
 - **Magic** - Sức mạnh phép thuật
 
+
 ### Evolution System
 - Thần thú có thể tiến hóa từ dạng yếu hơn
 - Cần đủ level để tiến hóa
@@ -119,8 +120,54 @@ Mỗi thần thú có các chỉ số:
 - **Rare** (Tier 3) - Khó bắt
 - **Legendary** (Tier 4) - Rất khó bắt
 
+## 🎵 Audio System
+
+### Comprehensive Vietnamese Voice & Audio
+**86 audio files** - 100% code-generated with complete Vietnamese narration:
+
+- **68 Voice Lines** - Vietnamese voice for every game scenario
+  - Opening cinematic and story narration
+  - Tutorial guidance (movement, combat, elements)
+  - Character selection prompts
+  - Battle announcements and reactions
+  - Element-specific attack calls (Kim, Mộc, Thủy, Hỏa, Thổ)
+  - Monster reactions by tier (common, rare, legendary)
+  - Overworld zone warnings
+  - UI feedback (menu, level up, save/load)
+
+- **4 Music Tracks** - Chiptune background music
+  - Overworld exploration theme
+  - Battle music
+  - Victory fanfare
+  - Menu/character selection music
+
+- **14 Sound Effects** - Game audio feedback
+  - Menu navigation sounds
+  - Battle SFX (attack, critical, explosion)
+  - Elemental effects (fire, water, metal, wood, earth)
+  - UI sounds (level up, capture, victory)
+
+### Audio Generation
+```bash
+# Regenerate all 86 audio files
+npm run generate-audio
+```
+
+All audio is code-generated using Web Audio API with:
+- Vietnamese tone simulation via melodic beeps
+- Pentatonic scales for Vietnamese feel
+- ADSR envelope for natural sound
+- Zero external dependencies
+
+**Documentation**:
+- `docs/AUDIO_INTEGRATION_GUIDE.md` - Quick reference API
+- `docs/AUDIO_INTEGRATION_EXAMPLES.md` - Scene implementation examples
+- `public/assets/audio/README.md` - Complete voice line catalog
+
+**Note**: Audio files are placeholder "melodic beeps" simulating Vietnamese tones. Replace with professional voice actors and SFX before production release.
+
 ## 📝 License
 
 MIT License
 
-All dragonbones assets are created by [Akashics](http://www.akashics.moe/category/librarium-animated/) under a custom license http://www.akashics.moe/terms-of-use/ which allows free use in non-commercial projects with attribution, but redistribution of content in base releases (Librarium Statics and/or Librarium Animated) is   not allowed!
+All dragonbones assets are created by [Akashics](http://www.akashics.moe/category/librarium-animated/) under a custom license http://www.akashics.moe/terms-of-use/ which allows free use in non-commercial projects with attribution, but redistribution of content in base releases (Librarium Statics and/or Librarium Animated) is not allowed!

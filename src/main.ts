@@ -75,5 +75,5 @@ async function startGame() {
   }
 }
 
-// Start the game immediately - dragonbones-pixijs is now a proper ES module
+// Start the game immediately - pixi-dragonbones-runtime is now a proper ES module
 startGame();

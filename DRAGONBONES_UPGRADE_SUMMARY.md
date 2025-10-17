@@ -1,53 +1,43 @@
-# DragonBones Upgrade & File Policy Update Summary
+# DragonBones Runtime Migration History
 
 ## Overview
 
-This document summarizes 2 key tasks completed in this update:
-1. The successful upgrade of the DragonBones runtime to support Pixi 8.x
-2. The updated file length policy for the project
+This document tracks the history of DragonBones runtime migrations for Pixi 8.x compatibility.
 
 ---
 
-## Task 1: DragonBones Pixi 8.x Runtime Integration ✅
+## Latest Migration: pixi-dragonbones-runtime (October 2025) ✅
 
 ### Problem
-The project was using `dragonbones.js@5.7.4`, which only supports Pixi v4-5. With the project running on Pixi v8.14.0, this created compatibility issues and required deprecated global loading patterns.
+The project was using `dragonbones-pixijs@1.0.5`, but the official recommended package for Pixi 8.x is `pixi-dragonbones-runtime@8.0.3`, published in April 2025 with active maintenance and comprehensive documentation.
 
 ### Solution
-Successfully replaced the old DragonBones package with the modern `dragonbones-pixijs@1.0.5` package, which is specifically built for Pixi v8.
+Migrated to the official `pixi-dragonbones-runtime@8.0.3` package, which is the recommended and actively maintained runtime for PixiJS 8.x.
 
 ### Changes Made
 
 #### 1. Package Updates
-- ❌ **Removed**: `dragonbones.js@5.7.4` (Pixi 4-5 only)
-- ✅ **Installed**: `dragonbones-pixijs@1.0.5` (Pixi 8.x compatible)
+- ❌ **Removed**: `dragonbones-pixijs@1.0.5` (superseded)
+- ✅ **Installed**: `pixi-dragonbones-runtime@8.0.3` (Official Pixi 8.x runtime)
+  - Published: April 2025
+  - GitHub: https://github.com/h1ve2/pixi-dragonbones-runtime
+  - Docs: https://h1ve2.github.io/pixi-dragonbones-runtime/
 
 #### 2. Code Updates
 Updated files:
-- `src/types/dragonbones.d.ts` - Updated type definitions for new API
-- `src/core/DragonBonesManager.ts` - Updated import and removed global window access
-- `src/entities/components/DragonBonesAnimation.ts` - Updated import and type references
-- `src/entities/components/PlayerAnimation.ts` - Updated import and type references
-- `src/main.ts` - Removed dynamic global import, now uses proper ES module
+- `package.json` - Updated dependency
+- `src/types/dragonbones.d.ts` - Updated module declaration
+- `src/core/DragonBonesManager.ts` - Updated import statement
+- `src/entities/components/DragonBonesAnimation.ts` - Updated import
+- `src/entities/components/PlayerAnimation.ts` - Updated import
+- `src/main.ts` - Updated comment
+- `.github/03-TECH-STACK.md` - Updated documentation with official links
+- `README.md` - Updated tech stack reference
 
-#### 3. API Changes
-**Before (old API):**
+#### 3. API Compatibility
+The API remains the same between `dragonbones-pixijs` and `pixi-dragonbones-runtime`:
 ```typescript
-import * as dragonBones from 'dragonbones.js';
-
-// Global loading required
-import('dragonbones.js').then((module) => {
-  window.dragonBones = module;
-  startGame();
-});
-
-// Access via namespace
-const factory = dragonBones.PixiFactory.factory;
-```
-
-**After (new API):**
-```typescript
-import { PixiFactory, PixiArmatureDisplay } from 'dragonbones-pixijs';
+import { PixiFactory, PixiArmatureDisplay } from 'pixi-dragonbones-runtime';
 
 // Direct ES module import
 const factory = PixiFactory.factory;
@@ -60,26 +50,42 @@ const factory = PixiFactory.factory;
 
 ### Benefits
 - ✅ Full Pixi 8.x compatibility
-- ✅ Proper ES module imports (no global hacks)
-- ✅ TypeScript type safety
-- ✅ Modern, actively maintained package
-- ✅ Better tree-shaking and bundling
-- ✅ All existing tests still pass (192/192)
+- ✅ Official recommended package for Pixi 8.x
+- ✅ Comprehensive documentation and guides
+- ✅ Active maintenance (April 2025 release)
+- ✅ No breaking API changes required
+- ✅ Better long-term support
 
 ### Package Information
-- **Name**: `dragonbones-pixijs`
-- **Version**: 1.0.5
-- **Publisher**: SGGames (@atomixnmc)
-- **Published**: 2024-06 (actively maintained)
-- **Repository**: https://github.com/SGGames/DragonBones-Pixi
-- **Documentation**: https://github.com/SGGames/DragonBones-Pixi#readme
-- **License**: MIT (same as original DragonBones)
+- **Name**: `pixi-dragonbones-runtime`
+- **Version**: 8.0.3
+- **Publisher**: h1ve2
+- **Published**: April 2025 (actively maintained)
+- **Repository**: https://github.com/h1ve2/pixi-dragonbones-runtime
+- **Documentation**: https://h1ve2.github.io/pixi-dragonbones-runtime/
+- **API Docs**: https://h1ve2.github.io/pixi-dragonbones-runtime/api/8.x/
+- **Quickstart**: https://h1ve2.github.io/pixi-dragonbones-runtime/guide/
+- **License**: MIT
 
-### Verification
-- ✅ Type check passes: `npm run type-check`
-- ✅ All 192 tests pass: `npm run test`
-- ✅ Build succeeds: `npm run build`
-- ✅ No breaking changes to existing DragonBones code
+### Verification Steps
+1. ✅ Install new package: `npm install pixi-dragonbones-runtime`
+2. ✅ Update all imports from `dragonbones-pixijs` to `pixi-dragonbones-runtime`
+3. ✅ Type check passes: `npm run type-check`
+4. ✅ Build succeeds: `npm run build`
+5. ✅ All tests pass: `npm run test`
+6. ✅ Manual verification of animations
+
+---
+
+## Previous Migration: dragonbones-pixijs (Historical)
+
+### Date
+Earlier in 2025
+
+### Changes
+- Migrated from `dragonbones.js@5.7.4` (Pixi 4-5) to `dragonbones-pixijs@1.0.5` (Pixi 8)
+- Updated from global imports to ES modules
+- Added proper TypeScript definitions
 
 ---
 

@@ -29,11 +29,11 @@
     "@types/lodash": "^4.17.20",
     "@types/matter-js": "^0.20.2",
     "canvas": "^3.2.0",
-    "dragonbones-pixijs": "^1.0.5",
     "gsap": "^3.13.0",
     "howler": "^2.2.4",
     "lodash": "^4.17.21",
     "matter-js": "^0.20.0",
+    "pixi-dragonbones-runtime": "^8.0.3",
     "pixi.js": "^8.0.0"
   },
   "devDependencies": {

@@ -4,17 +4,17 @@ These are **non-negotiable rules** that must be followed at all times. Violating
 
 ---
 
-## Commandment 1: The 500-Line Law (ABSOLUTE)
+## Commandment 1: The 1000-Line Law (ABSOLUTE)
 
 ### The Rule
 
-**NO FILE SHALL EXCEED 500 LINES. PERIOD.**
+**NO PROJECT FILE SHALL EXCEED 1000 LINES. PERIOD.**
 
-**Exemptions**: NONE. No exceptions. Split ruthlessly.
+**Exemptions**: Vendor libraries, external runtime files, and auto-generated code in `libs/`, `vendor/`, or `node_modules/` are exempt.
 
 ### Why This Matters
 
-When files exceed 500 lines:
+When files exceed 1000 lines:
 - ❌ AI agents struggle to understand full context
 - ❌ Code reviews become nightmares
 - ❌ Bugs hide in complexity
@@ -22,7 +22,7 @@ When files exceed 500 lines:
 - ❌ Merge conflicts multiply
 - ❌ Maintenance becomes impossible
 
-When files stay under 500 lines:
+When files stay under 1000 lines:
 - ✅ AI can understand entire file at once
 - ✅ Code reviews are fast and focused
 - ✅ Bugs are easier to spot
@@ -32,15 +32,20 @@ When files stay under 500 lines:
 
 ### Enforcement Process
 
-**Before saving any file:**
+**Before saving any project file:**
 ```bash
 wc -l filename.ts
 ```
 
 **Watch these thresholds:**
-1. **≥ 300 lines** → Green - OK, keep monitoring
-2. **≥ 400 lines** → Yellow - Plan extraction now
-3. **≥ 500 lines** → Red - STOP! Split immediately
+1. **≥ 600 lines** → Green - OK, keep monitoring
+2. **≥ 800 lines** → Yellow - Plan extraction now
+3. **≥ 1000 lines** → Red - STOP! Split immediately
+
+**Vendor/Library Exemption:**
+- Files in `libs/`, `vendor/`, `node_modules/` are exempt
+- External runtime code like `dragonbones.js` (>15k lines) is expected
+- Auto-generated or imported libraries never trigger warnings
 
 **After splitting:**
 - Update folder `README.md` with new files
@@ -56,31 +61,31 @@ wc -l filename.ts
 4. Original file becomes orchestrator
 
 **Target File Sizes After Split:**
-- Utilities: <200 lines (pure functions)
-- Components: <200 lines (single responsibility)
-- Entities: <300 lines (orchestrators)
-- Systems: <350 lines (game logic)
-- Managers: <400 lines (core infrastructure)
+- Utilities: <400 lines (pure functions)
+- Components: <400 lines (single responsibility)
+- Entities: <600 lines (orchestrators)
+- Systems: <700 lines (game logic)
+- Managers: <800 lines (core infrastructure)
 
 **Example - BAD (Monolithic):**
 ```
-❌ Player.ts (850 lines)
-   - Movement logic (200 lines)
-   - Combat logic (200 lines)
-   - Animation logic (180 lines)
-   - Stats management (120 lines)
-   - Inventory management (150 lines)
+❌ Player.ts (1700 lines)
+   - Movement logic (400 lines)
+   - Combat logic (400 lines)
+   - Animation logic (360 lines)
+   - Stats management (240 lines)
+   - Inventory management (300 lines)
 ```
 
 **Example - GOOD (Modular):**
 ```
 ✅ Split into multiple files:
-   ├── Player.ts (280 lines)              # Orchestrator
-   ├── PlayerMovement.ts (180 lines)      # Movement only
-   ├── PlayerCombat.ts (170 lines)        # Combat only
-   ├── PlayerAnimation.ts (160 lines)     # Animation only
-   ├── PlayerStats.ts (120 lines)         # Stats only
-   └── PlayerInventory.ts (140 lines)     # Inventory only
+   ├── Player.ts (560 lines)              # Orchestrator
+   ├── PlayerMovement.ts (360 lines)      # Movement only
+   ├── PlayerCombat.ts (340 lines)        # Combat only
+   ├── PlayerAnimation.ts (320 lines)     # Animation only
+   ├── PlayerStats.ts (240 lines)         # Stats only
+   └── PlayerInventory.ts (280 lines)     # Inventory only
 ```
 
 ### Splitting Strategy
@@ -112,22 +117,22 @@ export class Player {
 
 **2. Utility Function Splitting:**
 ```typescript
-// Before: GameHelpers.ts (600 lines)
+// Before: GameHelpers.ts (1200 lines)
 // After: Split by category
-├── MathHelpers.ts (150 lines)
-├── StringHelpers.ts (120 lines)
-├── DateHelpers.ts (100 lines)
-└── CollectionHelpers.ts (180 lines)
+├── MathHelpers.ts (300 lines)
+├── StringHelpers.ts (240 lines)
+├── DateHelpers.ts (200 lines)
+└── CollectionHelpers.ts (360 lines)
 ```
 
 **3. Feature-Based Splitting:**
 ```typescript
-// Before: BattleScene.ts (800 lines)
+// Before: BattleScene.ts (1600 lines)
 // After: Split by feature
-├── BattleScene.ts (350 lines)        # Core logic
-├── BattleUI.ts (200 lines)           # UI rendering
-├── BattleAnimations.ts (150 lines)   # Animations
-└── BattleEffects.ts (100 lines)      # Visual effects
+├── BattleScene.ts (700 lines)        # Core logic
+├── BattleUI.ts (400 lines)           # UI rendering
+├── BattleAnimations.ts (300 lines)   # Animations
+└── BattleEffects.ts (200 lines)      # Visual effects
 ```
 
 ---
@@ -283,7 +288,7 @@ Public API is minimal and clear.
 
 **Example - PlayerMovement Component:**
 ```typescript
-// PlayerMovement.ts (180 lines)
+// PlayerMovement.ts (360 lines)
 export class PlayerMovement {
   private body: Matter.Body;
   private speed: number = 3;
@@ -399,7 +404,7 @@ Before committing any file:
 
 ## Summary: The 4 Commandments
 
-1. **500-Line Law**: No file >500 lines. Split at 400.
+1. **1000-Line Law**: No project file >1000 lines. Split at 800. Vendor/library files exempt.
 2. **Use Popular Libraries**: Matter.js, GSAP, @pixi/tilemap. No custom implementations.
 3. **Extreme Modularity**: Component-based entities. Composition over inheritance.
 4. **Documentation = Success**: Folder READMEs, JSDoc with examples, WHY comments.
@@ -409,4 +414,5 @@ Before committing any file:
 ---
 
 **Last Updated**: 2025-10-17  
-**Version**: 1.0.0
+**Version**: 2.0.0  
+**Change**: Updated line limit from 500 to 1000 for project files, added vendor/library exemption

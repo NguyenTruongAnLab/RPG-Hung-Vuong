@@ -73,19 +73,24 @@ tilemap.tile(texture, x, y);
 
 ### Skeletal Animation
 ```bash
-# Already included in dependencies
-# dragonbones.js@^5.7.0
+npm install dragonbones-pixijs
 ```
 
-**Purpose**: Skeletal animation for monsters  
+**Purpose**: Skeletal animation for monsters (Pixi 8.x compatible)  
 **When to use**: Animating 200 Thần Thú characters  
-**Documentation**: https://github.com/DragonBones/DragonBonesJS
+**Documentation**: https://github.com/SGGames/DragonBones-Pixi
+
+**Version**: 1.0.5+ (actively maintained for Pixi v8)  
+**Note**: This replaces the legacy `dragonbones.js` package which only supports Pixi v4-5.
 
 **Example**:
 ```typescript
-import * as dragonBones from 'dragonbones';
-const factory = dragonBones.PixiFactory.factory;
+import { PixiFactory } from 'dragonbones-pixijs';
+const factory = PixiFactory.factory;
 factory.parseDragonBonesData(skeletonData);
+factory.parseTextureAtlasData(textureAtlasData, texture);
+const armatureDisplay = factory.buildArmatureDisplay('armature');
+armatureDisplay.animation.play('idle');
 ```
 
 ---
@@ -393,7 +398,7 @@ npm view matter-js versions
     "matter-js": "^0.19.0",
     "gsap": "^3.12.0",
     "@pixi/tilemap": "^5.0.0",
-    "dragonbones.js": "^5.7.0",
+    "dragonbones-pixijs": "^1.0.5",
     "lodash": "^4.17.0"
   },
   "devDependencies": {

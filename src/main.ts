@@ -75,13 +75,5 @@ async function startGame() {
   }
 }
 
-// Load DragonBones dynamically, then start game
-import('dragonbones.js').then((module) => {
-  console.log('DragonBones loaded successfully');
-  // Make DragonBones available globally
-  (window as any).dragonBones = module;
-  startGame();
-}).catch(err => {
-  console.error('Failed to load DragonBones:', err);
-  startGame(); // Start anyway, will use fallbacks
-});
+// Start the game immediately - dragonbones-pixijs is now a proper ES module
+startGame();

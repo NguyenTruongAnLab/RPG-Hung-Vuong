@@ -1,36 +1,50 @@
-// Type definitions for dragonbones.js
-// This is a minimal declaration file for the DragonBones library
+// Type definitions for dragonbones-pixijs
+// Extended type definitions for DragonBones Pixi 8.x runtime
+// Package: dragonbones-pixijs v1.0.5+
 
-declare module 'dragonbones.js' {
-  import * as PIXI from 'pixi.js';
+import type * as PIXI from 'pixi.js';
 
-  export namespace dragonBones {
-    export class PixiFactory {
-      static factory: PixiFactory;
-      parseDragonBonesData(data: any): void;
-      parseTextureAtlasData(data: any, texture: any): void;
-      buildArmatureDisplay(armatureName: string): PixiArmatureDisplay;
-      clear(): void;
-    }
-
-    export interface PixiArmatureDisplay extends PIXI.Container {
-      animation: Animation;
-      dispose(): void;
-      name: string;
-    }
-
-    export class Animation {
-      animationNames: string[];
-      animations: { [name: string]: AnimationData };
-      play(animationName: string, playTimes?: number): void;
-      stop(): void;
-    }
-
-    export interface AnimationData {
-      name: string;
-      duration: number;
-    }
+declare module 'dragonbones-pixijs' {
+  // Re-export the base types
+  import type { Animation } from 'dragonbones-pixijs';
+  
+  export class PixiFactory {
+    static readonly factory: PixiFactory;
+    parseDragonBonesData(data: any): void;
+    parseTextureAtlasData(data: any, texture: any): void;
+    buildArmatureDisplay(armatureName: string, dragonBonesName?: string): PixiArmatureDisplay | null;
+    clear(disposeData?: boolean): void;
   }
 
-  export = dragonBones;
+  export class PixiArmatureDisplay extends PIXI.Container {
+    animation: Animation;
+    armature: Armature;
+    dispose(): void;
+  }
+
+  export class Animation {
+    readonly animationNames: string[];
+    readonly animations: Map<string, AnimationData>;
+    play(animationName: string, playTimes?: number): AnimationState | null;
+    stop(animationName?: string): void;
+    fadeIn(animationName: string, fadeInTime?: number, playTimes?: number): AnimationState | null;
+  }
+
+  export class AnimationState {
+    readonly name: string;
+    playTimes: number;
+    isPlaying: boolean;
+    isCompleted: boolean;
+  }
+
+  export class AnimationData {
+    readonly name: string;
+    readonly duration: number;
+    readonly frameCount: number;
+  }
+
+  export class Armature {
+    readonly name: string;
+    dispose(): void;
+  }
 }

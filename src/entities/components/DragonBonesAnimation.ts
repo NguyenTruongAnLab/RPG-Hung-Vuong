@@ -1,4 +1,4 @@
-import * as dragonBones from 'dragonbones.js';
+import { PixiArmatureDisplay } from 'dragonbones-pixijs';
 import { AssetManager, type ExtendedDragonBonesAsset } from '../../core/AssetManager';
 import { DragonBonesManager } from '../../core/DragonBonesManager';
 import * as PIXI from 'pixi.js';
@@ -21,7 +21,7 @@ import * as PIXI from 'pixi.js';
  * ```
  */
 export class DragonBonesAnimation {
-  private armatureDisplay: dragonBones.PixiArmatureDisplay | null = null;
+  private armatureDisplay: PixiArmatureDisplay | null = null;
   private currentAnimation: string = 'Idle';
   private availableAnimations: string[] = [];
   private settings?: any;
@@ -222,7 +222,7 @@ export class DragonBonesAnimation {
    * Get armature display for adding to scene
    * @returns The DragonBones armature display or null if not loaded
    */
-  getDisplay(): dragonBones.PixiArmatureDisplay | null {
+  getDisplay(): PixiArmatureDisplay | null {
     return this.armatureDisplay;
   }
 

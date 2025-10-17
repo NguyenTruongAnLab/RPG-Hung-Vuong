@@ -526,5 +526,135 @@ function showDamage(x: number, y: number, damage: number): void {
 
 ---
 
+## 📋 Task: Load DragonBones Character
+
+### Basic Usage
+```typescript
+// src/scenes/BattleScene.ts
+import { DragonBonesAnimation } from '../entities/components/DragonBonesAnimation';
+import * as PIXI from 'pixi.js';
+
+async function loadMonster(app: PIXI.Application, monsterName: string) {
+  // Create animation controller
+  const animation = new DragonBonesAnimation(app);
+  
+  // Load character
+  await animation.loadCharacter(monsterName);
+  
+  // Get display and add to scene
+  const display = animation.getDisplay();
+  if (display) {
+    display.position.set(600, 300);
+    display.scale.set(0.8);
+    this.addChild(display);
+  }
+  
+  // Play idle animation
+  animation.play('Idle');
+  
+  return animation;
+}
+```
+
+### Attack Sequence
+```typescript
+async function performAttack(animation: DragonBonesAnimation) {
+  // Play attack animation once
+  animation.play('Attack A', 1);
+  
+  // Wait for animation duration
+  await new Promise(resolve => setTimeout(resolve, 500));
+  
+  // Return to idle
+  animation.play('Idle');
+}
+```
+
+### Check Available Animations
+```typescript
+function showAnimations(animation: DragonBonesAnimation) {
+  const animations = animation.listAnimations();
+  console.log('Available animations:', animations);
+  // Output: ['Idle', 'Attack A', 'Attack B', 'Damage']
+}
+```
+
+### Checklist
+- [ ] Use `DragonBonesAnimation` component (not raw factory)
+- [ ] Always `await` loadCharacter() before using
+- [ ] Check animations list with listAnimations()
+- [ ] Dispose on cleanup with destroy()
+- [ ] Use Vietnamese names from monster-database.json
+
+---
+
+## 📋 Task: Use Monster Database
+
+### Load Monster by Name
+```typescript
+import monsterDB from '../data/monster-database.json';
+import vi from '../data/vi.json';
+
+function getMonsterInfo(englishName: string) {
+  const monster = monsterDB.monsters.find(
+    m => m.englishName === englishName
+  );
+  
+  if (!monster) return null;
+  
+  return {
+    name: monster.name,           // Vietnamese name
+    element: vi.elements[monster.element], // Translated element
+    region: vi.regions[monster.region.toLowerCase().replace(/\s/g, '')],
+    assetName: monster.assetName  // For loading DragonBones
+  };
+}
+
+// Example usage
+const info = getMonsterInfo('Absolution');
+console.log(info);
+// {
+//   name: "Hổ Bọ Cạp Thần",
+//   element: "Kim (Kim Loại)",
+//   region: "Núi Kim Sơn",
+//   assetName: "Absolution"
+// }
+```
+
+### Filter Monsters by Element
+```typescript
+function getMonstersByElement(element: string) {
+  return monsterDB.monsters.filter(m => m.element === element);
+}
+
+// Get all Fire monsters
+const fireMonsters = getMonstersByElement('hoa');
+console.log(`Found ${fireMonsters.length} Fire monsters`);
+```
+
+### Random Encounter
+```typescript
+function getRandomMonster(tier: number = 1) {
+  const monstersInTier = monsterDB.monsters.filter(
+    m => m.tier === tier
+  );
+  
+  const randomIndex = Math.floor(Math.random() * monstersInTier.length);
+  return monstersInTier[randomIndex];
+}
+
+// Get random tier 2 monster
+const monster = getRandomMonster(2);
+```
+
+### Checklist
+- [ ] Import from `../data/monster-database.json`
+- [ ] Use Vietnamese names for UI display
+- [ ] Use `assetName` for DragonBones loading
+- [ ] Filter by tier for balanced encounters
+- [ ] Use translations from vi.json for elements/regions
+
+---
+
 **Last Updated**: 2025-10-17  
-**Version**: 1.0.0
+**Version**: 1.1.0

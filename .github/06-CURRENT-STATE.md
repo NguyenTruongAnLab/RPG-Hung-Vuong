@@ -28,7 +28,7 @@
 - [x] `SceneManager.ts` (238 lines) - Scene switching logic
 - [x] `AssetManager.ts` (305 lines) - Asset loading and caching
 - [x] `EventBus.ts` (185 lines) - Event pub/sub system
-- [x] `DragonBonesManager.ts` (290 lines) - Animation management
+- [x] `DragonBonesManager.ts` (232 lines) - Enhanced animation management with advanced features
 - [x] `InputManager.ts` (185 lines) - Keyboard and touch input
 - [x] `PhysicsManager.ts` (290 lines) - Matter.js wrapper
 - [x] `Game.js` (legacy, will migrate to TypeScript)
@@ -67,6 +67,8 @@
 - [x] ROADMAP.md with development plan
 - [x] CODING_STYLE.md with code standards
 - [x] Modular documentation system in `.github/`
+- [x] 11-DRAGONBONES-GUIDE.md - Comprehensive DragonBones integration guide
+- [x] Enhanced 09-COMMON-TASKS.md with DragonBones recipes
 
 ---
 

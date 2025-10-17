@@ -10,6 +10,7 @@ declare module 'pixi-dragonbones-runtime' {
   
   export class PixiFactory {
     static readonly factory: PixiFactory;
+    readonly clock: WorldClock;
     parseDragonBonesData(data: any): void;
     parseTextureAtlasData(data: any, texture: any): void;
     buildArmatureDisplay(armatureName: string, dragonBonesName?: string): PixiArmatureDisplay | null;
@@ -45,6 +46,31 @@ declare module 'pixi-dragonbones-runtime' {
 
   export class Armature {
     readonly name: string;
+    clock: WorldClock | null;
+    cacheFrameRate: number;
+    getBone(name: string): Bone | null;
     dispose(): void;
+  }
+
+  export class Bone {
+    readonly name: string;
+    offset: Transform;
+    global: Transform;
+    invalidUpdate(): void;
+    updateGlobalTransform(): void;
+  }
+
+  export class Transform {
+    x: number;
+    y: number;
+    rotation: number;
+    scaleX: number;
+    scaleY: number;
+  }
+
+  export class WorldClock {
+    time: number;
+    timeScale: number;
+    advanceTime(passedTime: number): void;
   }
 }

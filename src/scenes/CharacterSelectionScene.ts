@@ -512,7 +512,6 @@ export class CharacterSelectionScene extends Scene {
         align: 'center'
       }
     });
-    });
     text.anchor.set(0.5);
     text.position.set(200, 30);
     toast.addChild(text);

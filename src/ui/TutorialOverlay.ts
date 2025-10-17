@@ -67,23 +67,29 @@ export class TutorialOverlay extends PIXI.Container {
     this.addChild(this.messageBox);
     
     // Text
-    this.messageText = new PIXI.Text('', {
-      fontSize: 18,
-      fill: 0xFFFFFF,
-      wordWrap: true,
-      wordWrapWidth: 560,
-      align: 'center',
-      lineHeight: 28
+    this.messageText = new PIXI.Text({
+      text: '',
+      style: {
+        fontSize: 18,
+        fill: 0xFFFFFF,
+        wordWrap: true,
+        wordWrapWidth: 560,
+        align: 'center',
+        lineHeight: 28
+      }
     });
     this.messageText.anchor.set(0.5);
     this.messageText.position.set(300, 70);
     this.messageBox.addChild(this.messageText);
     
     // Next button
-    this.nextButton = new PIXI.Text('Tiếp theo →', {
-      fontSize: 16,
-      fill: 0x4CAF50,
-      fontWeight: 'bold'
+    this.nextButton = new PIXI.Text({
+      text: 'Tiếp theo →',
+      style: {
+        fontSize: 16,
+        fill: 0x4CAF50,
+        fontWeight: 'bold'
+      }
     });
     this.nextButton.position.set(470, 140);
     this.nextButton.interactive = true;
@@ -92,9 +98,12 @@ export class TutorialOverlay extends PIXI.Container {
     this.messageBox.addChild(this.nextButton);
     
     // Skip button
-    const skipButton = new PIXI.Text('Bỏ qua', {
-      fontSize: 14,
-      fill: 0x888888
+    const skipButton = new PIXI.Text({
+      text: 'Bỏ qua',
+      style: {
+        fontSize: 14,
+        fill: 0x888888
+      }
     });
     skipButton.position.set(40, 145);
     skipButton.interactive = true;
@@ -103,13 +112,16 @@ export class TutorialOverlay extends PIXI.Container {
     this.messageBox.addChild(skipButton);
     
     // Step indicator
-    const stepIndicator = new PIXI.Text('', {
-      fontSize: 12,
-      fill: 0xAAAAAA
+    const stepIndicator = new PIXI.Text({
+      text: '',
+      style: {
+        fontSize: 12,
+        fill: 0xAAAAAA
+      }
     });
     stepIndicator.position.set(270, 145);
     stepIndicator.anchor.set(0.5, 0);
-    (stepIndicator as any).name = 'step-indicator';
+    stepIndicator.label = 'step-indicator';
     this.messageBox.addChild(stepIndicator);
   }
   
@@ -125,7 +137,7 @@ export class TutorialOverlay extends PIXI.Container {
     
     // Update step indicator
     const indicator = this.messageBox.children.find(
-      c => (c as any).name === 'step-indicator'
+      c => c.label === 'step-indicator'
     ) as PIXI.Text;
     if (indicator) {
       indicator.text = `${index + 1} / ${this.steps.length}`;

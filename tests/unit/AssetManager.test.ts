@@ -23,6 +23,7 @@ describe('AssetManager - DragonBones Integration', () => {
     it('should load character with all required files', async () => {
       const mockSkeleton = {
         armature: [{
+          name: 'TestCharacter', // Add armature name
           animation: [
             { name: 'Idle' },
             { name: 'Attack A' },
@@ -67,6 +68,7 @@ describe('AssetManager - DragonBones Integration', () => {
     it('should handle character without settings file', async () => {
       const mockSkeleton = {
         armature: [{
+          name: 'SimpleCharacter', // Add armature name
           animation: [
             { name: 'Idle' },
             { name: 'Attack' }
@@ -106,6 +108,7 @@ describe('AssetManager - DragonBones Integration', () => {
     it('should cache loaded characters', async () => {
       const mockSkeleton = {
         armature: [{
+          name: 'CachedChar', // Add armature name
           animation: [{ name: 'Idle' }]
         }],
         frameRate: 24
@@ -153,7 +156,10 @@ Sample Action Sequence:
       `;
 
       const mockSkeleton = {
-        armature: [{ animation: [{ name: 'Idle' }] }],
+        armature: [{ 
+          name: 'TestChar', // Add armature name
+          animation: [{ name: 'Idle' }] 
+        }],
         frameRate: 24
       };
 
@@ -188,6 +194,7 @@ Sample Action Sequence:
     it('should calculate animation duration from skeleton data', async () => {
       const mockSkeleton = {
         armature: [{
+          name: 'TimedChar', // Add armature name
           animation: [
             { name: 'Idle', duration: 24 },
             { name: 'Attack A', duration: 48 }

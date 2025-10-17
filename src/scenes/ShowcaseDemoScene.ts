@@ -61,11 +61,14 @@ export class ShowcaseDemoScene extends Scene {
   }
 
   private createHeader(): void {
-    const header = new PIXI.Text('🐉 Thần Thú Showcase - 207 Characters 🐉', {
-      fontSize: 28,
-      fill: 0xFFD700,
-      fontWeight: 'bold',
-      stroke: { color: 0x000000, width: 4 }
+    const header = new PIXI.Text({
+      text: '🐉 Thần Thú Showcase - 207 Characters 🐉',
+      style: {
+        fontSize: 28,
+        fill: 0xFFD700,
+        fontWeight: 'bold',
+        stroke: { color: 0x000000, width: 4 }
+      }
     });
     header.anchor.set(0.5);
     header.position.set(480, 30);
@@ -98,10 +101,13 @@ export class ShowcaseDemoScene extends Scene {
         this.filterByElement(element);
       });
       
-      const label = new PIXI.Text(labels[index], {
-        fontSize: 14,
-        fill: 0xFFFFFF,
-        align: 'center'
+      const label = new PIXI.Text({
+        text: labels[index],
+        style: {
+          fontSize: 14,
+          fill: 0xFFFFFF,
+          align: 'center'
+        }
       });
       label.anchor.set(0.5);
       label.position.set(50, 20);
@@ -145,10 +151,13 @@ export class ShowcaseDemoScene extends Scene {
     this.controlPanel.addChild(panelBg);
     
     // Animation controls
-    const title = new PIXI.Text('🎮 Điều khiển', {
-      fontSize: 16,
-      fill: 0xFFFFFF,
-      fontWeight: 'bold'
+    const title = new PIXI.Text({
+      text: '🎮 Điều khiển',
+      style: {
+        fontSize: 16,
+        fill: 0xFFFFFF,
+        fontWeight: 'bold'
+      }
     });
     title.position.set(10, 10);
     this.controlPanel.addChild(title);
@@ -212,10 +221,13 @@ export class ShowcaseDemoScene extends Scene {
     bg.fill(color);
     btn.addChild(bg);
     
-    const label = new PIXI.Text(text, {
-      fontSize: 14,
-      fill: 0xFFFFFF,
-      fontWeight: 'bold'
+    const label = new PIXI.Text({
+      text,
+      style: {
+        fontSize: 14,
+        fill: 0xFFFFFF,
+        fontWeight: 'bold'
+      }
     });
     label.anchor.set(0.5);
     label.position.set(width / 2, 18);
@@ -253,12 +265,15 @@ export class ShowcaseDemoScene extends Scene {
     }
     
     // Show loading
-    const loadingText = new PIXI.Text('Đang tải...', {
-      fontSize: 20,
-      fill: 0xFFFFFF
+    const loadingText = new PIXI.Text({
+      text: 'Đang tải...',
+      style: {
+        fontSize: 20,
+        fill: 0xFFFFFF
+      }
     });
     loadingText.anchor.set(0.5);
-    (loadingText as any).name = 'loading';
+    loadingText.label = 'loading';
     this.monsterDisplay?.addChild(loadingText);
     
     try {
@@ -286,15 +301,18 @@ export class ShowcaseDemoScene extends Scene {
       console.error(`Failed to load monster ${monster.assetName}:`, error);
       
       // Show error
-      const errorText = new PIXI.Text(`❌ Lỗi: ${monster.assetName}`, {
-        fontSize: 16,
-        fill: 0xFF5555
+      const errorText = new PIXI.Text({
+        text: `❌ Lỗi: ${monster.assetName}`,
+        style: {
+          fontSize: 16,
+          fill: 0xFF5555
+        }
       });
       errorText.anchor.set(0.5);
       this.monsterDisplay?.addChild(errorText);
     } finally {
       // Remove loading text
-      const loading = this.monsterDisplay?.children.find(c => (c as any).name === 'loading');
+      const loading = this.monsterDisplay?.children.find(c => c.label === 'loading');
       if (loading && this.monsterDisplay) {
         this.monsterDisplay.removeChild(loading);
       }
@@ -309,18 +327,18 @@ export class ShowcaseDemoScene extends Scene {
       this.infoPanel.removeChild(this.infoPanel.children[1]);
     }
     
-    const info = new PIXI.Text(
-      `${monster.name} (${monster.englishName})\n` +
-      `Ngũ Hành: ${vi.elements[monster.element]} | Tier: ${'★'.repeat(monster.tier)}\n` +
-      `HP: ${monster.stats.hp} | ATK: ${monster.stats.attack} | DEF: ${monster.stats.defense} | SPD: ${monster.stats.speed}\n` +
-      `${monster.description}`,
-      {
+    const info = new PIXI.Text({
+      text: `${monster.name} (${monster.englishName})\n` +
+        `Ngũ Hành: ${vi.elements[monster.element]} | Tier: ${'★'.repeat(monster.tier)}\n` +
+        `HP: ${monster.stats.hp} | ATK: ${monster.stats.attack} | DEF: ${monster.stats.defense} | SPD: ${monster.stats.speed}\n` +
+        `${monster.description}`,
+      style: {
         fontSize: 13,
         fill: 0xFFFFFF,
         wordWrap: true,
         wordWrapWidth: 580
       }
-    );
+    });
     info.position.set(10, 10);
     this.infoPanel.addChild(info);
   }

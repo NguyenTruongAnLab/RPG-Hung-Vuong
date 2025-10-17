@@ -48,11 +48,14 @@ export class CharacterSelectionScene extends Scene {
   }
   
   private createTitle(): void {
-    const title = new PIXI.Text('Chọn Đội Thần Thú', {
-      fontSize: 36,
-      fill: 0xFFD700,
-      fontWeight: 'bold',
-      stroke: { color: 0x000000, width: 4 }
+    const title = new PIXI.Text({
+      text: 'Chọn Đội Thần Thú',
+      style: {
+        fontSize: 36,
+        fill: 0xFFD700,
+        fontWeight: 'bold',
+        stroke: { color: 0x000000, width: 4 }
+      }
     });
     title.anchor.set(0.5);
     title.position.set(480, 40);
@@ -79,10 +82,13 @@ export class CharacterSelectionScene extends Scene {
         this.refreshDisplay();
       });
       
-      const label = new PIXI.Text(vi.elements[element], {
-        fontSize: 16,
-        fill: 0xFFFFFF,
-        align: 'center'
+      const label = new PIXI.Text({
+        text: vi.elements[element],
+        style: {
+          fontSize: 16,
+          fill: 0xFFFFFF,
+          align: 'center'
+        }
       });
       label.anchor.set(0.5);
       label.position.set(50, 25);
@@ -95,7 +101,7 @@ export class CharacterSelectionScene extends Scene {
   private createMonsterGrid(element: string): void {
     // Clear existing grid
     this.children
-      .filter(c => (c as any).name === 'monster-card')
+      .filter(c => c.label === 'monster-card')
       .forEach(c => this.removeChild(c));
     
     const monsters = monsterDB.monsters.filter(m => m.element === element);
@@ -114,7 +120,7 @@ export class CharacterSelectionScene extends Scene {
   
   private createMonsterCard(monster: any, index: number): PIXI.Container {
     const card = new PIXI.Container();
-    (card as any).name = 'monster-card';
+    card.label = 'monster-card';
     
     const col = index % 4;
     const row = Math.floor(index / 4);
@@ -138,21 +144,27 @@ export class CharacterSelectionScene extends Scene {
     this.loadMonsterPreview(monster.assetName, card);
     
     // Name
-    const name = new PIXI.Text(monster.name, {
-      fontSize: 11,
-      fill: 0xFFFFFF,
-      wordWrap: true,
-      wordWrapWidth: 120,
-      align: 'center'
+    const name = new PIXI.Text({
+      text: monster.name,
+      style: {
+        fontSize: 11,
+        fill: 0xFFFFFF,
+        wordWrap: true,
+        wordWrapWidth: 120,
+        align: 'center'
+      }
     });
     name.anchor.set(0.5, 0);
     name.position.set(65, 80);
     card.addChild(name);
     
     // Tier stars
-    const tier = new PIXI.Text('★'.repeat(monster.tier), {
-      fontSize: 14,
-      fill: 0xFFD700
+    const tier = new PIXI.Text({
+      text: '★'.repeat(monster.tier),
+      style: {
+        fontSize: 14,
+        fill: 0xFFD700
+      }
     });
     tier.anchor.set(0.5);
     tier.position.set(65, 110);
@@ -172,13 +184,16 @@ export class CharacterSelectionScene extends Scene {
   private async loadMonsterPreview(assetName: string, card: PIXI.Container): Promise<void> {
     try {
       // Show loading indicator
-      const loadingText = new PIXI.Text('...', {
-        fontSize: 16,
-        fill: 0xFFFFFF
+      const loadingText = new PIXI.Text({
+        text: '...',
+        style: {
+          fontSize: 16,
+          fill: 0xFFFFFF
+        }
       });
       loadingText.anchor.set(0.5);
       loadingText.position.set(65, 45);
-      (loadingText as any).name = 'loading';
+      loadingText.label = 'loading';
       card.addChild(loadingText);
       
       // Create DragonBones animation
@@ -206,7 +221,7 @@ export class CharacterSelectionScene extends Scene {
       this.loadedAnimations.set(assetName, dbAnim);
       
       // Remove loading text
-      const loading = card.children.find(c => (c as any).name === 'loading');
+      const loading = card.children.find(c => c.label === 'loading');
       if (loading) card.removeChild(loading);
       
     } catch (error) {
@@ -217,7 +232,7 @@ export class CharacterSelectionScene extends Scene {
       this.showErrorToast(`Failed to load ${assetName}: Using fallback`);
       
       // Remove loading text
-      const loading = card.children.find(c => (c as any).name === 'loading');
+      const loading = card.children.find(c => c.label === 'loading');
       if (loading) card.removeChild(loading);
       
       // Fallback to colored circle
@@ -248,23 +263,26 @@ export class CharacterSelectionScene extends Scene {
     const panel = new PIXI.Graphics();
     panel.roundRect(640, 160, 280, 380, 10);
     panel.fill({ color: 0x222222, alpha: 0.9 });
-    (panel as any).name = 'party-panel';
+    panel.label = 'party-panel';
     this.addChild(panel);
     
-    const title = new PIXI.Text('Đội Hình', {
-      fontSize: 20,
-      fill: 0xFFFFFF,
-      fontWeight: 'bold'
+    const title = new PIXI.Text({
+      text: 'Đội Hình',
+      style: {
+        fontSize: 20,
+        fill: 0xFFFFFF,
+        fontWeight: 'bold'
+      }
     });
     title.position.set(700, 180);
-    (title as any).name = 'party-panel';
+    title.label = 'party-panel';
     this.addChild(title);
   }
   
   private updatePartyPanel(): void {
     // Remove old party display
     this.children
-      .filter(c => (c as any).name === 'party-member')
+      .filter(c => c.label === 'party-member')
       .forEach(c => this.removeChild(c));
     
     // Display selected monsters
@@ -273,31 +291,40 @@ export class CharacterSelectionScene extends Scene {
       if (!monster) return;
       
       const member = new PIXI.Graphics();
-      (member as any).name = 'party-member';
+      member.label = 'party-member';
       member.roundRect(0, 0, 240, 70, 10);
       member.fill(0x444444);
       member.position.set(660, 220 + index * 85);
       
-      const nameText = new PIXI.Text(monster.name, {
-        fontSize: 14,
-        fill: 0xFFFFFF,
-        wordWrap: true,
-        wordWrapWidth: 220
+      const nameText = new PIXI.Text({
+        text: monster.name,
+        style: {
+          fontSize: 14,
+          fill: 0xFFFFFF,
+          wordWrap: true,
+          wordWrapWidth: 220
+        }
       });
       nameText.position.set(10, 10);
       member.addChild(nameText);
       
-      const elementText = new PIXI.Text(vi.elements[monster.element], {
-        fontSize: 11,
-        fill: this.getElementColor(monster.element)
+      const elementText = new PIXI.Text({
+        text: vi.elements[monster.element],
+        style: {
+          fontSize: 11,
+          fill: this.getElementColor(monster.element)
+        }
       });
       elementText.position.set(10, 40);
       member.addChild(elementText);
       
       // Remove button
-      const removeBtn = new PIXI.Text('✕', {
-        fontSize: 20,
-        fill: 0xFF5555
+      const removeBtn = new PIXI.Text({
+        text: '✕',
+        style: {
+          fontSize: 20,
+          fill: 0xFF5555
+        }
       });
       removeBtn.position.set(210, 25);
       removeBtn.interactive = true;
@@ -315,7 +342,7 @@ export class CharacterSelectionScene extends Scene {
   private createPageNavigation(totalMonsters: number): void {
     // Remove old navigation
     this.children
-      .filter(c => (c as any).name === 'page-nav')
+      .filter(c => c.label === 'page-nav')
       .forEach(c => this.removeChild(c));
     
     const totalPages = Math.ceil(totalMonsters / this.monstersPerPage);
@@ -323,9 +350,12 @@ export class CharacterSelectionScene extends Scene {
     
     // Previous button
     if (this.currentPage > 0) {
-      const prevBtn = new PIXI.Text('◀', {
-        fontSize: 24,
-        fill: 0xFFFFFF
+      const prevBtn = new PIXI.Text({
+        text: '◀',
+        style: {
+          fontSize: 24,
+          fill: 0xFFFFFF
+        }
       });
       prevBtn.position.set(50, 580);
       prevBtn.interactive = true;
@@ -334,25 +364,31 @@ export class CharacterSelectionScene extends Scene {
         this.currentPage--;
         this.refreshDisplay();
       });
-      (prevBtn as any).name = 'page-nav';
+      prevBtn.label = 'page-nav';
       this.addChild(prevBtn);
     }
     
     // Page indicator
-    const pageText = new PIXI.Text(`${this.currentPage + 1} / ${totalPages}`, {
-      fontSize: 16,
-      fill: 0xFFFFFF
+    const pageText = new PIXI.Text({
+      text: `${this.currentPage + 1} / ${totalPages}`,
+      style: {
+        fontSize: 16,
+        fill: 0xFFFFFF
+      }
     });
     pageText.anchor.set(0.5);
     pageText.position.set(320, 590);
-    (pageText as any).name = 'page-nav';
+    pageText.label = 'page-nav';
     this.addChild(pageText);
     
     // Next button
     if (this.currentPage < totalPages - 1) {
-      const nextBtn = new PIXI.Text('▶', {
-        fontSize: 24,
-        fill: 0xFFFFFF
+      const nextBtn = new PIXI.Text({
+        text: '▶',
+        style: {
+          fontSize: 24,
+          fill: 0xFFFFFF
+        }
       });
       nextBtn.position.set(580, 580);
       nextBtn.interactive = true;
@@ -361,7 +397,7 @@ export class CharacterSelectionScene extends Scene {
         this.currentPage++;
         this.refreshDisplay();
       });
-      (nextBtn as any).name = 'page-nav';
+      nextBtn.label = 'page-nav';
       this.addChild(nextBtn);
     }
   }
@@ -373,14 +409,17 @@ export class CharacterSelectionScene extends Scene {
     button.position.set(670, 560);
     button.interactive = true;
     button.cursor = 'pointer';
-    (button as any).name = 'start-button';
+    button.label = 'start-button';
     
     button.on('pointerdown', () => this.startGame());
     
-    const label = new PIXI.Text('BẮT ĐẦU', {
-      fontSize: 22,
-      fill: 0xFFFFFF,
-      fontWeight: 'bold'
+    const label = new PIXI.Text({
+      text: 'BẮT ĐẦU',
+      style: {
+        fontSize: 22,
+        fill: 0xFFFFFF,
+        fontWeight: 'bold'
+      }
     });
     label.anchor.set(0.5);
     label.position.set(120, 25);
@@ -396,14 +435,17 @@ export class CharacterSelectionScene extends Scene {
     button.position.set(420, 560);
     button.interactive = true;
     button.cursor = 'pointer';
-    (button as any).name = 'demo-button';
+    button.label = 'demo-button';
     
     button.on('pointerdown', () => this.openDemoMode());
     
-    const label = new PIXI.Text('💡 DEMO MODE', {
-      fontSize: 20,
-      fill: 0xFFFFFF,
-      fontWeight: 'bold'
+    const label = new PIXI.Text({
+      text: '💡 DEMO MODE',
+      style: {
+        fontSize: 20,
+        fill: 0xFFFFFF,
+        fontWeight: 'bold'
+      }
     });
     label.anchor.set(0.5);
     label.position.set(120, 25);
@@ -421,11 +463,11 @@ export class CharacterSelectionScene extends Scene {
   private refreshDisplay(): void {
     // Recreate element tabs (to show selection)
     this.children
-      .filter(c => (c as any).name !== 'monster-card' && 
-                   (c as any).name !== 'party-panel' && 
-                   (c as any).name !== 'party-member' &&
-                   (c as any).name !== 'start-button' &&
-                   (c as any).name !== 'page-nav')
+      .filter(c => c.label !== 'monster-card' && 
+                   c.label !== 'party-panel' && 
+                   c.label !== 'party-member' &&
+                   c.label !== 'start-button' &&
+                   c.label !== 'page-nav')
       .forEach(c => {
         if (c !== this.children[0] && c !== this.children[1]) { // Keep bg and title
           this.removeChild(c);
@@ -453,19 +495,22 @@ export class CharacterSelectionScene extends Scene {
    */
   private showErrorToast(message: string): void {
     const toast = new PIXI.Container();
-    (toast as any).name = 'error-toast';
+    toast.label = 'error-toast';
     
     const bg = new PIXI.Graphics();
     bg.roundRect(0, 0, 400, 60, 10);
     bg.fill({ color: 0xFF5555, alpha: 0.9 });
     toast.addChild(bg);
     
-    const text = new PIXI.Text(message, {
-      fontSize: 14,
-      fill: 0xFFFFFF,
-      wordWrap: true,
-      wordWrapWidth: 380,
-      align: 'center'
+    const text = new PIXI.Text({
+      text: message,
+      style: {
+        fontSize: 14,
+        fill: 0xFFFFFF,
+        wordWrap: true,
+        wordWrapWidth: 380,
+        align: 'center'
+      }
     });
     text.anchor.set(0.5);
     text.position.set(200, 30);
@@ -485,18 +530,21 @@ export class CharacterSelectionScene extends Scene {
   private startGame(): void {
     if (this.selectedMonsters.length === 0) {
       // Show error message
-      const errorText = new PIXI.Text('Chọn ít nhất 1 Thần Thú!', {
-        fontSize: 18,
-        fill: 0xFF5555,
-        fontWeight: 'bold'
+      const errorText = new PIXI.Text({
+        text: 'Chọn ít nhất 1 Thần Thú!',
+        style: {
+          fontSize: 18,
+          fill: 0xFF5555,
+          fontWeight: 'bold'
+        }
       });
       errorText.anchor.set(0.5);
       errorText.position.set(790, 520);
-      (errorText as any).name = 'error-msg';
+      errorText.label = 'error-msg';
       this.addChild(errorText);
       
       setTimeout(() => {
-        const error = this.children.find(c => (c as any).name === 'error-msg');
+        const error = this.children.find(c => c.label === 'error-msg');
         if (error) this.removeChild(error);
       }, 2000);
       return;

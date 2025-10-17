@@ -7,6 +7,7 @@ import { resolveDragonBonesPath } from '../utils/paths';
  */
 export interface ExtendedDragonBonesAsset extends DragonBonesAsset {
   characterName: string;
+  armatureName: string; // The actual armature name from skeleton data
   animations: string[];
   settings?: BattleSettings;
 }
@@ -274,6 +275,12 @@ export class AssetManager {
         throw new Error(`Invalid skeleton data for ${characterName}`);
       }
 
+      // Extract armature name from skeleton data (it might differ from file name)
+      const armatureName = skeleton.armature[0].name;
+      if (!armatureName) {
+        throw new Error(`Armature name not found in skeleton data for ${characterName}`);
+      }
+
       // Extract animation names from skeleton data
       const animations: string[] = [];
       if (skeleton.armature[0].animation) {
@@ -293,11 +300,13 @@ export class AssetManager {
         textureAtlas,
         texture,
         characterName,
+        armatureName, // Store the actual armature name
         animations,
         settings: parsedSettings
       };
 
       console.log(`✅ Loaded ${characterName}:`, {
+        armatureName,
         animations: animations.length,
         hasSettings: !!parsedSettings,
         animationList: animations

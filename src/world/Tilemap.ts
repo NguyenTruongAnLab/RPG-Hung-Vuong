@@ -42,7 +42,13 @@ export class Tilemap {
   constructor() {
     this.container = new PIXI.Container();
     this.compositeTilemap = new CompositeTilemap();
+    
+    // Ensure the composite tilemap is properly initialized
+    // by adding it to the container immediately
     this.container.addChild(this.compositeTilemap);
+    
+    // Force the tilemap to be renderable
+    this.compositeTilemap.interactiveChildren = false;
   }
 
   /**

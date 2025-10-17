@@ -49,8 +49,8 @@ export class DragonBonesAnimation {
       const asset = await AssetManager.getInstance()
         .loadDragonBonesCharacter(characterName);
 
-      // Create armature display
-      this.armatureDisplay = this.dragonBonesManager.createDisplay(asset, characterName);
+      // Create armature display using the actual armature name from skeleton data
+      this.armatureDisplay = this.dragonBonesManager.createDisplay(asset, asset.armatureName);
       
       if (!this.armatureDisplay) {
         throw new Error(`Failed to create armature display for ${characterName}`);

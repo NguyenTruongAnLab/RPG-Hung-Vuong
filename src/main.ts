@@ -12,15 +12,6 @@ import { OverworldScene } from './scenes/OverworldScene';
 // Make PIXI available globally for DragonBones
 (window as any).PIXI = PIXI;
 
-// Load DragonBones dynamically
-import('dragonbones.js').then(() => {
-  console.log('DragonBones loaded successfully');
-  startGame();
-}).catch(err => {
-  console.error('Failed to load DragonBones:', err);
-  startGame(); // Start anyway, will use fallbacks
-});
-
 /**
  * Initialize and start the game
  */
@@ -84,5 +75,11 @@ async function startGame() {
   }
 }
 
-// Start the game
-startGame();
+// Load DragonBones dynamically, then start game
+import('dragonbones.js').then(() => {
+  console.log('DragonBones loaded successfully');
+  startGame();
+}).catch(err => {
+  console.error('Failed to load DragonBones:', err);
+  startGame(); // Start anyway, will use fallbacks
+});

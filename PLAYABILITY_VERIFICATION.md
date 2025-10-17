@@ -90,7 +90,7 @@ This document verifies that all critical playability issues have been addressed.
 
 ### Post-Deployment Testing (GitHub Pages)
 - [ ] Wait for GitHub Actions deploy to complete
-- [ ] Open https://NguyenTruongAnLab.github.io/RPG-Hung-Vuong/
+- [ ] Open `https://{username}.github.io/RPG-Hung-Vuong/` (replace {username} with repo owner)
 - [ ] **Clear browser cache** (Ctrl+Shift+R or Cmd+Shift+R)
 - [ ] Open Developer Tools → Console tab
 - [ ] Select 3 monsters
@@ -114,7 +114,7 @@ This document verifies that all critical playability issues have been addressed.
 
 ### If Assets Still 404 on GitHub Pages:
 1. Check `vite.config.js` has correct base: `base: process.env.NODE_ENV === 'production' ? '/RPG-Hung-Vuong/' : './'`
-2. Verify build sets NODE_ENV: `NODE_ENV=production npm run build`
+2. Verify build output: `npm run build` (Vite automatically sets NODE_ENV=production)
 3. Check `dist/index.html` has correct asset paths: `/RPG-Hung-Vuong/assets/...`
 4. Clear browser cache and CDN cache
 5. Check GitHub Pages settings in repo → Settings → Pages
@@ -153,7 +153,7 @@ Game is considered **PLAYABLE** when:
    - Run tests
    - Build with NODE_ENV=production
    - Deploy to GitHub Pages
-3. **Verify** deployment at https://NguyenTruongAnLab.github.io/RPG-Hung-Vuong/
+3. **Verify** deployment at `https://{username}.github.io/RPG-Hung-Vuong/`
 4. **Clear cache** and test
 5. **Share** link with testers
 

@@ -31,7 +31,7 @@
 
 ### 2. Enhanced DragonBonesManager (src/core/DragonBonesManager.ts)
 
-**Lines**: 232 (from 126, +106 lines of enhancements)
+**Lines**: 232 (enhanced from original 125 lines, +107 lines of new features)
 
 **New Methods Added**:
 ```typescript
@@ -210,31 +210,25 @@ class WorldClock {
 ## 📝 Common Patterns Documented
 
 ### Battle Animation Flow
-```typescript
-1. Load character → DragonBonesAnimation.loadCharacter()
-2. Position display → display.position.set()
-3. Play idle → animation.play('Idle')
-4. On attack → animation.play('Attack A', 1)
-5. Wait for completion → await delay()
-6. Return to idle → animation.play('Idle')
-```
+1. Load character → `DragonBonesAnimation.loadCharacter()`
+2. Position display → `display.position.set()`
+3. Play idle → `animation.play('Idle')`
+4. On attack → `animation.play('Attack A', 1)`
+5. Wait for completion → `await delay()`
+6. Return to idle → `animation.play('Idle')`
 
 ### Monster Database Integration
-```typescript
 1. Import monster database
 2. Find monster by English name
 3. Get Vietnamese name and translations
 4. Load DragonBones using assetName
 5. Display with proper element/region info
-```
 
 ### Performance Optimization
-```typescript
-1. Enable frame caching → manager.enableCaching(display, 24)
-2. Add to WorldClock → manager.addToClock(display)
+1. Enable frame caching → `manager.enableCaching(display, 24)`
+2. Add to WorldClock → `manager.addToClock(display)`
 3. Lazy load monsters → Load on encounter, not startup
-4. Dispose unused → display.dispose() on scene cleanup
-```
+4. Dispose unused → `display.dispose()` on scene cleanup
 
 ---
 

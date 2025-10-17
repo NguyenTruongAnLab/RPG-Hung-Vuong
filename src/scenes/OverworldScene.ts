@@ -167,6 +167,36 @@ export class OverworldScene extends Scene {
       this.app.screen.height,
       0.1 // Smooth follow
     );
+    
+    // Add zoom controls via mouse wheel
+    this.setupZoomControls();
+  }
+  
+  /**
+   * Sets up zoom controls via mouse wheel
+   */
+  private setupZoomControls(): void {
+    const zoomHandler = (event: WheelEvent) => {
+      event.preventDefault();
+      
+      if (!this.camera) return;
+      
+      // Get current scale
+      const currentScale = this.worldContainer.scale.x;
+      
+      // Calculate new scale (zoom in/out by 10% per scroll)
+      const zoomDelta = event.deltaY > 0 ? 0.9 : 1.1;
+      const newScale = Math.max(0.5, Math.min(2.0, currentScale * zoomDelta));
+      
+      // Apply zoom
+      this.camera.zoom(newScale, 0.2);
+    };
+    
+    // Add wheel event listener to canvas
+    this.app.canvas.addEventListener('wheel', zoomHandler, { passive: false });
+    
+    // Store handler for cleanup
+    (this as any).zoomHandler = zoomHandler;
   }
 
   /**
@@ -305,6 +335,11 @@ export class OverworldScene extends Scene {
    */
   destroy(): void {
     console.log('Destroying OverworldScene...');
+    
+    // Remove zoom handler
+    if ((this as any).zoomHandler) {
+      this.app.canvas.removeEventListener('wheel', (this as any).zoomHandler);
+    }
     
     // Cleanup player
     if (this.player) {

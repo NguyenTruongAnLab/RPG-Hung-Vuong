@@ -64,7 +64,7 @@ export class OverworldUI {
    */
   private createControlsHint(): void {
     this.controlsText = new PIXI.Text({
-      text: 'WASD/Arrows: Move | Space: Attack | E: Interact',
+      text: 'WASD/Arrows: Move | Space: Attack | E: Interact | Mouse Wheel: Zoom',
       style: {
         fontSize: 14,
         fill: 0xcccccc,

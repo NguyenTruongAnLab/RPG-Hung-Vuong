@@ -1,0 +1,5181 @@
+{
+  "version": "1.0.0",
+  "totalMonsters": 207,
+  "monsters": [
+    {
+      "id": "char001",
+      "name": "Hổ Bọ Cạp Thần",
+      "englishName": "Absolution",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "Absolution",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char002",
+      "name": "Rồng Mộc Lam",
+      "englishName": "Agravain",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "Agravain",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char003",
+      "name": "Thiên Thần Rừng",
+      "englishName": "Alfadriel",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "Alfadriel",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char004",
+      "name": "Cơ Quan Cổ Đại",
+      "englishName": "AncientAutomaton",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "AncientAutomaton",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char005",
+      "name": "Nữ Hoàng Kiến",
+      "englishName": "AntQueen",
+      "element": "tho",
+      "tier": 5,
+      "assetName": "AntQueen",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 200,
+        "attack": 100,
+        "defense": 90,
+        "speed": 80,
+        "magic": 90
+      },
+      "description": "Thần thú thuộc hệ Tho",
+      "captureRate": 5,
+      "rarity": "legendary",
+      "region": "Đồng Bằng Thổ Nguyên"
+    },
+    {
+      "id": "char006",
+      "name": "Đỉnh Cao",
+      "englishName": "ApexB",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "ApexB",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char007",
+      "name": "Nữ Thần Lửa",
+      "englishName": "Aphrodite",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "Aphrodite",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char008",
+      "name": "Ma Nhân Đá",
+      "englishName": "ArcaneGolem",
+      "element": "tho",
+      "tier": 3,
+      "assetName": "ArcaneGolem",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Tho",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đồng Bằng Thổ Nguyên"
+    },
+    {
+      "id": "char009",
+      "name": "Ác Ma Thổ",
+      "englishName": "Asmodeus",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "Asmodeus",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char010",
+      "name": "Thần Thú Azrafel",
+      "englishName": "Azrafel",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "Azrafel",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char011",
+      "name": "Thần Thú Baba",
+      "englishName": "Baba",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "Baba",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char012",
+      "name": "Thần Thú Beelzebub",
+      "englishName": "Beelzebub",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "Beelzebub",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char013",
+      "name": "Thần Thú BladeMaster",
+      "englishName": "BladeMaster",
+      "element": "kim",
+      "tier": 4,
+      "assetName": "BladeMaster",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 150,
+        "attack": 85,
+        "defense": 75,
+        "speed": 75,
+        "magic": 75
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 10,
+      "rarity": "epic",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char014",
+      "name": "Thần Thú BloodMage",
+      "englishName": "BloodMage",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "BloodMage",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char015",
+      "name": "Thần Thú Bonemask",
+      "englishName": "Bonemask",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "Bonemask",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char016",
+      "name": "Thần Thú Brachiosaurus",
+      "englishName": "Brachiosaurus",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "Brachiosaurus",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char017",
+      "name": "Thần Thú Byakko",
+      "englishName": "Byakko",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "Byakko",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char018",
+      "name": "Thần Thú Cerb",
+      "englishName": "Cerb",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "Cerb",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char019",
+      "name": "Thần Thú ChampionGoblin",
+      "englishName": "ChampionGoblin",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "ChampionGoblin",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char020",
+      "name": "Thần Thú Chronomancer",
+      "englishName": "Chronomancer",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "Chronomancer",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char021",
+      "name": "Thần Thú ClockworkKing",
+      "englishName": "ClockworkKing",
+      "element": "kim",
+      "tier": 5,
+      "assetName": "ClockworkKing",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 200,
+        "attack": 100,
+        "defense": 90,
+        "speed": 80,
+        "magic": 90
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 5,
+      "rarity": "legendary",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char022",
+      "name": "Thần Thú ClockworkPrototype",
+      "englishName": "ClockworkPrototype",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "ClockworkPrototype",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char023",
+      "name": "Thần Thú ClockworkQueen",
+      "englishName": "ClockworkQueen",
+      "element": "kim",
+      "tier": 5,
+      "assetName": "ClockworkQueen",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 200,
+        "attack": 100,
+        "defense": 90,
+        "speed": 80,
+        "magic": 90
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 5,
+      "rarity": "legendary",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char024",
+      "name": "Thần Thú ClockworkSkull",
+      "englishName": "ClockworkSkull",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "ClockworkSkull",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char025",
+      "name": "Thần Thú ColossalCrow",
+      "englishName": "ColossalCrow",
+      "element": "tho",
+      "tier": 3,
+      "assetName": "ColossalCrow",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Tho",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đồng Bằng Thổ Nguyên"
+    },
+    {
+      "id": "char026",
+      "name": "Thần Thú CommonDrake",
+      "englishName": "CommonDrake",
+      "element": "moc",
+      "tier": 1,
+      "assetName": "CommonDrake",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 80,
+        "attack": 50,
+        "defense": 40,
+        "speed": 60,
+        "magic": 40
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 25,
+      "rarity": "common",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char027",
+      "name": "Thần Thú Conglomerate",
+      "englishName": "Conglomerate",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "Conglomerate",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char028",
+      "name": "Thần Thú Contiturtle",
+      "englishName": "Contiturtle",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "Contiturtle",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char029",
+      "name": "Thần Thú CorruptedGodNyarlathotep",
+      "englishName": "CorruptedGodNyarlathotep",
+      "element": "thuy",
+      "tier": 5,
+      "assetName": "CorruptedGodNyarlathotep",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 200,
+        "attack": 100,
+        "defense": 90,
+        "speed": 80,
+        "magic": 90
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 5,
+      "rarity": "legendary",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char030",
+      "name": "Thần Thú Croco",
+      "englishName": "Croco",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "Croco",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char031",
+      "name": "Thần Thú Cthulhu",
+      "englishName": "Cthulhu",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "Cthulhu",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char032",
+      "name": "Thần Thú CultistMage",
+      "englishName": "CultistMage",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "CultistMage",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char033",
+      "name": "Thần Thú DAidarabotchi",
+      "englishName": "DAidarabotchi",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "DAidarabotchi",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char034",
+      "name": "Thần Thú DEKnight",
+      "englishName": "DEKnight",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "DEKnight",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char035",
+      "name": "Thần Thú Dagon",
+      "englishName": "Dagon",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "Dagon",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char036",
+      "name": "Thần Thú Dalton",
+      "englishName": "Dalton",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "Dalton",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char037",
+      "name": "Thần Thú DarkElvesPrincess",
+      "englishName": "DarkElvesPrincess",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "DarkElvesPrincess",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char038",
+      "name": "Thần Thú DarknessDragon",
+      "englishName": "DarknessDragon",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "DarknessDragon",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char039",
+      "name": "Thần Thú DeathWorm",
+      "englishName": "DeathWorm",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "DeathWorm",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char040",
+      "name": "Thần Thú Demeres",
+      "englishName": "Demeres",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "Demeres",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char041",
+      "name": "Thần Thú DeniraLioness",
+      "englishName": "DeniraLioness",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "DeniraLioness",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char042",
+      "name": "Thần Thú Denira",
+      "englishName": "Denira",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "Denira",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char043",
+      "name": "Thần Thú Dhunter",
+      "englishName": "Dhunter",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "Dhunter",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char044",
+      "name": "Thần Thú DragonDrakus",
+      "englishName": "DragonDrakus",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "DragonDrakus",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char045",
+      "name": "Thần Thú DragonKnightSlime",
+      "englishName": "DragonKnightSlime",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "DragonKnightSlime",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char046",
+      "name": "Thần Thú DragonTch",
+      "englishName": "DragonTch",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "DragonTch",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char047",
+      "name": "Thần Thú Dragorians",
+      "englishName": "Dragorians",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "Dragorians",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char048",
+      "name": "Thần Thú DreamSlime",
+      "englishName": "DreamSlime",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "DreamSlime",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char049",
+      "name": "Thần Thú Duesa",
+      "englishName": "Duesa",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "Duesa",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char050",
+      "name": "Thần Thú DwarfDrill",
+      "englishName": "DwarfDrill",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "DwarfDrill",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char051",
+      "name": "Thần Thú Dynamo",
+      "englishName": "Dynamo",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "Dynamo",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char052",
+      "name": "Thần Thú EarthHorse",
+      "englishName": "EarthHorse",
+      "element": "tho",
+      "tier": 3,
+      "assetName": "EarthHorse",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Tho",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đồng Bằng Thổ Nguyên"
+    },
+    {
+      "id": "char053",
+      "name": "Thần Thú Edmund",
+      "englishName": "Edmund",
+      "element": "tho",
+      "tier": 3,
+      "assetName": "Edmund",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Tho",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đồng Bằng Thổ Nguyên"
+    },
+    {
+      "id": "char054",
+      "name": "Thần Thú Elirabeth",
+      "englishName": "Elirabeth",
+      "element": "tho",
+      "tier": 3,
+      "assetName": "Elirabeth",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Tho",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đồng Bằng Thổ Nguyên"
+    },
+    {
+      "id": "char055",
+      "name": "Thần Thú Ella",
+      "englishName": "Ella",
+      "element": "tho",
+      "tier": 3,
+      "assetName": "Ella",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Tho",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đồng Bằng Thổ Nguyên"
+    },
+    {
+      "id": "char056",
+      "name": "Thần Thú Enjin",
+      "englishName": "Enjin",
+      "element": "tho",
+      "tier": 3,
+      "assetName": "Enjin",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Tho",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đồng Bằng Thổ Nguyên"
+    },
+    {
+      "id": "char057",
+      "name": "Thần Thú FatherTime",
+      "englishName": "FatherTime",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "FatherTime",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char058",
+      "name": "Thần Thú FencerDana",
+      "englishName": "FencerDana",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "FencerDana",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char059",
+      "name": "Thần Thú FireAngel",
+      "englishName": "FireAngel",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "FireAngel",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char060",
+      "name": "Thần Thú Flynn",
+      "englishName": "Flynn",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "Flynn",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char061",
+      "name": "Thần Thú GPandora",
+      "englishName": "GPandora",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "GPandora",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char062",
+      "name": "Thần Thú GSDuessa",
+      "englishName": "GSDuessa",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "GSDuessa",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char063",
+      "name": "Thần Thú Garm",
+      "englishName": "Garm",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "Garm",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char064",
+      "name": "Thần Thú Gawain",
+      "englishName": "Gawain",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "Gawain",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char065",
+      "name": "Thần Thú Geva",
+      "englishName": "Geva",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "Geva",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char066",
+      "name": "Thần Thú Ghalworn",
+      "englishName": "Ghalworn",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "Ghalworn",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char067",
+      "name": "Thần Thú Gigad",
+      "englishName": "Gigad",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "Gigad",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char068",
+      "name": "Thần Thú GigandeathVolcanica",
+      "englishName": "GigandeathVolcanica",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "GigandeathVolcanica",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char069",
+      "name": "Thần Thú Gisella",
+      "englishName": "Gisella",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "Gisella",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char070",
+      "name": "Thần Thú GoblinGove",
+      "englishName": "GoblinGove",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "GoblinGove",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char071",
+      "name": "Thần Thú GoblinKing",
+      "englishName": "GoblinKing",
+      "element": "moc",
+      "tier": 5,
+      "assetName": "GoblinKing",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 200,
+        "attack": 100,
+        "defense": 90,
+        "speed": 80,
+        "magic": 90
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 5,
+      "rarity": "legendary",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char072",
+      "name": "Thần Thú GodWarriorIshtar",
+      "englishName": "GodWarriorIshtar",
+      "element": "moc",
+      "tier": 5,
+      "assetName": "GodWarriorIshtar",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 200,
+        "attack": 100,
+        "defense": 90,
+        "speed": 80,
+        "magic": 90
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 5,
+      "rarity": "legendary",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char073",
+      "name": "Thần Thú GoddessDuesa",
+      "englishName": "GoddessDuesa",
+      "element": "moc",
+      "tier": 5,
+      "assetName": "GoddessDuesa",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 200,
+        "attack": 100,
+        "defense": 90,
+        "speed": 80,
+        "magic": 90
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 5,
+      "rarity": "legendary",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char074",
+      "name": "Thần Thú GreaterMimik",
+      "englishName": "GreaterMimik",
+      "element": "moc",
+      "tier": 4,
+      "assetName": "GreaterMimik",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 150,
+        "attack": 85,
+        "defense": 75,
+        "speed": 75,
+        "magic": 75
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 10,
+      "rarity": "epic",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char075",
+      "name": "Thần Thú Grunt",
+      "englishName": "Grunt",
+      "element": "moc",
+      "tier": 1,
+      "assetName": "Grunt",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 80,
+        "attack": 50,
+        "defense": 40,
+        "speed": 60,
+        "magic": 40
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 25,
+      "rarity": "common",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char076",
+      "name": "Thần Thú Hades",
+      "englishName": "Hades",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "Hades",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char077",
+      "name": "Thần Thú Harbinger",
+      "englishName": "Harbinger",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "Harbinger",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char078",
+      "name": "Thần Thú Hiyori",
+      "englishName": "Hiyori",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "Hiyori",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char079",
+      "name": "Thần Thú Horde",
+      "englishName": "Horde",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "Horde",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char080",
+      "name": "Thần Thú HuangLong",
+      "englishName": "HuangLong",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "HuangLong",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char081",
+      "name": "Thần Thú Hundred",
+      "englishName": "Hundred",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "Hundred",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char082",
+      "name": "Thần Thú HunterSlime",
+      "englishName": "HunterSlime",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "HunterSlime",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char083",
+      "name": "Thần Thú IceDemonAura",
+      "englishName": "IceDemonAura",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "IceDemonAura",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char084",
+      "name": "Thần Thú Ignis",
+      "englishName": "Ignis",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "Ignis",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char085",
+      "name": "Thần Thú Ilnoct",
+      "englishName": "Ilnoct",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "Ilnoct",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char086",
+      "name": "Thần Thú Insectqueen",
+      "englishName": "Insectqueen",
+      "element": "hoa",
+      "tier": 5,
+      "assetName": "Insectqueen",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 200,
+        "attack": 100,
+        "defense": 90,
+        "speed": 80,
+        "magic": 90
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 5,
+      "rarity": "legendary",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char087",
+      "name": "Thần Thú Isis",
+      "englishName": "Isis",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "Isis",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char088",
+      "name": "Thần Thú Jiangshi",
+      "englishName": "Jiangshi",
+      "element": "tho",
+      "tier": 3,
+      "assetName": "Jiangshi",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Tho",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đồng Bằng Thổ Nguyên"
+    },
+    {
+      "id": "char089",
+      "name": "Thần Thú Jubokko",
+      "englishName": "Jubokko",
+      "element": "tho",
+      "tier": 3,
+      "assetName": "Jubokko",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Tho",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đồng Bằng Thổ Nguyên"
+    },
+    {
+      "id": "char090",
+      "name": "Thần Thú Kalkail",
+      "englishName": "Kalkail",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "Kalkail",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char091",
+      "name": "Thần Thú Karkinos",
+      "englishName": "Karkinos",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "Karkinos",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char092",
+      "name": "Thần Thú KingArchial",
+      "englishName": "KingArchial",
+      "element": "kim",
+      "tier": 5,
+      "assetName": "KingArchial",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 200,
+        "attack": 100,
+        "defense": 90,
+        "speed": 80,
+        "magic": 90
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 5,
+      "rarity": "legendary",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char093",
+      "name": "Thần Thú KingArthur",
+      "englishName": "KingArthur",
+      "element": "kim",
+      "tier": 5,
+      "assetName": "KingArthur",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 200,
+        "attack": 100,
+        "defense": 90,
+        "speed": 80,
+        "magic": 90
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 5,
+      "rarity": "legendary",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char094",
+      "name": "Thần Thú Kitsune",
+      "englishName": "Kitsune",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "Kitsune",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char095",
+      "name": "Thần Thú LKAnsellus",
+      "englishName": "LKAnsellus",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "LKAnsellus",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char096",
+      "name": "Thần Thú LKArri",
+      "englishName": "LKArri",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "LKArri",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char097",
+      "name": "Thần Thú LKCroix",
+      "englishName": "LKCroix",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "LKCroix",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char098",
+      "name": "Thần Thú LKSen",
+      "englishName": "LKSen",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "LKSen",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char099",
+      "name": "Thần Thú Ladon",
+      "englishName": "Ladon",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "Ladon",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char100",
+      "name": "Thần Thú LegendaryKnightJeanne",
+      "englishName": "LegendaryKnightJeanne",
+      "element": "kim",
+      "tier": 5,
+      "assetName": "LegendaryKnightJeanne",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 200,
+        "attack": 100,
+        "defense": 90,
+        "speed": 80,
+        "magic": 90
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 5,
+      "rarity": "legendary",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char101",
+      "name": "Thần Thú LegendaryKnightSerat",
+      "englishName": "LegendaryKnightSerat",
+      "element": "kim",
+      "tier": 5,
+      "assetName": "LegendaryKnightSerat",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 200,
+        "attack": 100,
+        "defense": 90,
+        "speed": 80,
+        "magic": 90
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 5,
+      "rarity": "legendary",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char102",
+      "name": "Thần Thú LichWarlord",
+      "englishName": "LichWarlord",
+      "element": "moc",
+      "tier": 4,
+      "assetName": "LichWarlord",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 150,
+        "attack": 85,
+        "defense": 75,
+        "speed": 75,
+        "magic": 75
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 10,
+      "rarity": "epic",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char103",
+      "name": "Thần Thú LifeReaper",
+      "englishName": "LifeReaper",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "LifeReaper",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char104",
+      "name": "Thần Thú LightDragon",
+      "englishName": "LightDragon",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "LightDragon",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char105",
+      "name": "Thần Thú LordUnderworld",
+      "englishName": "LordUnderworld",
+      "element": "moc",
+      "tier": 4,
+      "assetName": "LordUnderworld",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 150,
+        "attack": 85,
+        "defense": 75,
+        "speed": 75,
+        "magic": 75
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 10,
+      "rarity": "epic",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char106",
+      "name": "Thần Thú Lucifer",
+      "englishName": "Lucifer",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "Lucifer",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char107",
+      "name": "Thần Thú MadLizardCryst",
+      "englishName": "MadLizardCryst",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "MadLizardCryst",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char108",
+      "name": "Thần Thú MagmaDragon",
+      "englishName": "MagmaDragon",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "MagmaDragon",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char109",
+      "name": "Thần Thú Manticora",
+      "englishName": "Manticora",
+      "element": "tho",
+      "tier": 3,
+      "assetName": "Manticora",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Tho",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đồng Bằng Thổ Nguyên"
+    },
+    {
+      "id": "char110",
+      "name": "Thần Thú MantisOrchid",
+      "englishName": "MantisOrchid",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "MantisOrchid",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char111",
+      "name": "Thần Thú MantisSkullHunter",
+      "englishName": "MantisSkullHunter",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "MantisSkullHunter",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char112",
+      "name": "Thần Thú MechaSnake",
+      "englishName": "MechaSnake",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "MechaSnake",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char113",
+      "name": "Thần Thú Medusa",
+      "englishName": "Medusa",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "Medusa",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char114",
+      "name": "Thần Thú Meltera",
+      "englishName": "Meltera",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "Meltera",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char115",
+      "name": "Thần Thú MermaidWarrior",
+      "englishName": "MermaidWarrior",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "MermaidWarrior",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char116",
+      "name": "Thần Thú Michael",
+      "englishName": "Michael",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "Michael",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char117",
+      "name": "Thần Thú Midas",
+      "englishName": "Midas",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "Midas",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char118",
+      "name": "Thần Thú MknightGoldnharl",
+      "englishName": "MknightGoldnharl",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "MknightGoldnharl",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char119",
+      "name": "Thần Thú Mordred",
+      "englishName": "Mordred",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "Mordred",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char120",
+      "name": "Thần Thú Mountoll",
+      "englishName": "Mountoll",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "Mountoll",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char121",
+      "name": "Thần Thú MysticalAlchemistKalmulon",
+      "englishName": "MysticalAlchemistKalmulon",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "MysticalAlchemistKalmulon",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char122",
+      "name": "Thần Thú MythicalStag",
+      "englishName": "MythicalStag",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "MythicalStag",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char123",
+      "name": "Thần Thú Nage",
+      "englishName": "Nage",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "Nage",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char124",
+      "name": "Thần Thú NubraLion",
+      "englishName": "NubraLion",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "NubraLion",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char125",
+      "name": "Thần Thú Ogmios",
+      "englishName": "Ogmios",
+      "element": "tho",
+      "tier": 3,
+      "assetName": "Ogmios",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Tho",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đồng Bằng Thổ Nguyên"
+    },
+    {
+      "id": "char126",
+      "name": "Thần Thú OgreOut",
+      "englishName": "OgreOut",
+      "element": "tho",
+      "tier": 3,
+      "assetName": "OgreOut",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Tho",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đồng Bằng Thổ Nguyên"
+    },
+    {
+      "id": "char127",
+      "name": "Thần Thú OrcKing",
+      "englishName": "OrcKing",
+      "element": "tho",
+      "tier": 5,
+      "assetName": "OrcKing",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 200,
+        "attack": 100,
+        "defense": 90,
+        "speed": 80,
+        "magic": 90
+      },
+      "description": "Thần thú thuộc hệ Tho",
+      "captureRate": 5,
+      "rarity": "legendary",
+      "region": "Đồng Bằng Thổ Nguyên"
+    },
+    {
+      "id": "char128",
+      "name": "Thần Thú OriginatorAzathoth",
+      "englishName": "OriginatorAzathoth",
+      "element": "tho",
+      "tier": 3,
+      "assetName": "OriginatorAzathoth",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Tho",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đồng Bằng Thổ Nguyên"
+    },
+    {
+      "id": "char129",
+      "name": "Thần Thú Osiris",
+      "englishName": "Osiris",
+      "element": "tho",
+      "tier": 3,
+      "assetName": "Osiris",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Tho",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đồng Bằng Thổ Nguyên"
+    },
+    {
+      "id": "char130",
+      "name": "Thần Thú Overmind",
+      "englishName": "Overmind",
+      "element": "tho",
+      "tier": 3,
+      "assetName": "Overmind",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Tho",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đồng Bằng Thổ Nguyên"
+    },
+    {
+      "id": "char131",
+      "name": "Thần Thú ParrotKing",
+      "englishName": "ParrotKing",
+      "element": "kim",
+      "tier": 5,
+      "assetName": "ParrotKing",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 200,
+        "attack": 100,
+        "defense": 90,
+        "speed": 80,
+        "magic": 90
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 5,
+      "rarity": "legendary",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char132",
+      "name": "Thần Thú Phoenix",
+      "englishName": "Phoenix",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "Phoenix",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char133",
+      "name": "Thần Thú Pizarro",
+      "englishName": "Pizarro",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "Pizarro",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char134",
+      "name": "Thần Thú Poseidon",
+      "englishName": "Poseidon",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "Poseidon",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char135",
+      "name": "Thần Thú PrimalD",
+      "englishName": "PrimalD",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "PrimalD",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char136",
+      "name": "Thần Thú QueenShaccad",
+      "englishName": "QueenShaccad",
+      "element": "moc",
+      "tier": 5,
+      "assetName": "QueenShaccad",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 200,
+        "attack": 100,
+        "defense": 90,
+        "speed": 80,
+        "magic": 90
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 5,
+      "rarity": "legendary",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char137",
+      "name": "Thần Thú RADIANCEeldritchknight",
+      "englishName": "RADIANCEeldritchknight",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "RADIANCEeldritchknight",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char138",
+      "name": "Thần Thú Radulac",
+      "englishName": "Radulac",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "Radulac",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char139",
+      "name": "Thần Thú Rafflesia",
+      "englishName": "Rafflesia",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "Rafflesia",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char140",
+      "name": "Thần Thú Ravager",
+      "englishName": "Ravager",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "Ravager",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char141",
+      "name": "Thần Thú Ravus",
+      "englishName": "Ravus",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "Ravus",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char142",
+      "name": "Thần Thú Regulus",
+      "englishName": "Regulus",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "Regulus",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char143",
+      "name": "Thần Thú Remment",
+      "englishName": "Remment",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "Remment",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char144",
+      "name": "Thần Thú RoyalGuardsmen",
+      "englishName": "RoyalGuardsmen",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "RoyalGuardsmen",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char145",
+      "name": "Thần Thú RunicStoneGolem",
+      "englishName": "RunicStoneGolem",
+      "element": "tho",
+      "tier": 3,
+      "assetName": "RunicStoneGolem",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Tho",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đồng Bằng Thổ Nguyên"
+    },
+    {
+      "id": "char146",
+      "name": "Thần Thú SKXoer",
+      "englishName": "SKXoer",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "SKXoer",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char147",
+      "name": "Thần Thú Saggitarius",
+      "englishName": "Saggitarius",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "Saggitarius",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char148",
+      "name": "Thần Thú ScarletWyrm",
+      "englishName": "ScarletWyrm",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "ScarletWyrm",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char149",
+      "name": "Thần Thú SeaDragon",
+      "englishName": "SeaDragon",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "SeaDragon",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char150",
+      "name": "Thần Thú Sensayu",
+      "englishName": "Sensayu",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "Sensayu",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char151",
+      "name": "Thần Thú ShaccadDestroyer",
+      "englishName": "ShaccadDestroyer",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "ShaccadDestroyer",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char152",
+      "name": "Thần Thú Shaccad",
+      "englishName": "Shaccad",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "Shaccad",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char153",
+      "name": "Thần Thú ShianteDevourerofSouls",
+      "englishName": "ShianteDevourerofSouls",
+      "element": "tho",
+      "tier": 3,
+      "assetName": "ShianteDevourerofSouls",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Tho",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đồng Bằng Thổ Nguyên"
+    },
+    {
+      "id": "char154",
+      "name": "Thần Thú ShieldKnightess",
+      "englishName": "ShieldKnightess",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "ShieldKnightess",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char155",
+      "name": "Thần Thú ShinigamiP",
+      "englishName": "ShinigamiP",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "ShinigamiP",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char156",
+      "name": "Thần Thú Skoll",
+      "englishName": "Skoll",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "Skoll",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char157",
+      "name": "Thần Thú SlimeBossGolgotha",
+      "englishName": "SlimeBossGolgotha",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "SlimeBossGolgotha",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char158",
+      "name": "Thần Thú SlimeDragonQuolot",
+      "englishName": "SlimeDragonQuolot",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "SlimeDragonQuolot",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char159",
+      "name": "Thần Thú SlimeNinja",
+      "englishName": "SlimeNinja",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "SlimeNinja",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char160",
+      "name": "Thần Thú Snek",
+      "englishName": "Snek",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "Snek",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char161",
+      "name": "Thần Thú SnowV",
+      "englishName": "SnowV",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "SnowV",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char162",
+      "name": "Thần Thú Sobek",
+      "englishName": "Sobek",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "Sobek",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char163",
+      "name": "Thần Thú Soulless",
+      "englishName": "Soulless",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "Soulless",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char164",
+      "name": "Thần Thú SovereignDragon",
+      "englishName": "SovereignDragon",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "SovereignDragon",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char165",
+      "name": "Thần Thú SpiritFighter",
+      "englishName": "SpiritFighter",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "SpiritFighter",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char166",
+      "name": "Thần Thú SunGoddess",
+      "englishName": "SunGoddess",
+      "element": "hoa",
+      "tier": 5,
+      "assetName": "SunGoddess",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 200,
+        "attack": 100,
+        "defense": 90,
+        "speed": 80,
+        "magic": 90
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 5,
+      "rarity": "legendary",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char167",
+      "name": "Thần Thú SwordShieldValk",
+      "englishName": "SwordShieldValk",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "SwordShieldValk",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char168",
+      "name": "Thần Thú Tantalus",
+      "englishName": "Tantalus",
+      "element": "tho",
+      "tier": 3,
+      "assetName": "Tantalus",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Tho",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đồng Bằng Thổ Nguyên"
+    },
+    {
+      "id": "char169",
+      "name": "Thần Thú Terraos",
+      "englishName": "Terraos",
+      "element": "tho",
+      "tier": 3,
+      "assetName": "Terraos",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Tho",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đồng Bằng Thổ Nguyên"
+    },
+    {
+      "id": "char170",
+      "name": "Thần Thú Thanatos",
+      "englishName": "Thanatos",
+      "element": "tho",
+      "tier": 3,
+      "assetName": "Thanatos",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Tho",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đồng Bằng Thổ Nguyên"
+    },
+    {
+      "id": "char171",
+      "name": "Thần Thú TheFallen",
+      "englishName": "TheFallen",
+      "element": "tho",
+      "tier": 3,
+      "assetName": "TheFallen",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Tho",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đồng Bằng Thổ Nguyên"
+    },
+    {
+      "id": "char172",
+      "name": "Thần Thú Trangor",
+      "englishName": "Trangor",
+      "element": "tho",
+      "tier": 3,
+      "assetName": "Trangor",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Tho",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đồng Bằng Thổ Nguyên"
+    },
+    {
+      "id": "char173",
+      "name": "Thần Thú UltimateWeapon",
+      "englishName": "UltimateWeapon",
+      "element": "kim",
+      "tier": 5,
+      "assetName": "UltimateWeapon",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 200,
+        "attack": 100,
+        "defense": 90,
+        "speed": 80,
+        "magic": 90
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 5,
+      "rarity": "legendary",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char174",
+      "name": "Thần Thú UndeadMage",
+      "englishName": "UndeadMage",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "UndeadMage",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char175",
+      "name": "Thần Thú Unicorn",
+      "englishName": "Unicorn",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "Unicorn",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char176",
+      "name": "Thần Thú Urmica",
+      "englishName": "Urmica",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "Urmica",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char177",
+      "name": "Thần Thú Valhalla",
+      "englishName": "Valhalla",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "Valhalla",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char178",
+      "name": "Thần Thú ValkFara",
+      "englishName": "ValkFara",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "ValkFara",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char179",
+      "name": "Thần Thú VampKaiser",
+      "englishName": "VampKaiser",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "VampKaiser",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char180",
+      "name": "Thần Thú Virgel",
+      "englishName": "Virgel",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "Virgel",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char181",
+      "name": "Thần Thú VoidollMistress",
+      "englishName": "VoidollMistress",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "VoidollMistress",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char182",
+      "name": "Thần Thú Weretiger",
+      "englishName": "Weretiger",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "Weretiger",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char183",
+      "name": "Thần Thú Wolfbull",
+      "englishName": "Wolfbull",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "Wolfbull",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char184",
+      "name": "Thần Thú Wukong",
+      "englishName": "Wukong",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "Wukong",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char185",
+      "name": "Thần Thú Ydro",
+      "englishName": "Ydro",
+      "element": "tho",
+      "tier": 3,
+      "assetName": "Ydro",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Tho",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đồng Bằng Thổ Nguyên"
+    },
+    {
+      "id": "char186",
+      "name": "Thần Thú Yukino",
+      "englishName": "Yukino",
+      "element": "tho",
+      "tier": 3,
+      "assetName": "Yukino",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Tho",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đồng Bằng Thổ Nguyên"
+    },
+    {
+      "id": "char187",
+      "name": "Thần Thú Zefir",
+      "englishName": "Zefir",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "Zefir",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char188",
+      "name": "Thần Thú Zeograth",
+      "englishName": "Zeograth",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "Zeograth",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char189",
+      "name": "Thần Thú ZeroMachina",
+      "englishName": "ZeroMachina",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "ZeroMachina",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char190",
+      "name": "Thần Thú Zidh",
+      "englishName": "Zidh",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "Zidh",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char191",
+      "name": "Thần Thú ZodiacCancer",
+      "englishName": "ZodiacCancer",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "ZodiacCancer",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char192",
+      "name": "Thần Thú ZodiacSagittarius",
+      "englishName": "ZodiacSagittarius",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "ZodiacSagittarius",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char193",
+      "name": "Thần Thú amalgamate",
+      "englishName": "amalgamate",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "amalgamate",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char194",
+      "name": "Thần Thú crababoon",
+      "englishName": "crababoon",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "crababoon",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char195",
+      "name": "Thần Thú frostlich",
+      "englishName": "frostlich",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "frostlich",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char196",
+      "name": "Thần Thú gigaGazer",
+      "englishName": "gigaGazer",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "gigaGazer",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char197",
+      "name": "Thần Thú mSnail",
+      "englishName": "mSnail",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "mSnail",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char198",
+      "name": "Thần Thú mechascorp",
+      "englishName": "mechascorp",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "mechascorp",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    },
+    {
+      "id": "char199",
+      "name": "Thần Thú megalodile",
+      "englishName": "megalodile",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "megalodile",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char200",
+      "name": "Thần Thú qBee",
+      "englishName": "qBee",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "qBee",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char201",
+      "name": "Thần Thú sunPriestess",
+      "englishName": "sunPriestess",
+      "element": "hoa",
+      "tier": 3,
+      "assetName": "sunPriestess",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Hoa",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Hỏa Sơn"
+    },
+    {
+      "id": "char202",
+      "name": "Thần Thú titanoboa",
+      "englishName": "titanoboa",
+      "element": "tho",
+      "tier": 3,
+      "assetName": "titanoboa",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Tho",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đồng Bằng Thổ Nguyên"
+    },
+    {
+      "id": "char203",
+      "name": "Thần Thú valdrekk",
+      "englishName": "valdrekk",
+      "element": "moc",
+      "tier": 3,
+      "assetName": "valdrekk",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Moc",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Rừng Mộc Lâm"
+    },
+    {
+      "id": "char204",
+      "name": "Thần Thú wDeath",
+      "englishName": "wDeath",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "wDeath",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char205",
+      "name": "Thần Thú warmoth",
+      "englishName": "warmoth",
+      "element": "thuy",
+      "tier": 3,
+      "assetName": "warmoth",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Thuy",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đầm Thủy Trạch"
+    },
+    {
+      "id": "char206",
+      "name": "Thần Thú ygg",
+      "englishName": "ygg",
+      "element": "tho",
+      "tier": 3,
+      "assetName": "ygg",
+      "hasSettings": true,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Tho",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Đồng Bằng Thổ Nguyên"
+    },
+    {
+      "id": "char207",
+      "name": "Thần Thú zVirgo",
+      "englishName": "zVirgo",
+      "element": "kim",
+      "tier": 3,
+      "assetName": "zVirgo",
+      "hasSettings": false,
+      "animations": {
+        "idle": "Idle",
+        "attack": "Attack A",
+        "damage": "Damage"
+      },
+      "stats": {
+        "hp": 120,
+        "attack": 70,
+        "defense": 60,
+        "speed": 70,
+        "magic": 60
+      },
+      "description": "Thần thú thuộc hệ Kim",
+      "captureRate": 15,
+      "rarity": "rare",
+      "region": "Núi Kim Sơn"
+    }
+  ]
+}

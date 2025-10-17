@@ -31,7 +31,7 @@
 
 ### 2. Enhanced DragonBonesManager (src/core/DragonBonesManager.ts)
 
-**Lines**: 232 (enhanced from original 125 lines, +107 lines of new features)
+**Lines**: 232 (was 125 before enhancements, added +107 lines of new features)
 
 **New Methods Added**:
 ```typescript

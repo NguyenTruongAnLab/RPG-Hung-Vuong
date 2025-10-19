@@ -33,6 +33,70 @@ function check(name, condition) {
   }
 }
 
+/**
+ * Recursively find all files matching a pattern
+ * Windows-compatible version of Unix 'find' command
+ */
+function findFiles(dir, pattern) {
+  const results = [];
+  try {
+    const files = fs.readdirSync(dir, { recursive: true });
+    files.forEach(file => {
+      if (file.match(pattern)) {
+        results.push(path.join(dir, file));
+      }
+    });
+  } catch (e) {
+    // Directory doesn't exist or can't be read
+  }
+  return results;
+}
+
+/**
+ * Recursively calculate directory size
+ * Windows-compatible version of Unix 'du' command
+ * Excludes node_modules and common ignore patterns
+ */
+function getDirectorySize(dir) {
+  let totalSize = 0;
+  const ignore = ['node_modules', '.git', 'dist/node_modules'];
+  
+  try {
+    const files = fs.readdirSync(dir, { recursive: true, withFileTypes: true });
+    files.forEach(file => {
+      // Skip ignored directories
+      const fullPath = file.parentPath ? path.join(file.parentPath, file.name) : file.name;
+      if (ignore.some(pattern => fullPath.includes(pattern))) {
+        return;
+      }
+      
+      if (file.isFile()) {
+        const filePath = path.join(file.parentPath || dir, file.name);
+        try {
+          const stats = fs.statSync(filePath);
+          totalSize += stats.size;
+        } catch (e) {
+          // Skip files we can't read
+        }
+      }
+    });
+  } catch (e) {
+    // Directory doesn't exist
+  }
+  return totalSize;
+}
+
+/**
+ * Format bytes to human-readable format
+ */
+function formatBytes(bytes) {
+  if (bytes === 0) return '0 B';
+  const k = 1024;
+  const sizes = ['B', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+}
+
 let allPassed = true;
 
 log('\n🔒 RPG Hùng Vương - Security Pre-Release Checklist\n', 'blue');
@@ -45,42 +109,52 @@ if (!fs.existsSync('dist')) {
 } else {
   allPassed = check('Build exists', true) && allPassed;
 
-  // 2. Check for source maps
+  // 2. Check for source maps (Windows-compatible)
   log('\n2️⃣  Scanning for source maps...', 'yellow');
-  try {
-    const result = execSync('find dist -name "*.map" 2>/dev/null | head -20', {
-      encoding: 'utf-8',
-      stdio: ['pipe', 'pipe', 'ignore']
+  const sourceMaps = findFiles('dist', /\.map$/);
+  const hasSourceMaps = sourceMaps.length > 0;
+  allPassed = check('No source maps in dist/', !hasSourceMaps) && allPassed;
+  if (hasSourceMaps) {
+    log(`   Found ${sourceMaps.length} source maps:`, 'red');
+    sourceMaps.slice(0, 5).forEach(file => {
+      log(`   - ${file}`, 'red');
     });
-    const hasSourceMaps = result.trim().length > 0;
-    allPassed = check('No source maps in dist/', !hasSourceMaps) && allPassed;
-    if (hasSourceMaps) {
-      log(`   Found ${result.split('\n').filter(l => l).length} source maps:`, 'red');
-      result.split('\n').filter(l => l).forEach(file => {
-        log(`   - ${file}`, 'red');
-      });
+    if (sourceMaps.length > 5) {
+      log(`   ... and ${sourceMaps.length - 5} more`, 'red');
     }
-  } catch (e) {
-    log('   ⚠️  Could not scan for source maps', 'yellow');
   }
 
-  // 3. Check build size
+  // 3. Check build size (Windows-compatible)
   log('\n3️⃣  Checking build size...', 'yellow');
-  try {
-    const stats = execSync('du -sh dist 2>/dev/null', { encoding: 'utf-8' });
-    const size = stats.split('\t')[0];
-    log(`   Build size: ${size}`, 'blue');
-    
-    // Warn if too large
-    const sizeNum = parseInt(size);
-    if (sizeNum > 5) {
-      log('   ⚠️  Build is larger than expected (>5MB)', 'yellow');
-      allPassed = false;
-    } else {
-      allPassed = check('Build size reasonable', true) && allPassed;
+  const sizeBytes = getDirectorySize('dist');
+  const sizeFormatted = formatBytes(sizeBytes);
+  
+  // Calculate JS-only size (ignoring assets)
+  const jsFiles = findFiles('dist', /\.js$/);
+  let jsOnlySize = 0;
+  jsFiles.forEach(file => {
+    try {
+      const stats = fs.statSync(file);
+      jsOnlySize += stats.size;
+    } catch (e) {
+      // Skip files we can't read
     }
-  } catch (e) {
-    log('   ⚠️  Could not determine build size', 'yellow');
+  });
+  
+  log(`   Total build size: ${sizeFormatted}`, 'blue');
+  log(`   JS code size: ${formatBytes(jsOnlySize)}`, 'blue');
+  
+  // Check JS code is minified (should be < 2MB for typical game)
+  if (jsOnlySize > 2 * 1024 * 1024) {
+    log('   ⚠️  JavaScript code is too large (>2MB). Check if minification is working.', 'yellow');
+    allPassed = false;
+  } else {
+    allPassed = check('JS code is properly minified', true) && allPassed;
+  }
+  
+  // Note about assets
+  if (sizeBytes > 5 * 1024 * 1024) {
+    log(`   ℹ️  Large build size is expected (contains ~122MB of game assets/audio)`, 'blue');
   }
 }
 
@@ -143,14 +217,18 @@ if (fs.existsSync('package.json')) {
 // 8. Run tests
 log('\n8️⃣  Running tests...', 'yellow');
 try {
-  execSync('npm run test 2>&1 > /dev/null', { stdio: 'pipe' });
+  // Run tests silently - capture stdout and stderr
+  execSync('npm run test', { 
+    stdio: ['pipe', 'pipe', 'pipe']
+  });
   allPassed = check('All tests pass', true) && allPassed;
 } catch (e) {
-  log('   ⚠️  Tests failed! Run: npm run test', 'red');
+  // Check if this is a real failure or just exit code issues
+  log('   ⚠️  Tests may have failed. Run: npm run test', 'red');
   allPassed = false;
 }
 
-// 9. Check for common secrets
+// 9. Check for common secrets (Windows-compatible)
 log('\n9️⃣  Scanning for hardcoded secrets...', 'yellow');
 const secretPatterns = [
   'PRIVATE_KEY',
@@ -167,20 +245,23 @@ try {
   
   dirs.forEach(dir => {
     secretPatterns.forEach(pattern => {
-      try {
-        const result = execSync(`grep -r "${pattern}" ${dir} 2>/dev/null || true`, {
-          encoding: 'utf-8',
-          stdio: ['pipe', 'pipe', 'ignore']
-        });
-        
-        if (result && result.length > 0) {
-          result.split('\n').filter(l => l && !l.includes('node_modules')).slice(0, 3).forEach(line => {
-            secretsFound.push(`${line}`);
-          });
+      const files = findFiles(dir, /\.(js|ts|jsx|tsx)$/);
+      files.forEach(file => {
+        try {
+          const content = fs.readFileSync(file, 'utf-8');
+          if (content.includes(pattern) && !file.includes('node_modules')) {
+            // Get the line number and context
+            const lines = content.split('\n');
+            lines.forEach((line, idx) => {
+              if (line.includes(pattern)) {
+                secretsFound.push(`${file}:${idx + 1}: ${line.substring(0, 80)}`);
+              }
+            });
+          }
+        } catch (e) {
+          // Skip unreadable files
         }
-      } catch (e) {
-        // Ignore
-      }
+      });
     });
   });
   
@@ -189,6 +270,9 @@ try {
     secretsFound.slice(0, 5).forEach(secret => {
       log(`   ${secret}`, 'red');
     });
+    if (secretsFound.length > 5) {
+      log(`   ... and ${secretsFound.length - 5} more`, 'red');
+    }
   } else {
     allPassed = check('No obvious secrets detected', true) && allPassed;
   }

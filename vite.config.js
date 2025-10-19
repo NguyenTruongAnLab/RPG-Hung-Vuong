@@ -10,15 +10,8 @@ export default defineConfig(({ command, mode }) => ({
     assetsDir: 'assets',
     
     // 🔒 SECURITY: Production optimizations
-    minify: 'terser', // Minify code - harder to reverse engineer
+    minify: 'esbuild', // Built-in to Vite, faster than terser, no external dependency
     sourcemap: false,  // 🔒 IMPORTANT: No source maps in production
-    terserOptions: {
-      compress: {
-        drop_console: true, // Remove console.log in production
-        drop_debugger: true
-      },
-      mangle: true // Obfuscate variable names
-    },
     
     // Code splitting for better caching
     rollupOptions: {

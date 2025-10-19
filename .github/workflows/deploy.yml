@@ -28,7 +28,16 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --verbose
+
+      - name: Verify Terser installed
+        run: |
+          if [ -d node_modules/terser ]; then
+            echo "✅ Terser is installed"
+          else
+            echo "⚠️ Terser not found, installing separately..."
+            npm install terser --save-dev
+          fi
 
       # 🔒 Security: Type check before build
       - name: Type Check

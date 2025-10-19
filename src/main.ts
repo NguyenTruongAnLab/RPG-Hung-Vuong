@@ -6,6 +6,7 @@
 import { Application } from 'pixi.js';
 import * as PIXI from 'pixi.js';
 import { SceneManager } from './core/SceneManager';
+import { AssetManager } from './core/AssetManager';
 import { CharacterSelectionScene } from './scenes/CharacterSelectionScene';
 import { OverworldScene } from './scenes/OverworldScene';
 
@@ -17,6 +18,11 @@ import { OverworldScene } from './scenes/OverworldScene';
  */
 async function startGame() {
   try {
+    // Initialize AssetManager first (handles Electron/web detection)
+    const assetManager = AssetManager.getInstance();
+    await assetManager.initialize();
+    console.log('✅ AssetManager initialized');
+    
     // Create PixiJS application with responsive sizing
     const app = new Application();
     // Note: previous defensive patch for PIXI.Container.addChild was removed.

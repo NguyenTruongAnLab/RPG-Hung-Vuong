@@ -47,9 +47,45 @@ export class AssetManager {
   private loadingPromises = new Map<string, Promise<DragonBonesAsset>>();
   private loadedCharacters = new Map<string, ExtendedDragonBonesAsset>();
   private loadingCharacters = new Map<string, Promise<ExtendedDragonBonesAsset>>();
+  private assetsPath: string = './assets';
+  private isInitialized: boolean = false;
 
   private constructor() {
     // Singleton pattern
+  }
+
+  /**
+   * Initialize AssetManager
+   * Must be called on application startup
+   * Detects whether running in Electron or browser
+   */
+  async initialize(): Promise<void> {
+    if (this.isInitialized) return;
+
+    try {
+      // Check if running in Electron
+      if (typeof window !== 'undefined' && (window as any).game?.getAssetsPath) {
+        const electronPath = await (window as any).game.getAssetsPath();
+        const isDevMode = await (window as any).game.isDevMode();
+
+        if (electronPath) {
+          this.assetsPath = electronPath;
+          console.log(`✅ [AssetManager] Using Electron decrypted assets: ${this.assetsPath}`);
+          console.log(`   Dev mode: ${isDevMode}`);
+        }
+      } else {
+        // Browser mode
+        this.assetsPath = './assets';
+        console.log('✅ [AssetManager] Using web assets (browser mode)');
+      }
+
+      this.isInitialized = true;
+    } catch (error) {
+      console.error('⚠️  [AssetManager] Failed to initialize:', error);
+      console.log('   Falling back to default assets path: ./assets');
+      this.assetsPath = './assets';
+      this.isInitialized = true;
+    }
   }
 
   /**

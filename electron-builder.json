@@ -1,0 +1,49 @@
+{
+  "appId": "com.rpg-hung-vuong.game",
+  "productName": "RPG Hùng Vương",
+  "directories": {
+    "buildResources": "assets/build",
+    "output": "release"
+  },
+  "files": [
+    "dist/**/*",
+    "node_modules/**/*",
+    "package.json",
+    "!node_modules/electron",
+    "!node_modules/electron-builder",
+    "assets.asar.enc",
+    "assets.meta.json"
+  ],
+  "win": {
+    "target": [
+      {
+        "target": "nsis",
+        "arch": ["x64"]
+      },
+      {
+        "target": "portable",
+        "arch": ["x64"]
+      }
+    ],
+    "certificateFile": null,
+    "certificatePassword": null,
+    "signingHashAlgorithms": ["sha256"]
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "RPG Hùng Vương",
+    "installerIcon": "assets/build/icon.ico",
+    "uninstallerIcon": "assets/build/icon.ico",
+    "installerHeaderIcon": "assets/build/icon.ico",
+    "artifactName": "RPG-Hung-Vuong-${version}.${ext}"
+  },
+  "portable": {
+    "artifactName": "RPG-Hung-Vuong-${version}-portable.${ext}"
+  },
+  "extraMetadata": {
+    "main": "dist/electron/main.js"
+  }
+}

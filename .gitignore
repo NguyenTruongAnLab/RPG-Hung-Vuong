@@ -28,6 +28,12 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# ⚠️ ENCRYPTED ASSET BUNDLES - DO NOT COMMIT
+# These are generated during build process only
+assets.asar.enc
+assets.asar
+assets.meta.json
+
 # ⚠️ LOCAL ASSETS - LARGE BINARY FILES (DO NOT COMMIT TO GIT)
 # These files are too large for GitHub. Keep them local only.
 # When cloning, you may need to generate or download these assets locally.

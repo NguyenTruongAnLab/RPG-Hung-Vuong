@@ -17,10 +17,16 @@ export class PlayerMovement {
    * Creates a new PlayerMovement component
    * 
    * @param body - The Matter.js body to control
-   * @param moveSpeed - Movement force multiplier (default: 0.015)
-   * @param maxVelocity - Maximum velocity (default: 5)
+   * @param moveSpeed - Movement speed in pixels per second (default: 2000 = 10x speed)
+   * @param maxVelocity - Maximum velocity in pixels per second (default: 2500)
+   * 
+   * Speed guidelines:
+   * - 1500 = Slow walking
+   * - 2000 = Normal walking (default) [10x faster]
+   * - 3000 = Fast running
+   * - 4000+ = Very fast/sprint
    */
-  constructor(body: Matter.Body, moveSpeed: number = 0.015, maxVelocity: number = 5) {
+  constructor(body: Matter.Body, moveSpeed: number = 2000, maxVelocity: number = 2500) {
     this.body = body;
     this.moveSpeed = moveSpeed;
     this.maxVelocity = maxVelocity;
@@ -41,9 +47,17 @@ export class PlayerMovement {
     if (direction.x === 0 && direction.y === 0) {
       return;
     }
-
-    // Apply force in direction
-    applyForceInDirection(this.body, direction, this.moveSpeed);
+    
+    // Convert speed from pixels/second to pixels/tick
+    // Matter.js physics runs at ~60 FPS (16.67ms per tick)
+    // So we divide by 60 to get per-tick velocity
+    const velocityPerTick = this.moveSpeed / 60;
+    
+    // Set velocity directly (more responsive than applyForce)
+    Matter.Body.setVelocity(this.body, {
+      x: direction.x * velocityPerTick,
+      y: direction.y * velocityPerTick
+    });
 
     // Clamp velocity to max
     this.clampVelocity();
@@ -56,9 +70,12 @@ export class PlayerMovement {
   private clampVelocity(): void {
     const velocity = this.body.velocity;
     const speed = Math.sqrt(velocity.x * velocity.x + velocity.y * velocity.y);
+    
+    // Convert max velocity from pixels/second to pixels/tick
+    const maxVelocityPerTick = this.maxVelocity / 60;
 
-    if (speed > this.maxVelocity) {
-      const scale = this.maxVelocity / speed;
+    if (speed > maxVelocityPerTick) {
+      const scale = maxVelocityPerTick / speed;
       Matter.Body.setVelocity(this.body, {
         x: velocity.x * scale,
         y: velocity.y * scale

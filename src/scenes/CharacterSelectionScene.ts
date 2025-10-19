@@ -21,7 +21,9 @@ export class CharacterSelectionScene extends Scene {
   private maxPartySize = 1; // Only select 1 starting companion
   private currentElement = 'kim';
   private currentPage = 0;
-  private monstersPerPage = 12;
+  private monstersPerPage = 18; // 6 columns x 3 rows
+  private gridColumns = 6; // Increased to 6 columns
+  private gridRows = 3;
   private sceneManager: SceneManager;
   private loadedAnimations: Map<string, DragonBonesAnimation> = new Map();
   
@@ -42,12 +44,16 @@ export class CharacterSelectionScene extends Scene {
 
   private createBackground(): void {
     const bg = new PIXI.Graphics();
-    bg.rect(0, 0, 960, 640);
+    const width = this.app.screen.width;
+    const height = this.app.screen.height;
+    bg.rect(0, 0, width, height);
     bg.fill(0x1a1a2e);
     this.addChild(bg);
   }
   
   private createTitle(): void {
+    const width = this.app.screen.width;
+    
     const title = new PIXI.Text({
       text: 'Chọn Thần Thú Bạn Đầu Tiên',
       style: {
@@ -58,23 +64,31 @@ export class CharacterSelectionScene extends Scene {
       }
     });
     title.anchor.set(0.5);
-    title.position.set(480, 40);
+    title.position.set(width / 2, 40);
     this.addChild(title);
   }
   
   private createElementTabs(): void {
+    const width = this.app.screen.width;
     const elements = ['kim', 'moc', 'thuy', 'hoa', 'tho'];
     const colors = [0xC0C0C0, 0x4CAF50, 0x2196F3, 0xFF5722, 0x795548];
+    
+    // Center tabs horizontally
+    const tabWidth = 100;
+    const tabSpacing = 120;
+    const totalWidth = elements.length * tabSpacing;
+    const startX = (width - totalWidth) / 2;
     
     elements.forEach((element, index) => {
       const tab = new PIXI.Graphics();
       const isSelected = element === this.currentElement;
       
-      tab.roundRect(0, 0, 100, 50, 10);
+      tab.roundRect(0, 0, tabWidth, 50, 10);
       tab.fill(isSelected ? colors[index] : 0x333333);
-      tab.position.set(80 + index * 120, 80);
+      tab.position.set(startX + index * tabSpacing, 80);
       tab.interactive = true;
       tab.cursor = 'pointer';
+      tab.label = 'element-tab'; // Add label for cleanup
       
       tab.on('pointerdown', () => {
         this.currentElement = element;
@@ -91,7 +105,7 @@ export class CharacterSelectionScene extends Scene {
         }
       });
       label.anchor.set(0.5);
-      label.position.set(50, 25);
+      label.position.set(tabWidth / 2, 25);
       tab.addChild(label);
       
       this.addChild(tab);
@@ -108,9 +122,34 @@ export class CharacterSelectionScene extends Scene {
     const start = this.currentPage * this.monstersPerPage;
     const pageMonsters = monsters.slice(start, start + this.monstersPerPage);
     
-    // Display monsters in grid
+    // FILL THE SCREEN - Calculate maximum card size
+    const screenWidth = this.app.screen.width;
+    const screenHeight = this.app.screen.height;
+    
+    // Use 70% of screen width for grid (party panel uses remaining 30%)
+    const gridAreaWidth = screenWidth * 0.7;
+    const cardSpacing = 15;
+    
+    // Calculate card size to FILL available width
+    const maxCardWidth = (gridAreaWidth - (this.gridColumns + 1) * cardSpacing) / this.gridColumns;
+    
+    // Available height: from tabs (140) to navigation buttons (leave 120px for nav+buttons)
+    const gridStartY = 140;
+    const bottomReserved = 120; // Minimal space for nav + buttons
+    const availableHeight = screenHeight - gridStartY - bottomReserved;
+    const maxCardHeight = (availableHeight - (this.gridRows + 1) * cardSpacing) / this.gridRows;
+    
+    // Use MAXIMUM size to fill screen
+    const cardSize = Math.floor(Math.max(maxCardWidth, maxCardHeight));
+    
+    // Display monsters in 6-column grid
     pageMonsters.forEach((monster, index) => {
-      const card = this.createMonsterCard(monster, index);
+      const col = index % this.gridColumns;
+      const row = Math.floor(index / this.gridColumns);
+      const x = 20 + col * (cardSize + cardSpacing);
+      const y = gridStartY + row * (cardSize + cardSpacing);
+      
+      const card = this.createMonsterCard(monster, x, y, cardSize);
       this.addChild(card);
     });
     
@@ -118,56 +157,58 @@ export class CharacterSelectionScene extends Scene {
     this.createPageNavigation(monsters.length);
   }
   
-  private createMonsterCard(monster: any, index: number): PIXI.Container {
+  private createMonsterCard(monster: any, x: number, y: number, cardSize: number): PIXI.Container {
     const card = new PIXI.Container();
     card.label = 'monster-card';
-    
-    const col = index % 4;
-    const row = Math.floor(index / 4);
-    card.position.set(80 + col * 140, 160 + row * 140);
+    card.position.set(x, y);
     
     // Card background
     const isSelected = this.selectedMonsters.includes(monster.assetName);
     const bg = new PIXI.Graphics();
-    bg.roundRect(0, 0, 130, 130, 10);
+    bg.roundRect(0, 0, cardSize, cardSize, 10);
     bg.fill(isSelected ? 0x4CAF50 : 0x333333);
     
     // Border highlight
     if (isSelected) {
-      bg.roundRect(0, 0, 130, 130, 10);
+      bg.roundRect(0, 0, cardSize, cardSize, 10);
       bg.stroke({ width: 3, color: 0xFFD700 });
     }
     
     card.addChild(bg);
     
-    // Load DragonBones animation (async)
-    this.loadMonsterPreview(monster.assetName, card);
+    // Preview area (70% of card height) - reduced gap
+    const previewHeight = cardSize * 0.7;
+    this.loadMonsterPreview(monster.assetName, card, cardSize, previewHeight);
     
-    // Name
+    // Info area (30% of card height) - closer to character feet
+    const infoY = previewHeight;
+    const infoHeight = cardSize - previewHeight;
+    
+    // Name - positioned right below preview
     const name = new PIXI.Text({
       text: monster.name,
       style: {
-        fontSize: 11,
+        fontSize: Math.min(12, cardSize / 12),
         fill: 0xFFFFFF,
         wordWrap: true,
-        wordWrapWidth: 120,
+        wordWrapWidth: cardSize - 10,
         align: 'center'
       }
     });
     name.anchor.set(0.5, 0);
-    name.position.set(65, 80);
+    name.position.set(cardSize / 2, infoY + 5); // Small gap
     card.addChild(name);
     
     // Tier stars
     const tier = new PIXI.Text({
       text: '★'.repeat(monster.tier),
       style: {
-        fontSize: 14,
+        fontSize: Math.min(14, cardSize / 10),
         fill: 0xFFD700
       }
     });
     tier.anchor.set(0.5);
-    tier.position.set(65, 110);
+    tier.position.set(cardSize / 2, infoY + name.height + 15);
     card.addChild(tier);
     
     // Make interactive
@@ -181,7 +222,7 @@ export class CharacterSelectionScene extends Scene {
   /**
    * Load DragonBones preview for a monster card
    */
-  private async loadMonsterPreview(assetName: string, card: PIXI.Container): Promise<void> {
+  private async loadMonsterPreview(assetName: string, card: PIXI.Container, cardWidth: number, previewHeight: number): Promise<void> {
     try {
       // Show loading indicator
       const loadingText = new PIXI.Text({
@@ -192,7 +233,7 @@ export class CharacterSelectionScene extends Scene {
         }
       });
       loadingText.anchor.set(0.5);
-      loadingText.position.set(65, 45);
+      loadingText.position.set(cardWidth / 2, previewHeight / 2);
       loadingText.label = 'loading';
       card.addChild(loadingText);
       
@@ -205,8 +246,12 @@ export class CharacterSelectionScene extends Scene {
         throw new Error(`DragonBones display not created for ${assetName}`);
       }
       
-      display.position.set(65, 45);
-      display.scale.set(0.12);
+      // Set initial safe scale to avoid mesh buffer errors
+      display.scale.set(0.2);
+      
+      // Position in center of preview area, 20% lower
+      const offsetY = previewHeight * 0.2;  // 20% lower offset
+      display.position.set(cardWidth / 2, previewHeight / 2 + offsetY);
       
       // Validate before playing
       if (!display.animation) {
@@ -216,6 +261,31 @@ export class CharacterSelectionScene extends Scene {
       dbAnim.play('Idle');
       (display as any).name = 'db-preview';
       card.addChild(display);
+      
+      // NOW calculate bounds after display is added and rendered
+      setTimeout(() => {
+        try {
+          const bounds = display.getLocalBounds();
+          const charWidth = bounds.width;
+          const charHeight = bounds.height;
+          
+          // Calculate scale to fit character within preview area with padding
+          const maxWidth = cardWidth * 0.6;   // Use 60% of card width
+          const maxHeight = previewHeight * 0.8; // Use 80% of preview height
+          
+          let scale = 1;
+          if (charWidth > 0) scale = Math.min(scale, maxWidth / charWidth);
+          if (charHeight > 0) scale = Math.min(scale, maxHeight / charHeight);
+          
+          // Apply calculated scale
+          if (scale > 0 && isFinite(scale)) {
+            display.scale.set(scale);
+          }
+        } catch (e) {
+          // Bounds calculation failed, keep initial scale
+          console.warn(`Could not calculate bounds for ${assetName}:`, e);
+        }
+      }, 50);
       
       // Store for cleanup
       this.loadedAnimations.set(assetName, dbAnim);
@@ -238,7 +308,7 @@ export class CharacterSelectionScene extends Scene {
       // Fallback to colored circle
       const preview = new PIXI.Graphics();
       const monster = monsterDB.monsters.find(m => m.assetName === assetName);
-      preview.circle(65, 45, 30);
+      preview.circle(cardWidth / 2, previewHeight / 2, Math.min(cardWidth, previewHeight) * 0.3);
       preview.fill(this.getElementColor(monster?.element || 'kim'));
       (preview as any).name = 'fallback-preview';
       card.addChild(preview);
@@ -260,8 +330,17 @@ export class CharacterSelectionScene extends Scene {
   }
   
   private createPartyPanel(): void {
+    const width = this.app.screen.width;
+    const height = this.app.screen.height;
+    
+    // Position panel on right side, responsive
+    const panelWidth = Math.min(320, width * 0.25);
+    const panelHeight = Math.min(400, height * 0.6);
+    const panelX = width - panelWidth - 20;
+    const panelY = 140;
+    
     const panel = new PIXI.Graphics();
-    panel.roundRect(640, 160, 280, 380, 10);
+    panel.roundRect(panelX, panelY, panelWidth, panelHeight, 10);
     panel.fill({ color: 0x222222, alpha: 0.9 });
     panel.label = 'party-panel';
     this.addChild(panel);
@@ -274,16 +353,23 @@ export class CharacterSelectionScene extends Scene {
         fontWeight: 'bold'
       }
     });
-    title.position.set(700, 180);
+    title.position.set(panelX + 20, panelY + 20);
     title.label = 'party-panel';
     this.addChild(title);
   }
   
   private updatePartyPanel(): void {
+    const width = this.app.screen.width;
+    
     // Remove old party display
     this.children
       .filter(c => c.label === 'party-member')
       .forEach(c => this.removeChild(c));
+    
+    // Calculate panel position (same as createPartyPanel)
+    const panelWidth = Math.min(320, width * 0.25);
+    const panelX = width - panelWidth - 20;
+    const memberWidth = panelWidth - 40;
     
     // Display selected monsters
     this.selectedMonsters.forEach((assetName, index) => {
@@ -292,9 +378,9 @@ export class CharacterSelectionScene extends Scene {
       
       const member = new PIXI.Graphics();
       member.label = 'party-member';
-      member.roundRect(0, 0, 240, 70, 10);
+      member.roundRect(0, 0, memberWidth, 70, 10);
       member.fill(0x444444);
-      member.position.set(660, 220 + index * 85);
+      member.position.set(panelX + 20, 200 + index * 85);
       
       const nameText = new PIXI.Text({
         text: monster.name,
@@ -302,7 +388,7 @@ export class CharacterSelectionScene extends Scene {
           fontSize: 14,
           fill: 0xFFFFFF,
           wordWrap: true,
-          wordWrapWidth: 220
+          wordWrapWidth: memberWidth - 50
         }
       });
       nameText.position.set(10, 10);
@@ -326,7 +412,7 @@ export class CharacterSelectionScene extends Scene {
           fill: 0xFF5555
         }
       });
-      removeBtn.position.set(210, 25);
+      removeBtn.position.set(memberWidth - 30, 25);
       removeBtn.interactive = true;
       removeBtn.cursor = 'pointer';
       removeBtn.on('pointerdown', () => {
@@ -345,8 +431,13 @@ export class CharacterSelectionScene extends Scene {
       .filter(c => c.label === 'page-nav')
       .forEach(c => this.removeChild(c));
     
+    const width = this.app.screen.width;
+    const height = this.app.screen.height;
     const totalPages = Math.ceil(totalMonsters / this.monstersPerPage);
     if (totalPages <= 1) return;
+    
+    // Position nav at bottom, just above buttons (height - 80)
+    const navY = height - 80;
     
     // Previous button
     if (this.currentPage > 0) {
@@ -357,7 +448,7 @@ export class CharacterSelectionScene extends Scene {
           fill: 0xFFFFFF
         }
       });
-      prevBtn.position.set(50, 580);
+      prevBtn.position.set(width / 2 - 100, navY);
       prevBtn.interactive = true;
       prevBtn.cursor = 'pointer';
       prevBtn.on('pointerdown', () => {
@@ -377,7 +468,7 @@ export class CharacterSelectionScene extends Scene {
       }
     });
     pageText.anchor.set(0.5);
-    pageText.position.set(320, 590);
+    pageText.position.set(width / 2, navY);
     pageText.label = 'page-nav';
     this.addChild(pageText);
     
@@ -390,7 +481,7 @@ export class CharacterSelectionScene extends Scene {
           fill: 0xFFFFFF
         }
       });
-      nextBtn.position.set(580, 580);
+      nextBtn.position.set(width / 2 + 100, navY);
       nextBtn.interactive = true;
       nextBtn.cursor = 'pointer';
       nextBtn.on('pointerdown', () => {
@@ -403,13 +494,25 @@ export class CharacterSelectionScene extends Scene {
   }
   
   private createStartButton(): void {
+    const width = this.app.screen.width;
+    const height = this.app.screen.height;
+    
+    // Position at ABSOLUTE BOTTOM, right of center
+    const buttonY = height - 50; // 50px from bottom
+    const centerX = width / 2;
+    const buttonWidth = 200;
+    const spacing = 10;
+    
+    const container = new PIXI.Container();
+    container.position.set(centerX + spacing, buttonY);
+    container.label = 'start-button-container';
+    
     const button = new PIXI.Graphics();
-    button.roundRect(0, 0, 240, 50, 10);
+    button.roundRect(0, 0, buttonWidth, 50, 10);
     button.fill(0x4CAF50);
-    button.position.set(670, 560);
     button.interactive = true;
     button.cursor = 'pointer';
-    button.label = 'start-button';
+    button.eventMode = 'static';
     
     button.on('pointerdown', () => this.startGame());
     
@@ -422,20 +525,47 @@ export class CharacterSelectionScene extends Scene {
       }
     });
     label.anchor.set(0.5);
-    label.position.set(120, 25);
+    label.position.set(buttonWidth / 2, 25);
     button.addChild(label);
     
-    this.addChild(button);
+    // Add explanatory subtitle
+    const subtitle = new PIXI.Text({
+      text: 'Chơi Pokemon + Don\'t Starve',
+      style: {
+        fontSize: 11,
+        fill: 0xAAAAAA,
+        align: 'center',
+        fontStyle: 'italic'
+      }
+    });
+    subtitle.anchor.set(0.5, 0);
+    subtitle.position.set(buttonWidth / 2, 55);
+    
+    container.addChild(button);
+    container.addChild(subtitle);
+    this.addChild(container);
   }
   
   private createDemoButton(): void {
+    const width = this.app.screen.width;
+    const height = this.app.screen.height;
+    
+    // Position at ABSOLUTE BOTTOM, left of center
+    const buttonY = height - 50; // 50px from bottom
+    const centerX = width / 2;
+    const buttonWidth = 220;
+    const spacing = 10;
+    
+    const container = new PIXI.Container();
+    container.position.set(centerX - buttonWidth - spacing, buttonY);
+    container.label = 'demo-button-container';
+    
     const button = new PIXI.Graphics();
-    button.roundRect(0, 0, 240, 50, 10);
+    button.roundRect(0, 0, buttonWidth, 50, 10);
     button.fill(0x9C27B0); // Purple color
-    button.position.set(420, 560);
     button.interactive = true;
     button.cursor = 'pointer';
-    button.label = 'demo-button';
+    button.eventMode = 'static';
     
     button.on('pointerdown', () => this.openDemoMode());
     
@@ -448,10 +578,27 @@ export class CharacterSelectionScene extends Scene {
       }
     });
     label.anchor.set(0.5);
-    label.position.set(120, 25);
+    label.position.set(buttonWidth / 2, 25);
     button.addChild(label);
     
-    this.addChild(button);
+    // Add explanatory subtitle
+    const subtitle = new PIXI.Text({
+      text: 'Xem trước 207 Thần Thú & animations',
+      style: {
+        fontSize: 11,
+        fill: 0xDDDDDD,
+        align: 'center',
+        fontStyle: 'italic',
+        wordWrap: true,
+        wordWrapWidth: 200
+      }
+    });
+    subtitle.anchor.set(0.5, 0);
+    subtitle.position.set(buttonWidth / 2, 55);
+    
+    container.addChild(button);
+    container.addChild(subtitle);
+    this.addChild(container);
   }
   
   private async openDemoMode(): Promise<void> {
@@ -461,19 +608,14 @@ export class CharacterSelectionScene extends Scene {
   }
   
   private refreshDisplay(): void {
-    // Recreate element tabs (to show selection)
+    // Remove only what needs to be refreshed, keep buttons, party panel, and nav
     this.children
-      .filter(c => c.label !== 'monster-card' && 
-                   c.label !== 'party-panel' && 
-                   c.label !== 'party-member' &&
-                   c.label !== 'start-button' &&
-                   c.label !== 'page-nav')
+      .filter(c => c.label === 'monster-card' || c.label === 'element-tab')
       .forEach(c => {
-        if (c !== this.children[0] && c !== this.children[1]) { // Keep bg and title
-          this.removeChild(c);
-        }
+        this.removeChild(c);
       });
     
+    // Recreate element tabs and grid, but keep buttons and party panel intact
     this.createElementTabs();
     this.createMonsterGrid(this.currentElement);
     this.updatePartyPanel();

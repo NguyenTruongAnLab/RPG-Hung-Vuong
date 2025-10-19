@@ -50,11 +50,21 @@ export class CollisionSystem {
       return;
     }
 
+    // Debug: log all bodies in the world
+    const allBodies = this.physics.getAllBodies();
+    console.log(`[CollisionSystem] Total bodies in world: ${allBodies.length}`);
+    for (let i = 0; i < Math.min(5, allBodies.length); i++) {
+      const body = allBodies[i];
+      console.log(`  Body ${i}: ${body.label}, static=${body.isStatic}, collision filter=${JSON.stringify(body.collisionFilter)}`);
+    }
+
     // Listen to collision start events
     Matter.Events.on(engine, 'collisionStart', this.handleCollisionStart);
 
     // Listen to collision end events
     Matter.Events.on(engine, 'collisionEnd', this.handleCollisionEnd);
+
+    console.log('✅ CollisionSystem initialized - listening for collision events');
 
     this.isInitialized = true;
   }
@@ -69,6 +79,12 @@ export class CollisionSystem {
     for (const pair of pairs) {
       const bodyA = pair.bodyA;
       const bodyB = pair.bodyB;
+
+      // Log collision for debugging
+      if (bodyA.label.includes('player') || bodyB.label.includes('player') ||
+          bodyA.label.includes('enemy') || bodyB.label.includes('enemy')) {
+        console.log(`🔵 Collision START: ${bodyA.label} <-> ${bodyB.label}`);
+      }
 
       // Emit generic collision event
       this.eventBus.emit('collision:start', {
@@ -91,6 +107,12 @@ export class CollisionSystem {
     for (const pair of pairs) {
       const bodyA = pair.bodyA;
       const bodyB = pair.bodyB;
+
+      // Log collision for debugging
+      if (bodyA.label.includes('player') || bodyB.label.includes('player') ||
+          bodyA.label.includes('enemy') || bodyB.label.includes('enemy')) {
+        console.log(`🔴 Collision END: ${bodyA.label} <-> ${bodyB.label}`);
+      }
 
       // Emit generic collision event
       this.eventBus.emit('collision:end', {

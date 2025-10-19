@@ -761,51 +761,6 @@ class BattleMonster {
 
 **Full API**: https://h1ve2.github.io/pixi-dragonbones-runtime/api/8.x/
 
----
-
-## 🎯 Roadmap Integration
-
-### Current Support (Phase 3)
-- ✅ Basic animation playback
-- ✅ Multi-animation support
-- ✅ Character loading system
-- ✅ 207 monsters integrated
-
-### Planned Enhancements (Phase 4+)
-
-**Advanced Animation Mixing**:
-```typescript
-// Blend walk + shoot animations
-display.animation.fadeIn('walk', 0.3, 0, 0, 'lower_body');
-display.animation.fadeIn('shoot', 0.2, 1, 1, 'upper_body');
-```
-
-**Real-time Armature Editing**:
-```typescript
-// Editor integration for custom poses
-const bone = display.armature.getBone('arm');
-bone.offset.rotation = editorRotation;
-bone.invalidUpdate();
-```
-
-**Networked Skin/Slot Customization**:
-```typescript
-// Load player's custom equipment from server
-const equipment = await fetchPlayerEquipment(playerId);
-equipment.forEach(item => {
-  factory.replaceSlotDisplay(/* ... */, item.slotName, item.displayName, slot);
-});
-```
-
-**IK Support** (Future):
-```typescript
-// Inverse kinematics for feet on terrain
-const ikConstraint = display.armature.getConstraint('leg_ik');
-ikConstraint.target = terrainPoint;
-```
-
----
-
 ## 📝 Summary
 
 **Key Takeaways**:
@@ -822,25 +777,3 @@ ikConstraint.target = terrainPoint;
 - ❌ Don't forget to dispose armature displays on cleanup
 - ❌ Don't manipulate bones without `invalidUpdate()`
 - ❌ Don't load all 207 characters at once (lazy load!)
-- ❌ Don't use deprecated packages like `dragonbones.js`
-
-**Quick Reference Commands**:
-```bash
-# Type check
-npm run type-check
-
-# Run tests
-npm run test
-
-# Build
-npm run build
-
-# Check file sizes (must be <1000 lines)
-wc -l src/**/*.ts | sort -n
-```
-
----
-
-**Happy Animating! 🎮🇻🇳**
-
-For questions or improvements to this guide, update this file following the documentation standards in `.github/04-CODING-STANDARDS.md`.

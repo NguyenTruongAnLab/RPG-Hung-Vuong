@@ -202,28 +202,19 @@ emitter.update(deltaTime * 0.001);
 
 ### Filters & Shaders
 ```bash
-npm install @pixi/filter-glow
-npm install @pixi/filter-bloom
-npm install @pixi/filter-blur
-npm install @pixi/filter-adjustment
-npm install @pixi/filter-crt
-npm install @pixi/filter-godray
-npm install @pixi/filter-shockwave
-npm install @pixi/filter-old-film
-npm install @pixi/filter-pixelate
+npm install pixi-filters
 ```
 
 **Purpose**: Visual effects, atmosphere, and screen FX  
 **When to use**: Elemental effects, damage feedback, atmosphere, retro style  
-**Documentation**: https://github.com/pixijs/filters
+**Documentation**: https://github.com/pixijs/filters  
+**Version**: v6.x (for PixiJS v8)
+
+**Note**: The `pixi-filters` package consolidates all community filters. Individual `@pixi/filter-*` packages are outdated (v5.x for PixiJS v7) and should NOT be used.
 
 **Key Filters**:
 ```typescript
-import { GlowFilter } from '@pixi/filter-glow';
-import { AdvancedBloomFilter } from '@pixi/filter-bloom';
-import { ShockwaveFilter } from '@pixi/filter-shockwave';
-import { GodrayFilter } from '@pixi/filter-godray';
-import { AdjustmentFilter } from '@pixi/filter-adjustment';
+import { GlowFilter, BloomFilter, ShockwaveFilter, GodrayFilter, AdjustmentFilter } from 'pixi-filters';
 
 // Glow for skills and critical hits
 const glowFilter = new GlowFilter({
@@ -234,7 +225,7 @@ const glowFilter = new GlowFilter({
 sprite.filters = [glowFilter];
 
 // Bloom for magical/legendary effects
-const bloomFilter = new AdvancedBloomFilter({
+const bloomFilter = new BloomFilter({
   threshold: 0.5,
   bloomScale: 1.5,
   brightness: 1.2
@@ -245,87 +236,21 @@ const shockwave = new ShockwaveFilter(
   [centerX, centerY],
   { radius: 100, wavelength: 30 }
 );
+
+// Note: BlurFilter is built into PixiJS core (PIXI.BlurFilter)
+const blur = new PIXI.BlurFilter({ strength: 5 });
 ```
 
 **Filter Usage by Feature**:
 | Feature | Filter(s) |
 |---------|----------|
-| Critical hits | GlowFilter, AdvancedBloomFilter |
+| Critical hits | GlowFilter, BloomFilter |
 | Super effective | ShockwaveFilter, GlowFilter |
 | Sacred zones | GodrayFilter, AdjustmentFilter |
 | Poison/status | AdjustmentFilter (color shift) |
 | Flashback cutscenes | OldFilmFilter, PixelateFilter |
-| Victory screen | AdvancedBloomFilter |
+| Victory screen | BloomFilter |
 | Nightmare zones | CRTFilter, AdjustmentFilter |
-
-### UI Framework
-```bash
-npm install @pixi/ui
-```
-
-**Purpose**: Professional UI controls (buttons, sliders, checkboxes, panels)  
-**When to use**: Inventory, menus, settings, dialog boxes  
-**Documentation**: https://pixijs.io/ui/
-
-**Example**:
-```typescript
-import { Button, CheckBox, ScrollBox } from '@pixi/ui';
-
-// Create button with hover/press states
-const button = new Button({
-  text: 'Start Battle',
-  textStyle: { fill: 0xffffff },
-  background: buttonTexture,
-  hoverBackground: buttonHoverTexture
-});
-
-button.onPress.connect(() => {
-  console.log('Button pressed!');
-});
-
-// Checkbox for settings
-const checkbox = new CheckBox({
-  checked: true,
-  text: 'Sound Effects'
-});
-
-// Scrollable list for inventory
-const scrollBox = new ScrollBox({
-  width: 300,
-  height: 400,
-  items: itemList
-});
-```
-
-### UI Layout
-```bash
-npm install @pixi/layout
-```
-
-**Purpose**: Responsive, adaptive UI layouts  
-**When to use**: Complex menus, grid layouts, responsive design  
-**Documentation**: https://github.com/pixijs/layout
-
-**Example**:
-```typescript
-import { Layout } from '@pixi/layout';
-
-// Create responsive layout
-const layout = new Layout({
-  content: {
-    inventoryPanel: {
-      content: {
-        id: 'inventory',
-        styles: {
-          position: 'center',
-          maxWidth: '80%',
-          maxHeight: '90%'
-        }
-      }
-    }
-  }
-});
-```
 
 ### Advanced Lighting
 ```bash
@@ -641,55 +566,52 @@ npm view matter-js versions
 ```json
 {
   "dependencies": {
-    "pixi.js": "^8.0.0",
+    "pixi.js": "^8.14.0",
     "matter-js": "^0.19.0",
-    "gsap": "^3.12.0",
-    "@pixi/tilemap": "^5.0.0",
+    "gsap": "^3.13.0",
+    "@pixi/tilemap": "^5.0.2",
     "pixi-dragonbones-runtime": "^8.0.3",
-    "lodash": "^4.17.0",
-    "howler": "^2.2.4"
+    "@pixi/particle-emitter": "^5.0.8",
+    "pixi-filters": "^6.0.0",
+    "lodash": "^4.17.21",
+    "howler": "^2.2.4",
+    "localforage": "^1.10.0"
   },
   "devDependencies": {
-    "typescript": "^5.0.0",
-    "vite": "^5.0.0",
-    "vitest": "^1.0.0",
-    "playwright": "^1.40.0",
-    "@types/matter-js": "*",
-    "@types/lodash": "*",
-    "@types/howler": "*"
+    "typescript": "^5.9.3",
+    "vite": "^7.1.10",
+    "vitest": "^3.2.4",
+    "playwright": "^1.56.0",
+    "@types/matter-js": "^0.20.2",
+    "@types/lodash": "^4.17.20",
+    "@types/howler": "^2.2.12"
   }
 }
 ```
 
-### Phase 5+ Additional Plugins (Install as needed)
+### ✅ Already Installed (Phase 1-3)
 
 **Visual Polish & Effects**:
+- ✅ `@pixi/particle-emitter@^5.0.8` - Particle effects (battle, weather, UI)
+- ✅ `pixi-filters@^6.0.0` - All visual filters unified (replaces individual @pixi/filter-* packages)
+- ✅ `localforage@^1.10.0` - IndexedDB storage for inventory and save data
+
+**Note**: `pixi-filters` v6.x consolidates ALL filters (glow, bloom, shockwave, adjustment, etc.) in one package. Do NOT install individual `@pixi/filter-*` packages as they are outdated.
+
+### 🔮 Future Plugins (Phase 5+, not yet needed)
+
 ```bash
-# Particles
-npm install @pixi/particle-emitter
-
-# Filters (install individually as needed)
-npm install @pixi/filter-glow
-npm install @pixi/filter-bloom
-npm install @pixi/filter-blur
-npm install @pixi/filter-adjustment
-npm install @pixi/filter-shockwave
-npm install @pixi/filter-godray
-npm install @pixi/filter-old-film
-npm install @pixi/filter-crt
-npm install @pixi/filter-pixelate
-
-# UI Framework
-npm install @pixi/ui
-npm install @pixi/layout
-
-# Lighting (advanced)
+# Advanced lighting (if implementing dynamic lighting system)
 npm install pixi-lights
+
+# UI frameworks (if needed for complex UI - currently using custom UI)
+# npm install @pixi/ui
+# npm install @pixi/layout
 ```
 
-**Note**: Install plugins only when implementing their corresponding features. Don't install all at once.
+**Policy**: Only install new plugins when implementing their specific features. Current stack is sufficient for Phases 1-4.
 
 ---
 
-**Last Updated**: 2025-10-17  
-**Version**: 1.0.0
+**Last Updated**: 2025-10-19  
+**Version**: 1.1.0 (Updated filter packages to pixi-filters v6)

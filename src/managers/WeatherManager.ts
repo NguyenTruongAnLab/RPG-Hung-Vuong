@@ -423,11 +423,15 @@ export class WeatherManager {
     };
 
     // Sanitize config: ensure all 'time' properties in lists are valid numbers
+    // and remove any null/undefined entries
     const sanitizePropertyLists = (obj: any): void => {
       if (!obj || typeof obj !== 'object') return;
 
       // If this object has a 'list' array, sanitize it
       if (Array.isArray(obj.list)) {
+        // Filter out null/undefined entries first
+        obj.list = obj.list.filter((item: any) => item != null);
+        
         for (const item of obj.list) {
           if (item && typeof item === 'object') {
             // Ensure time is a valid number
@@ -435,7 +439,17 @@ export class WeatherManager {
               console.warn('WeatherManager: Fixing invalid time property in list item', item);
               item.time = 0;
             }
+            // Ensure value exists
+            if (item.value === undefined || item.value === null) {
+              console.warn('WeatherManager: Fixing missing value in list item', item);
+              item.value = 0;
+            }
           }
+        }
+        
+        // Ensure at least one entry exists
+        if (obj.list.length === 0) {
+          obj.list.push({ time: 0, value: 1 });
         }
       }
 
@@ -448,15 +462,18 @@ export class WeatherManager {
       }
     };
 
-    // Sanitize the config
-    if (adjustedConfig.behaviors && Array.isArray(adjustedConfig.behaviors)) {
-      for (const behavior of adjustedConfig.behaviors) {
+    // Deep clone the config to avoid mutating the original
+    const clonedConfig = JSON.parse(JSON.stringify(adjustedConfig));
+    
+    // Sanitize the cloned config
+    if (clonedConfig.behaviors && Array.isArray(clonedConfig.behaviors)) {
+      for (const behavior of clonedConfig.behaviors) {
         sanitizePropertyLists(behavior);
       }
     }
 
     // Create emitter using upgraded config with texture
-    const upgradedConfig = upgradeConfig(adjustedConfig, [this.particleTexture]);
+    const upgradedConfig = upgradeConfig(clonedConfig, [this.particleTexture]);
 
     // Create a SafeContainer wrapper to protect the real container from non-DisplayObject children
     class SafeContainer {

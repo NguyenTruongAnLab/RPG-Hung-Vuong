@@ -2,18 +2,48 @@
  * PhysicsManager - Manages Matter.js physics engine
  * 
  * Singleton wrapper around Matter.js Engine and World.
- * Handles physics updates and body management.
+ * Handles physics updates, body management, and collision filtering.
+ * 
+ * Collision Categories (powers of 2):
+ * - PLAYER: 0x0001 (collides with enemies and walls)
+ * - ENEMY: 0x0002 (collides with player, enemies, and walls)
+ * - WALL: 0x0004 (collides with player and enemies)
+ * - ITEM: 0x0008 (collides with player)
  * 
  * @example
  * ```typescript
  * const physics = PhysicsManager.getInstance();
  * physics.init();
  * 
+ * // Create bodies with proper collision filtering
+ * const playerBody = createCircleBody(100, 100, 16);
+ * physics.setCollisionFilter(playerBody, 'player');
+ * 
  * // In game loop
  * physics.update(deltaMs);
  * ```
  */
 import Matter from 'matter-js';
+
+/**
+ * Collision categories for filtering (powers of 2)
+ */
+export const COLLISION_CATEGORY = {
+  PLAYER: 0x0001,
+  ENEMY: 0x0002,
+  WALL: 0x0004,
+  ITEM: 0x0008
+};
+
+/**
+ * Collision masks (what each category collides with)
+ */
+export const COLLISION_MASK = {
+  PLAYER: COLLISION_CATEGORY.ENEMY | COLLISION_CATEGORY.WALL,
+  ENEMY: COLLISION_CATEGORY.PLAYER | COLLISION_CATEGORY.ENEMY | COLLISION_CATEGORY.WALL,
+  WALL: COLLISION_CATEGORY.PLAYER | COLLISION_CATEGORY.ENEMY,
+  ITEM: COLLISION_CATEGORY.PLAYER
+};
 
 export class PhysicsManager {
   private static instance: PhysicsManager | null = null;
@@ -219,6 +249,34 @@ export class PhysicsManager {
     this.engine = null;
     this.world = null;
     this.isInitialized = false;
+  }
+
+  /**
+   * Sets collision filter for a body
+   * 
+   * @param body - The body to set collision filter for
+   * @param category - Collision category ('player', 'enemy', 'wall', 'item')
+   * 
+   * @example
+   * ```typescript
+   * const body = createCircleBody(100, 100, 16);
+   * physics.setCollisionFilter(body, 'player');
+   * ```
+   */
+  public setCollisionFilter(
+    body: Matter.Body,
+    category: 'player' | 'enemy' | 'wall' | 'item'
+  ): void {
+    const categoryKey = (category.toUpperCase()) as keyof typeof COLLISION_CATEGORY;
+    const maskKey = (category.toUpperCase()) as keyof typeof COLLISION_MASK;
+    
+    body.collisionFilter = {
+      category: COLLISION_CATEGORY[categoryKey],
+      mask: COLLISION_MASK[maskKey]
+    };
+    
+    // Debug logging for collision filter setup
+    console.log(`[PhysicsManager] Body '${body.label}' collision filter: category=0x${COLLISION_CATEGORY[categoryKey].toString(16)}, mask=0x${COLLISION_MASK[maskKey].toString(16)}`);
   }
 
   /**

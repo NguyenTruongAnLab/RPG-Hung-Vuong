@@ -58,6 +58,7 @@ export class InputManager {
     window.addEventListener('blur', this.clearKeys);
 
     this.isInitialized = true;
+    console.log('✅ InputManager: Keyboard event listeners registered (W/A/S/D + Arrow keys)');
   }
 
   /**
@@ -65,7 +66,13 @@ export class InputManager {
    */
   private handleKeyDown = (event: KeyboardEvent): void => {
     const key = event.key.toLowerCase();
+    const wasPressed = this.keys.get(key);
     this.keys.set(key, true);
+    
+    // Only log first press (not repeats)
+    if (!wasPressed && ['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(key)) {
+      console.log(`✅ [INPUT] ${key.toUpperCase()} pressed`);
+    }
   };
 
   /**
@@ -166,6 +173,22 @@ export class InputManager {
    */
   public isInteractPressed(): boolean {
     return this.isKeyDown('e');
+  }
+
+  /**
+   * Checks if harvest key is pressed (E) - alias for interact
+   * @returns True if E is pressed
+   */
+  public isHarvestPressed(): boolean {
+    return this.isKeyDown('e');
+  }
+
+  /**
+   * Checks if inventory key is pressed (Tab or I)
+   * @returns True if Tab or I is pressed
+   */
+  public isInventoryPressed(): boolean {
+    return this.isKeyDown('tab') || this.isKeyDown('i');
   }
 
   /**

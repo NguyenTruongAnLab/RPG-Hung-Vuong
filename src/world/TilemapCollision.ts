@@ -66,9 +66,12 @@ export class TilemapCollision {
           {
             isStatic: true,
             label: 'wall',
-            friction: 0
+            friction: 0.01
           }
         );
+
+        // Set collision filter for walls
+        this.physics.setCollisionFilter(body, 'wall');
 
         this.physics.addBody(body);
         this.bodies.push(body);
@@ -87,13 +90,17 @@ export class TilemapCollision {
     const layer = tilemap.getLayer(layerName);
     
     if (!layer) {
-      console.warn(`Layer '${layerName}' not found`);
+      console.warn(`⚠️ TilemapCollision: Layer '${layerName}' not found in tilemap`);
+      console.log('Available layers:', tilemap.getLayers().map(l => l.name).join(', '));
       return;
     }
+    
+    console.log(`✅ TilemapCollision: Found layer '${layerName}' (${layer.width}x${layer.height})`);
 
     const tileWidth = tilemap.getTileWidth();
     const tileHeight = tilemap.getTileHeight();
     const processed = new Set<number>();
+    let wallCount = 0;
 
     // Merge horizontal runs of tiles
     for (let y = 0; y < layer.height; y++) {
@@ -134,13 +141,24 @@ export class TilemapCollision {
           {
             isStatic: true,
             label: 'wall',
-            friction: 0
+            friction: 0.01,
+            restitution: 0.0,  // No bounciness
+            density: 1.0       // Solid walls
           }
         );
 
+        // Set collision filter for walls
+        this.physics.setCollisionFilter(body, 'wall');
+
         this.physics.addBody(body);
         this.bodies.push(body);
+        wallCount++;
       }
+    }
+    
+    console.log(`✅ TilemapCollision: Created ${wallCount} optimized wall bodies from layer '${layerName}'`);
+    if (wallCount === 0) {
+      console.warn(`⚠️ TilemapCollision: No collision tiles found! Check if layer has non-zero tile values.`);
     }
   }
 
@@ -175,8 +193,14 @@ export class TilemapCollision {
       })
     ];
 
-    this.physics.addBodies(boundaries);
-    this.bodies.push(...boundaries);
+    // Set collision filters for all boundary walls
+    for (const boundary of boundaries) {
+      this.physics.setCollisionFilter(boundary, 'wall');
+      this.physics.addBody(boundary);
+      this.bodies.push(boundary);
+    }
+    
+    console.log(`✅ Created 4 boundary walls around map (${width}x${height})`);
   }
 
   /**

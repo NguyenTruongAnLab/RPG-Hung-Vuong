@@ -8,3 +8,36 @@ coverage/
 .env.local
 test-results/
 playwright-report/
+
+# Build outputs
+build/
+*.tsbuildinfo
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing
+.nyc_output/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ⚠️ LOCAL ASSETS - LARGE BINARY FILES (DO NOT COMMIT TO GIT)
+# These files are too large for GitHub. Keep them local only.
+# When cloning, you may need to generate or download these assets locally.
+public/assets/audio/
+public/assets/dragonbones_assets/
+public/assets/monsters/
+public/assets/tilesets/
+
+# Backup & temporary files
+*.backup
+*.bak
+*.tmp
+src/scenes/*.backup

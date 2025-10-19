@@ -13,6 +13,7 @@
  */
 import { PixiArmatureDisplay } from 'pixi-dragonbones-runtime';
 import * as PIXI from 'pixi.js';
+import { AnimationMapper } from '../../utils/AnimationMapper';
 
 export type AnimationState = 'idle' | 'walk' | 'attack';
 export type Direction = 'up' | 'down' | 'left' | 'right';
@@ -21,6 +22,7 @@ export type Direction = 'up' | 'down' | 'left' | 'right';
  * PlayerAnimation component
  * 
  * Manages animation state and playback for the player character.
+ * Uses AnimationMapper for intelligent 200+ asset animation name detection.
  */
 export class PlayerAnimation {
   private armatureDisplay: PixiArmatureDisplay | null = null;
@@ -28,6 +30,7 @@ export class PlayerAnimation {
   private currentDirection: Direction = 'down';
   private isPlaying: boolean = false;
   private availableAnimations: string[] = []; // Track available animations
+  private animationMapper: AnimationMapper = new AnimationMapper([]); // Smart mapper
 
   /**
    * Creates a new PlayerAnimation component
@@ -56,26 +59,34 @@ export class PlayerAnimation {
     // Store available animations for validation
     if (availableAnimations && availableAnimations.length > 0) {
       this.availableAnimations = availableAnimations;
+      this.animationMapper.setAvailableAnimations(availableAnimations);
       console.log('PlayerAnimation: Available animations:', availableAnimations.slice(0, 10).join(', '));
     }
     
-    // Start with first available animation or try 'Idle'
-    const startAnim = this.availableAnimations.includes('Idle') 
-      ? 'Idle' 
-      : (this.availableAnimations[0] || 'idle');
-    this.play(startAnim);
+    // Apply uniform scale to all characters for consistent size
+    // Target: 64-80px tall character regardless of original DragonBones asset size
+    // Scale 0.25 = smaller characters, 0.5 = larger characters
+    if (this.armatureDisplay) {
+      const uniformScale = 0.3; // Balanced size for overworld exploration
+      this.armatureDisplay.scale.set(uniformScale, uniformScale);
+      console.log(`PlayerAnimation: Applied uniform scale ${uniformScale}`);
+    }
+    
+    // Start with idle animation
+    this.play('idle');
   }
 
   /**
    * Plays an animation
+   * Uses AnimationMapper for intelligent animation name resolution
    * 
-   * @param animation - Animation to play (flexible name based on available animations)
-   * @param playTimes - Number of times to play (0 = loop, default: 0)
+   * @param animation - Animation to play (e.g., 'idle', 'walk', 'attack')
+   * @param playTimes - Number of times to play (0 = loop, default: 0 for loops, 1 for attack)
    * 
    * @example
    * ```typescript
-   * animation.play('Walk'); // Plays available walk animation
-   * animation.play('Attack', 1); // Plays attack once
+   * animation.play('walk'); // Intelligently finds walk animation
+   * animation.play('attack', 1); // Plays attack once
    * ```
    */
   play(animation: string, playTimes?: number): void {
@@ -84,33 +95,40 @@ export class PlayerAnimation {
       return;
     }
 
-    // Don't restart the same animation
-    if (this.currentAnimation === animation && this.isPlaying) {
+    // Early exit if no animations available
+    if (this.availableAnimations.length === 0) {
       return;
     }
 
-    this.currentAnimation = animation;
+    // Use AnimationMapper to find the best animation match
+    const mapped = this.animationMapper.getAnimation(animation);
+    const targetAnimation = mapped.animationName;
+
+    // Don't restart the same animation
+    if (this.currentAnimation === targetAnimation && this.isPlaying) {
+      return;
+    }
+
+    this.currentAnimation = targetAnimation;
     this.isPlaying = true;
 
-    // Determine play times (default loop)
-    const times = playTimes !== undefined ? playTimes : 0;
+    // Determine play times: attack animations play once by default, others loop
+    let times = playTimes !== undefined ? playTimes : 0;
+    if (playTimes === undefined && targetAnimation === 'attack') {
+      times = 1;
+    }
 
     try {
-      // Try to play the animation
-      this.armatureDisplay.animation.play(animation, times);
+      // Play the mapped animation
+      this.armatureDisplay.animation.play(targetAnimation, times);
     } catch (error) {
-      // Animation not found, try first available
-      if (this.availableAnimations.length > 0 && animation !== this.availableAnimations[0]) {
-        console.warn(`Animation '${animation}' not found, trying first available: '${this.availableAnimations[0]}'`);
-        try {
-          this.armatureDisplay.animation.play(this.availableAnimations[0], times);
-          this.currentAnimation = this.availableAnimations[0];
-        } catch (fallbackError) {
-          console.warn(`Failed to play any animation: ${fallbackError}`);
-          this.isPlaying = false;
-        }
-      } else {
-        console.warn(`Animation '${animation}' not found and no fallback available`);
+      // If animation fails, try first available animation as fallback
+      console.warn(`Failed to play animation "${targetAnimation}", using fallback`);
+      try {
+        this.armatureDisplay.animation.play(this.availableAnimations[0], times);
+        this.currentAnimation = this.availableAnimations[0];
+      } catch (fallbackError) {
+        console.error('Failed to play fallback animation:', fallbackError);
         this.isPlaying = false;
       }
     }
@@ -162,16 +180,14 @@ export class PlayerAnimation {
       } else if (direction === 'right') {
         display.scale.x = Math.abs(display.scale.x);
       } else {
-        // Reset scale for up/down
+        // Reset scale for up/down (face forward)
         display.scale.x = Math.abs(display.scale.x);
       }
     }
-
-    // Replay current animation with new direction
-    if (this.isPlaying) {
-      const currentAnim = this.currentAnimation;
-      this.isPlaying = false; // Reset flag so play() doesn't skip
-      this.play(currentAnim);
+    
+    // Replay current animation with new direction if playing
+    if (this.isPlaying && this.currentAnimation) {
+      this.armatureDisplay?.animation.play(this.currentAnimation, 0);
     }
   }
 

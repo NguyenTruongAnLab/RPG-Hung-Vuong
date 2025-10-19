@@ -2,7 +2,8 @@
  * DialogueSystem - Dialogue and conversation management
  * 
  * Handles NPC dialogues, story conversations, and text display.
- * Supports typewriter effects, choices, and Vietnamese text.
+ * Supports typewriter effects, choices, Vietnamese text,
+ * and dialogue state persistence.
  * 
  * @example
  * ```typescript
@@ -58,9 +59,14 @@ export class DialogueSystem {
   private isActive: boolean = false;
   private currentDialogue: DialogueData | null = null;
   private typewriterTimeline: gsap.core.Timeline | null = null;
+  
+  // Dialogue state management
+  private dialogueState: Map<string, any> = new Map();
+  private visitedDialogues: Set<string> = new Set();
 
   private constructor() {
     this.eventBus = EventBus.getInstance();
+    this.loadDialogueState();
   }
 
   /**
@@ -403,5 +409,99 @@ export class DialogueSystem {
     this.textContainer = null;
     this.isActive = false;
     this.currentDialogue = null;
+    
+    // Save dialogue state before cleanup
+    this.saveDialogueState();
+  }
+
+  /**
+   * Run dialogue sequence (simple implementation without external dependencies)
+   * @param dialogues - Array of dialogue messages
+   * @param npcName - Name of the NPC
+   * @returns Promise that resolves when dialogue is complete
+   */
+  async runDialogueSequence(dialogues: string[], npcName: string = 'NPC'): Promise<void> {
+    for (const text of dialogues) {
+      await this.showDialogueAsync(text, npcName);
+    }
+  }
+
+  /**
+   * Show dialogue and wait for completion
+   * @param text - Dialogue text
+   * @param npcName - NPC name
+   * @returns Promise that resolves when dialogue ends
+   */
+  private showDialogueAsync(text: string, npcName?: string): Promise<void> {
+    return new Promise((resolve) => {
+      const dialogueData: DialogueData = {
+        text,
+        npcName,
+        autoClose: false
+      };
+
+      this.showDialogue(dialogueData);
+
+      // Wait for player to continue (space/click or auto-close)
+      const continueHandler = () => {
+        this.eventBus.off('dialogue:hide', continueHandler);
+        resolve();
+      };
+
+      this.eventBus.on('dialogue:hide', continueHandler);
+    });
+  }
+
+  /**
+   * Load dialogue state from localStorage
+   */
+  private loadDialogueState(): void {
+    try {
+      const saved = localStorage.getItem('dialogue_state');
+      if (saved) {
+        const data = JSON.parse(saved);
+        this.dialogueState = new Map(Object.entries(data.variables || {}));
+        this.visitedDialogues = new Set(data.visitedDialogues || []);
+      }
+    } catch (error) {
+      console.error('Failed to load dialogue state:', error);
+    }
+  }
+
+  /**
+   * Save dialogue state to localStorage
+   */
+  private saveDialogueState(): void {
+    try {
+      const data = {
+        variables: Object.fromEntries(this.dialogueState),
+        visitedDialogues: Array.from(this.visitedDialogues)
+      };
+      localStorage.setItem('dialogue_state', JSON.stringify(data));
+    } catch (error) {
+      console.error('Failed to save dialogue state:', error);
+    }
+  }
+
+  /**
+   * Check if dialogue has been visited
+   */
+  hasVisitedDialogue(dialogueId: string): boolean {
+    return this.visitedDialogues.has(dialogueId);
+  }
+
+  /**
+   * Get dialogue variable
+   */
+  getVariable(name: string): any {
+    return this.dialogueState.get(name);
+  }
+
+  /**
+   * Set dialogue variable
+   */
+  setVariable(name: string, value: any): void {
+    this.dialogueState.set(name, value);
+    this.saveDialogueState();
   }
 }

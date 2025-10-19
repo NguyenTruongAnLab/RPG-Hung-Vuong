@@ -17,10 +17,12 @@ import { Vector2D } from './Vector2D';
  * @returns A new circular body
  * 
  * @example
- * // Create player body
+ * // Create player body with proper physics
  * const player = createCircleBody(100, 100, 16, { 
  *   label: 'player',
- *   friction: 0
+ *   friction: 0.01,
+ *   frictionAir: 0.01,
+ *   restitution: 0.2
  * });
  */
 export function createCircleBody(
@@ -30,8 +32,11 @@ export function createCircleBody(
   options: Matter.IBodyDefinition = {}
 ): Matter.Body {
   return Matter.Bodies.circle(x, y, radius, {
-    friction: 0.1,
-    frictionAir: 0.05,
+    friction: 0.01,           // Surface friction
+    frictionStatic: 0.01,     // Static friction (prevents sliding)
+    frictionAir: 0.01,        // Air resistance (damping)
+    restitution: 0.0,         // No bounciness
+    density: 0.001,           // Low density for top-down movement
     ...options
   });
 }
@@ -47,7 +52,7 @@ export function createCircleBody(
  * @returns A new rectangular body
  * 
  * @example
- * // Create wall
+ * // Create wall (static)
  * const wall = createRectBody(100, 100, 50, 100, {
  *   isStatic: true,
  *   label: 'wall'
@@ -61,7 +66,9 @@ export function createRectBody(
   options: Matter.IBodyDefinition = {}
 ): Matter.Body {
   return Matter.Bodies.rectangle(x, y, width, height, {
-    friction: 0.1,
+    friction: 0.01,
+    frictionStatic: 0.01,
+    restitution: 0.0,
     ...options
   });
 }

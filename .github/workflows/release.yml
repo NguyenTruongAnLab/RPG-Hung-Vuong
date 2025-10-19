@@ -1,0 +1,279 @@
+name: Create Release (Web + Windows Build)
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., 1.0.0)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pages: read
+
+jobs:
+  # 🔒 Security: Build and test before release
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type Check
+        run: npm run type-check
+
+      - name: Run Tests
+        run: npm run test
+
+  # 🌐 Build Web Version (for GitHub Pages + Release)
+  build-web:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Web
+        run: npm run build
+
+      - name: Verify No Source Maps
+        run: |
+          if find dist -name "*.map" -type f 2>/dev/null | grep -q .; then
+            echo "❌ ERROR: Source maps found! Removing them..."
+            find dist -name "*.map" -type f -delete
+          fi
+          echo "✅ Build verified - no source maps"
+
+      - name: Create Web Release Archive
+        run: |
+          cd dist
+          zip -r ../RPG-Hung-Vuong-web-${{ github.event.inputs.version }}.zip .
+          cd ..
+          echo "✅ Web build archived"
+
+      - name: Upload Web Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: |
+            RPG-Hung-Vuong-web-${{ github.event.inputs.version }}.zip
+            dist/
+
+  # 🪟 Build Windows Version (Electron)
+  build-windows:
+    runs-on: windows-latest
+    needs: test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Electron Builder
+        run: npm install --save-dev electron electron-builder
+
+      - name: Create Electron Main Process
+        run: |
+          # Create electron/main.js if it doesn't exist
+          if (-not (Test-Path "electron")) {
+            mkdir electron
+          }
+          
+          $mainProcess = @"
+          const { app, BrowserWindow } = require('electron');
+          const path = require('path');
+          let mainWindow;
+          
+          app.on('ready', () => {
+            mainWindow = new BrowserWindow({
+              width: 1024,
+              height: 768,
+              webPreferences: {
+                preload: path.join(__dirname, 'preload.js'),
+                sandbox: true,
+                contextIsolation: true
+              }
+            });
+            
+            const isDev = require('electron-is-dev');
+            const startUrl = isDev
+              ? 'http://localhost:3000'
+              : \`file://\${path.join(__dirname, '../dist/index.html')}\`;
+            
+            mainWindow.loadURL(startUrl);
+            if (isDev) mainWindow.webContents.openDevTools();
+          });
+          
+          app.on('window-all-closed', () => {
+            if (process.platform !== 'darwin') app.quit();
+          });
+          "@"
+          
+          Set-Content -Path "electron/main.js" -Value $mainProcess
+          echo "✅ Electron main process created"
+
+      - name: Build Web for Electron
+        run: npm run build
+
+      - name: Build Windows Executable
+        run: |
+          # Update package.json with electron config
+          $packageJson = Get-Content package.json -Raw | ConvertFrom-Json
+          
+          $packageJson | Add-Member -Name "main" -Value "electron/main.js" -MemberType NoteProperty -Force
+          $packageJson | Add-Member -Name "homepage" -Value "./" -MemberType NoteProperty -Force
+          
+          $electronConfig = @{
+            "appId" = "com.rpg-hung-vuong.app"
+            "productName" = "RPG Hùng Vương"
+            "directories" = @{
+              "buildResources" = "assets"
+              "output" = "release"
+            }
+            "files" = @(
+              "dist/**/*",
+              "electron/**/*",
+              "package.json"
+            )
+            "win" = @{
+              "target" = @("portable", "nsis")
+              "artifactName" = "RPG-Hung-Vuong-Setup-${{ github.event.inputs.version }}.${ext}"
+            }
+            "nsis" = @{
+              "oneClick" = $false
+              "allowToChangeInstallationDirectory" = $true
+              "createDesktopShortcut" = $true
+              "createStartMenuShortcut" = $true
+            }
+            "portable" = @{
+              "artifactName" = "RPG-Hung-Vuong-${{ github.event.inputs.version }}-portable.${ext}"
+            }
+          }
+          
+          $packageJson | Add-Member -Name "build" -Value $electronConfig -MemberType NoteProperty -Force
+          
+          $packageJson | ConvertTo-Json -Depth 10 | Set-Content package.json
+          
+          echo "✅ package.json configured for Electron"
+          
+          # Build Windows executable
+          npx electron-builder --win portable --publish never
+          echo "✅ Windows build completed"
+
+      - name: Upload Windows Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: release/
+
+  # 📦 Create GitHub Release
+  create-release:
+    runs-on: ubuntu-latest
+    needs: [build-web, build-windows]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download Web Build
+        uses: actions/download-artifact@v4
+        with:
+          name: web-build
+          path: artifacts/web
+
+      - name: Download Windows Build
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-build
+          path: artifacts/windows
+
+      - name: Create Release Notes
+        run: |
+          cat > release-notes.md << 'EOF'
+          # RPG Hùng Vương - Release ${{ github.event.inputs.version }}
+          
+          ## 🎮 What's New
+          - Enhanced security hardening
+          - Optimized build process
+          - Minified production code
+          - Removed source maps from distribution
+          
+          ## 📦 Downloads
+          
+          ### 🌐 Web Version
+          Play online at: https://nguyentruonganlab.github.io/RPG-Hung-Vuong/
+          - Browser-based (no installation needed)
+          - Works on Windows, Mac, Linux
+          - ZIP archive included for offline deployment
+          
+          ### 🪟 Windows Version
+          - **Portable Executable** - Run directly without installation
+          - **Installer** - Full installation with Start Menu shortcuts
+          
+          ## 🔒 Security
+          - ✅ No source maps in distribution
+          - ✅ Code minified and obfuscated
+          - ✅ Console logs removed
+          - ✅ Terser compression enabled
+          - ✅ All tests passed
+          
+          ## 🚀 Installation
+          
+          **Windows**: Download the installer or portable exe and run
+          **Web**: Extract ZIP and open index.html in browser
+          **GitHub Pages**: https://nguyentruonganlab.github.io/RPG-Hung-Vuong/
+          
+          ## 📋 Requirements
+          - Windows 7+
+          - Or any modern web browser
+          
+          ## ❓ Support
+          - Report issues: https://github.com/NguyenTruongAnLab/RPG-Hung-Vuong/issues
+          - Repository: https://github.com/NguyenTruongAnLab/RPG-Hung-Vuong
+          EOF
+          
+          cat release-notes.md
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ github.event.inputs.version }}
+          name: Release ${{ github.event.inputs.version }}
+          body_path: release-notes.md
+          files: |
+            artifacts/web/RPG-Hung-Vuong-web-${{ github.event.inputs.version }}.zip
+            artifacts/windows/RPG-Hung-Vuong-*.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Log Release Success
+        run: |
+          echo "✅ Release created successfully!"
+          echo "📦 Web: RPG-Hung-Vuong-web-${{ github.event.inputs.version }}.zip"
+          echo "🪟 Windows: RPG-Hung-Vuong-*.exe"
+          echo "🌐 GitHub Pages: https://nguyentruonganlab.github.io/RPG-Hung-Vuong/"

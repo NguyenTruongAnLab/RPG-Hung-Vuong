@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -30,8 +30,38 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # 🔒 Security: Type check before build
+      - name: Type Check
+        run: npm run type-check
+
+      # 🔒 Security: Run tests
+      - name: Run Unit Tests
+        run: npm run test
+
+      # 🔒 Security: Build with hardened config (no sourcemaps)
       - name: Build
         run: npm run build
+
+      # 🔒 Security: Verify no source maps in build
+      - name: Verify No Source Maps
+        run: |
+          if find dist -name "*.map" -type f 2>/dev/null | grep -q .; then
+            echo "❌ ERROR: Source maps found in build! Remove them before publishing."
+            find dist -name "*.map" -type f
+            exit 1
+          else
+            echo "✅ No source maps found - safe to publish"
+          fi
+
+      # 🔒 Security: Check for environment variables in build
+      - name: Scan for Secrets
+        run: |
+          if grep -r "PRIVATE_KEY\|SECRET_KEY\|API_KEY\|PASSWORD" dist/ 2>/dev/null | grep -v "node_modules"; then
+            echo "⚠️ WARNING: Potential secrets found in build"
+            exit 1
+          else
+            echo "✅ No obvious secrets detected"
+          fi
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -43,7 +73,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    needs: build
+    needs: build-and-test
     steps:
       - name: Deploy to GitHub Pages
         id: deployment

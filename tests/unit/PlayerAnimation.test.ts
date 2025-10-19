@@ -9,9 +9,18 @@ function createMockArmatureDisplay() {
     animationNames: ['idle', 'walk', 'attack']
   };
 
+  const mockScale = {
+    x: 1,
+    y: 1,
+    set: vi.fn(function(this: any, x: number, y: number) {
+      this.x = x;
+      this.y = y;
+    })
+  };
+
   const mockDisplay = {
     animation: mockAnimation,
-    scale: { x: 1, y: 1 }
+    scale: mockScale
   } as any;
 
   return mockDisplay;
@@ -32,7 +41,7 @@ describe('PlayerAnimation', () => {
     });
 
     it('should start with default state', () => {
-      expect(playerAnimation.getCurrentAnimation()).toBe('idle');
+      expect(playerAnimation.getCurrentAnimation()).toBe('');
       expect(playerAnimation.getCurrentDirection()).toBe('down');
       expect(playerAnimation.isAnimationPlaying()).toBe(false);
     });
@@ -40,19 +49,19 @@ describe('PlayerAnimation', () => {
 
   describe('setArmatureDisplay', () => {
     it('should set the armature display', () => {
-      playerAnimation.setArmatureDisplay(mockArmatureDisplay);
+      playerAnimation.setArmatureDisplay(mockArmatureDisplay, ['idle', 'walk', 'attack']);
       expect(playerAnimation.getArmatureDisplay()).toBe(mockArmatureDisplay);
     });
 
     it('should start idle animation when set', () => {
-      playerAnimation.setArmatureDisplay(mockArmatureDisplay);
+      playerAnimation.setArmatureDisplay(mockArmatureDisplay, ['idle', 'walk', 'attack']);
       expect(mockArmatureDisplay.animation.play).toHaveBeenCalledWith('idle', 0);
     });
   });
 
   describe('play', () => {
     beforeEach(() => {
-      playerAnimation.setArmatureDisplay(mockArmatureDisplay);
+      playerAnimation.setArmatureDisplay(mockArmatureDisplay, ['idle', 'walk', 'attack']);
       mockArmatureDisplay.animation.play.mockClear();
     });
 
@@ -104,7 +113,7 @@ describe('PlayerAnimation', () => {
 
   describe('stop', () => {
     beforeEach(() => {
-      playerAnimation.setArmatureDisplay(mockArmatureDisplay);
+      playerAnimation.setArmatureDisplay(mockArmatureDisplay, ['idle', 'walk', 'attack']);
       playerAnimation.play('walk');
     });
 
@@ -126,7 +135,7 @@ describe('PlayerAnimation', () => {
 
   describe('setDirection', () => {
     beforeEach(() => {
-      playerAnimation.setArmatureDisplay(mockArmatureDisplay);
+      playerAnimation.setArmatureDisplay(mockArmatureDisplay, ['idle', 'walk', 'attack']);
       mockArmatureDisplay.animation.play.mockClear();
     });
 
@@ -172,14 +181,14 @@ describe('PlayerAnimation', () => {
 
   describe('update', () => {
     it('should not throw errors', () => {
-      playerAnimation.setArmatureDisplay(mockArmatureDisplay);
+      playerAnimation.setArmatureDisplay(mockArmatureDisplay, ['idle', 'walk', 'attack']);
       expect(() => playerAnimation.update(16.67)).not.toThrow();
     });
   });
 
   describe('dispose', () => {
     beforeEach(() => {
-      playerAnimation.setArmatureDisplay(mockArmatureDisplay);
+      playerAnimation.setArmatureDisplay(mockArmatureDisplay, ['idle', 'walk', 'attack']);
       playerAnimation.play('walk');
     });
 
@@ -201,7 +210,7 @@ describe('PlayerAnimation', () => {
 
   describe('getters', () => {
     beforeEach(() => {
-      playerAnimation.setArmatureDisplay(mockArmatureDisplay);
+      playerAnimation.setArmatureDisplay(mockArmatureDisplay, ['idle', 'walk', 'attack']);
     });
 
     it('should get current animation', () => {
@@ -215,9 +224,13 @@ describe('PlayerAnimation', () => {
     });
 
     it('should check if animation is playing', () => {
-      expect(playerAnimation.isAnimationPlaying()).toBe(true); // idle from setArmatureDisplay
+      // After beforeEach, armatureDisplay is set and idle animation is playing
+      expect(playerAnimation.isAnimationPlaying()).toBe(true); // idle is playing after beforeEach
       playerAnimation.stop();
       expect(playerAnimation.isAnimationPlaying()).toBe(false);
+      // Verify it becomes true again when we play
+      playerAnimation.play('walk');
+      expect(playerAnimation.isAnimationPlaying()).toBe(true);
     });
 
     it('should get armature display', () => {

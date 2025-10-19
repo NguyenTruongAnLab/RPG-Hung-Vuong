@@ -17,24 +17,64 @@ import { OverworldScene } from './scenes/OverworldScene';
  */
 async function startGame() {
   try {
-    // Create PixiJS application
+    // Create PixiJS application with responsive sizing
     const app = new Application();
     // Note: previous defensive patch for PIXI.Container.addChild was removed.
     // WeatherManager now uses a local SafeContainer wrapper when constructing emitters.
-    await app.init({
-      width: 960,
-      height: 640,
-      backgroundColor: 0x1a1a2e,
-      resolution: window.devicePixelRatio || 1,
-      autoDensity: true
-    });
-
-    // Add canvas to DOM
+    
+    // Get container first to determine viewport size
     const container = document.getElementById('game-container');
     if (!container) {
       throw new Error('Game container not found');
     }
+    
+    // Use window dimensions for fullscreen/responsive canvas
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    
+    await app.init({
+      width: width,
+      height: height,
+      backgroundColor: 0x1a1a2e,
+      resolution: window.devicePixelRatio || 1,
+      autoDensity: true,
+      resizeTo: window // Auto-resize with window
+    });
+
+    // Add canvas to DOM first
     container.appendChild(app.canvas);
+    
+    // Style canvas for fullscreen (after appending to DOM)
+    app.canvas.style.width = '100%';
+    app.canvas.style.height = '100%';
+    app.canvas.style.display = 'block';
+    app.canvas.style.position = 'absolute';
+    app.canvas.style.top = '0';
+    app.canvas.style.left = '0';
+    
+    // CRITICAL: Set canvas tabindex to make it focusable, then focus it
+    app.canvas.setAttribute('tabindex', '0');
+    app.canvas.focus();
+    console.log('✅ Canvas focused for keyboard input');
+    
+    // Add event listeners to track focus state
+    app.canvas.addEventListener('focus', () => {
+      console.log('✅ CANVAS FOCUSED - Keyboard input will work');
+    });
+    
+    app.canvas.addEventListener('blur', () => {
+      console.log('⚠️ CANVAS LOST FOCUS - Keyboard input disabled');
+    });
+    
+    // Handle window resize for responsive canvas
+    // Note: resizeTo: window in init() handles automatic resizing,
+    // but we keep this for explicit control and canvas focus
+    window.addEventListener('resize', () => {
+      app.canvas.style.width = '100%';
+      app.canvas.style.height = '100%';
+      // Re-focus canvas after resize
+      app.canvas.focus();
+    });
 
     // Create scene manager
     const sceneManager = new SceneManager(app);
@@ -50,6 +90,13 @@ async function startGame() {
       console.log('Starting overworld scene...');
       const overworldScene = new OverworldScene(app, sceneManager);
       await sceneManager.switchTo(overworldScene);
+      
+      // CRITICAL: Re-focus canvas after scene transition
+      // Button clicks may have stolen focus, so we need to regain it
+      setTimeout(() => {
+        app.canvas.focus();
+        console.log('✅ Canvas refocused after scene transition');
+      }, 100);
     });
 
     // Game loop

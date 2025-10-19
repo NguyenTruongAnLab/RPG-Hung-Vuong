@@ -1,10 +1,8 @@
 /**
- * FilterManager - Wrapper for @pixi/filters
+ * FilterManager - Wrapper for pixi-filters
  * 
  * Manages visual filters for status effects, damage feedback, and atmosphere.
- * Uses mature @pixi/filter-* plugins for all visual effects.
- * 
- * Note: Uses @ts-ignore for filter typing issues with PixiJS v8 compatibility
+ * Uses the official pixi-filters v6 package (compatible with PixiJS v8).
  * 
  * @example
  * ```typescript
@@ -21,11 +19,8 @@
  * ```
  */
 import * as PIXI from 'pixi.js';
-import { GlowFilter } from '@pixi/filter-glow';
-import { BloomFilter } from '@pixi/filter-bloom';
-import { BlurFilter } from '@pixi/filter-blur';
-import { AdjustmentFilter } from '@pixi/filter-adjustment';
-import { ShockwaveFilter } from '@pixi/filter-shockwave';
+import { GlowFilter, BloomFilter, AdjustmentFilter, ShockwaveFilter } from 'pixi-filters';
+// Note: BlurFilter is built into PixiJS core
 import gsap from 'gsap';
 
 /**
@@ -215,8 +210,7 @@ export class FilterManager {
    * Apply confusion effect (blur + color shift)
    */
   private applyConfusionEffect(sprite: PIXI.Sprite | PIXI.Container): void {
-    // @ts-ignore - BlurFilter typing issue with PixiJS v8
-    const blurFilter = new BlurFilter(2) as unknown as PIXI.Filter;
+    const blurFilter = new PIXI.BlurFilter({ strength: 2 });
 
     // @ts-ignore - AdjustmentFilter typing issue with PixiJS v8
     const adjustFilter = new AdjustmentFilter({

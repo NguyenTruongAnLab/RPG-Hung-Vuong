@@ -17,7 +17,7 @@
  * ```
  */
 import * as PIXI from 'pixi.js';
-import { Emitter, EmitterConfigV3 } from '@pixi/particle-emitter';
+import { Emitter, EmitterConfigV3, upgradeConfig } from '@pixi/particle-emitter';
 import gsap from 'gsap';
 
 /**
@@ -48,6 +48,8 @@ export class WeatherManager {
   private app: PIXI.Application | null = null;
   private particleTexture: PIXI.Texture | null = null;
   private activeWeather: ActiveWeather | null = null;
+  // If emitter validation repeatedly fails, disable weather to avoid crashing
+  private weatherDisabled: boolean = false;
   private configs: Map<string, EmitterConfigV3> = new Map();
 
   private constructor() {}
@@ -91,7 +93,7 @@ export class WeatherManager {
     this.configs.set('rain', {
       lifetime: { min: 0.5, max: 1.0 },
       frequency: 0.01,
-      emitterLifetime: -1,
+      emitterLifetime: 999999,
       maxParticles: 200,
       addAtBack: false,
       pos: { x: 0, y: 0 },
@@ -134,8 +136,8 @@ export class WeatherManager {
           config: {
             color: {
               list: [
-                { time: 0, value: 'aaaaff' },
-                { time: 1, value: '6666aa' }
+                { time: 0, value: 0xaaaaff },
+                { time: 1, value: 0x6666aa }
               ]
             }
           }
@@ -164,7 +166,7 @@ export class WeatherManager {
     this.configs.set('snow', {
       lifetime: { min: 2.0, max: 4.0 },
       frequency: 0.05,
-      emitterLifetime: -1,
+      emitterLifetime: 999999,
       maxParticles: 150,
       addAtBack: false,
       pos: { x: 0, y: 0 },
@@ -208,8 +210,8 @@ export class WeatherManager {
           config: {
             color: {
               list: [
-                { time: 0, value: 'ffffff' },
-                { time: 1, value: 'cccccc' }
+                { time: 0, value: 0xffffff },
+                { time: 1, value: 0xcccccc }
               ]
             }
           }
@@ -237,9 +239,9 @@ export class WeatherManager {
     // Leaves configuration (for Mộc/Wood zones)
     this.configs.set('leaves', {
       lifetime: { min: 3.0, max: 5.0 },
-      frequency: 0.1,
-      emitterLifetime: -1,
-      maxParticles: 100,
+      frequency: 0.08,
+      emitterLifetime: 999999,
+      maxParticles: 80,
       addAtBack: false,
       pos: { x: 0, y: 0 },
       behaviors: [
@@ -282,9 +284,9 @@ export class WeatherManager {
           config: {
             color: {
               list: [
-                { time: 0, value: '88ff88' },
-                { time: 0.5, value: 'ffaa44' },
-                { time: 1, value: '886644' }
+                { time: 0, value: 0x88ff88 },
+                { time: 0.5, value: 0xffaa44 },
+                { time: 1, value: 0x886644 }
               ]
             }
           }
@@ -312,9 +314,9 @@ export class WeatherManager {
     // Petals configuration (decorative)
     this.configs.set('petals', {
       lifetime: { min: 4.0, max: 6.0 },
-      frequency: 0.15,
-      emitterLifetime: -1,
-      maxParticles: 80,
+      frequency: 0.12,
+      emitterLifetime: 999999,
+      maxParticles: 60,
       addAtBack: false,
       pos: { x: 0, y: 0 },
       behaviors: [
@@ -356,8 +358,8 @@ export class WeatherManager {
           config: {
             color: {
               list: [
-                { time: 0, value: 'ffccff' },
-                { time: 1, value: 'ff88ff' }
+                { time: 0, value: 0xffccff },
+                { time: 1, value: 0xff88ff }
               ]
             }
           }
@@ -394,6 +396,9 @@ export class WeatherManager {
     container: PIXI.Container,
     intensity: WeatherIntensity = 'medium'
   ): void {
+    // If we've disabled weather due to prior failures, skip
+    if (this.weatherDisabled) return;
+
     // Clear existing weather
     this.clearWeather();
 
@@ -412,24 +417,89 @@ export class WeatherManager {
       heavy: 1.5
     };
     
-    const adjustedConfig = { ...config };
-    adjustedConfig.maxParticles = Math.floor(
-      (config.maxParticles || 100) * intensityMultiplier[intensity]
-    );
-
-    // Create emitter
-    const emitter = new Emitter(container, adjustedConfig);
-    // @ts-ignore - init method signature variance
-    emitter.init([this.particleTexture]);
-    emitter.emit = true;
-
-    // Store active weather
-    this.activeWeather = {
-      type,
-      emitter,
-      container,
-      intensity
+    const adjustedConfig: EmitterConfigV3 = {
+      ...config,
+      maxParticles: Math.floor((config.maxParticles || 100) * intensityMultiplier[intensity])
     };
+
+    // Sanitize config: ensure all 'time' properties in lists are valid numbers
+    const sanitizePropertyLists = (obj: any): void => {
+      if (!obj || typeof obj !== 'object') return;
+
+      // If this object has a 'list' array, sanitize it
+      if (Array.isArray(obj.list)) {
+        for (const item of obj.list) {
+          if (item && typeof item === 'object') {
+            // Ensure time is a valid number
+            if (typeof item.time !== 'number' || isNaN(item.time)) {
+              console.warn('WeatherManager: Fixing invalid time property in list item', item);
+              item.time = 0;
+            }
+          }
+        }
+      }
+
+      // Recurse into nested objects
+      for (const key of Object.keys(obj)) {
+        const val = obj[key];
+        if (val && typeof val === 'object') {
+          sanitizePropertyLists(val);
+        }
+      }
+    };
+
+    // Sanitize the config
+    if (adjustedConfig.behaviors && Array.isArray(adjustedConfig.behaviors)) {
+      for (const behavior of adjustedConfig.behaviors) {
+        sanitizePropertyLists(behavior);
+      }
+    }
+
+    // Create emitter using upgraded config with texture
+    const upgradedConfig = upgradeConfig(adjustedConfig, [this.particleTexture]);
+
+    // Create a SafeContainer wrapper to protect the real container from non-DisplayObject children
+    class SafeContainer {
+      private target: PIXI.Container;
+      constructor(target: PIXI.Container) { this.target = target; }
+      addChild(...children: any[]) {
+        const valid = children.filter((c: any) => c && typeof c.updateLocalTransform === 'function');
+        if (valid.length !== children.length) {
+          console.warn('WeatherManager.SafeContainer: attempting to add invalid child(s). Skipping invalid entries.', children);
+        }
+        if (valid.length === 0) return this.target;
+        return this.target.addChild(...valid);
+      }
+      addChildAt(child: any, index: number) {
+        if (!child || typeof child.updateLocalTransform !== 'function') {
+          console.warn('WeatherManager.SafeContainer: attempted to add invalid child via addChildAt', child);
+          return this.target;
+        }
+        return this.target.addChildAt(child, index);
+      }
+      removeChild(child: any) { try { return this.target.removeChild(child); } catch (e) { return undefined; } }
+      removeChildAt(index: number) { try { return this.target.removeChildAt(index); } catch (e) { return undefined; } }
+      get width() { return (this.target as any).width; }
+      get height() { return (this.target as any).height; }
+      get position() { return (this.target as any).position; }
+    }
+
+    const safeOwner = new SafeContainer(container);
+
+    // @ts-ignore - Emitter API typing issue with PixiJS v8
+    const emitter = new Emitter(safeOwner as any, upgradedConfig);
+
+    // Validation: attempt a zero-delta update
+    try {
+      emitter.update(0);
+      emitter.emit = true;
+      this.activeWeather = { type, emitter, container, intensity };
+    } catch (err) {
+      console.error('WeatherManager: emitter validation failed', err);
+      try { emitter.destroy(); } catch (e) { /* ignore */ }
+      this.weatherDisabled = true;
+      return;
+    }
   }
 
   /**
@@ -452,19 +522,23 @@ export class WeatherManager {
       const currentContainer = this.activeWeather.container;
       const currentIntensity = this.activeWeather.intensity;
 
-      // Fade out current weather
-      gsap.to(currentEmitter, {
-        duration: duration / 1000,
-        onUpdate: () => {
+      // Fade out current weather using a simple timer instead of gsap on emitter
+      let elapsed = 0;
+      const fadeStep = () => {
+        elapsed += 16; // ~60fps
+        const progress = elapsed / duration;
+        
+        if (progress < 1) {
           // Gradually reduce emission
           if (currentEmitter.emit) {
             currentEmitter.maxParticles = Math.max(
               0,
-              Math.floor(currentEmitter.maxParticles * 0.95)
+              Math.floor(currentEmitter.maxParticles * (1 - progress * 0.1))
             );
           }
-        },
-        onComplete: () => {
+          requestAnimationFrame(fadeStep);
+        } else {
+          // Complete the transition
           currentEmitter.emit = false;
           currentEmitter.destroy();
           
@@ -477,7 +551,9 @@ export class WeatherManager {
           
           resolve();
         }
-      });
+      };
+      
+      requestAnimationFrame(fadeStep);
     });
   }
 
@@ -498,7 +574,26 @@ export class WeatherManager {
    */
   update(delta: number): void {
     if (this.activeWeather) {
-      this.activeWeather.emitter.update(delta);
+      try {
+        this.activeWeather.emitter.update(delta);
+      } catch (err) {
+        console.error('WeatherManager: emitter.update failed, clearing weather to avoid crash', err);
+        // log a safe snapshot of the emitter behaviors if possible
+        try {
+          // @ts-ignore
+          const em = this.activeWeather.emitter;
+          // attempt to log the behaviour config safely
+          console.error('Emitter snapshot:', {
+            // @ts-ignore
+            maxParticles: em.maxParticles,
+            // @ts-ignore
+            running: em.emit
+          });
+        } catch (e) {
+          // ignore
+        }
+        this.clearWeather();
+      }
     }
   }
 

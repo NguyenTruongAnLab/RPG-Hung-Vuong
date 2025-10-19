@@ -24,9 +24,10 @@ export type Direction = 'up' | 'down' | 'left' | 'right';
  */
 export class PlayerAnimation {
   private armatureDisplay: PixiArmatureDisplay | null = null;
-  private currentAnimation: AnimationState = 'idle';
+  private currentAnimation: string = ''; // Use flexible string instead of AnimationState
   private currentDirection: Direction = 'down';
   private isPlaying: boolean = false;
+  private availableAnimations: string[] = []; // Track available animations
 
   /**
    * Creates a new PlayerAnimation component
@@ -41,35 +42,45 @@ export class PlayerAnimation {
    * Sets the DragonBones armature display
    * 
    * @param armatureDisplay - The DragonBones armature display
+   * @param availableAnimations - Optional array of available animation names
    * 
    * @example
    * ```typescript
    * const display = dragonBonesManager.createDisplay(asset);
-   * animation.setArmatureDisplay(display);
+   * animation.setArmatureDisplay(display, asset.animations);
    * ```
    */
-  setArmatureDisplay(armatureDisplay: PixiArmatureDisplay): void {
+  setArmatureDisplay(armatureDisplay: PixiArmatureDisplay, availableAnimations?: string[]): void {
     this.armatureDisplay = armatureDisplay;
     
-    // Start with idle animation
-    this.play('idle');
+    // Store available animations for validation
+    if (availableAnimations && availableAnimations.length > 0) {
+      this.availableAnimations = availableAnimations;
+      console.log('PlayerAnimation: Available animations:', availableAnimations.slice(0, 10).join(', '));
+    }
+    
+    // Start with first available animation or try 'Idle'
+    const startAnim = this.availableAnimations.includes('Idle') 
+      ? 'Idle' 
+      : (this.availableAnimations[0] || 'idle');
+    this.play(startAnim);
   }
 
   /**
    * Plays an animation
    * 
-   * @param animation - Animation to play ('idle', 'walk', or 'attack')
-   * @param playTimes - Number of times to play (0 = loop, default: 0 for idle/walk, 1 for attack)
+   * @param animation - Animation to play (flexible name based on available animations)
+   * @param playTimes - Number of times to play (0 = loop, default: 0)
    * 
    * @example
    * ```typescript
-   * animation.play('walk'); // Loops
-   * animation.play('attack', 1); // Plays once
+   * animation.play('Walk'); // Plays available walk animation
+   * animation.play('Attack', 1); // Plays attack once
    * ```
    */
-  play(animation: AnimationState, playTimes?: number): void {
+  play(animation: string, playTimes?: number): void {
+    // Silently return if armatureDisplay not set
     if (!this.armatureDisplay || !this.armatureDisplay.animation) {
-      console.warn('Cannot play animation: armature display not set');
       return;
     }
 
@@ -81,21 +92,27 @@ export class PlayerAnimation {
     this.currentAnimation = animation;
     this.isPlaying = true;
 
-    // Determine play times based on animation type
-    let times = playTimes;
-    if (times === undefined) {
-      times = animation === 'attack' ? 1 : 0; // Attack plays once, others loop
-    }
-
-    // Get animation name with direction suffix if needed
-    const animationName = this.getAnimationName(animation);
+    // Determine play times (default loop)
+    const times = playTimes !== undefined ? playTimes : 0;
 
     try {
-      this.armatureDisplay.animation.play(animationName, times);
-    } catch (error) {
-      console.warn(`Animation '${animationName}' not found, using default`);
-      // Fallback to default animation without direction
+      // Try to play the animation
       this.armatureDisplay.animation.play(animation, times);
+    } catch (error) {
+      // Animation not found, try first available
+      if (this.availableAnimations.length > 0 && animation !== this.availableAnimations[0]) {
+        console.warn(`Animation '${animation}' not found, trying first available: '${this.availableAnimations[0]}'`);
+        try {
+          this.armatureDisplay.animation.play(this.availableAnimations[0], times);
+          this.currentAnimation = this.availableAnimations[0];
+        } catch (fallbackError) {
+          console.warn(`Failed to play any animation: ${fallbackError}`);
+          this.isPlaying = false;
+        }
+      } else {
+        console.warn(`Animation '${animation}' not found and no fallback available`);
+        this.isPlaying = false;
+      }
     }
   }
 
@@ -175,7 +192,7 @@ export class PlayerAnimation {
    * 
    * @returns Current animation name
    */
-  getCurrentAnimation(): AnimationState {
+  getCurrentAnimation(): string {
     return this.currentAnimation;
   }
 

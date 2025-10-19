@@ -25,6 +25,12 @@ import { Camera } from '../world/Camera';
 import { OverworldUI } from './OverworldUI';
 import { BattleSceneV2, EncounterData } from './BattleSceneV2';
 import { TutorialOverlay } from '../ui/TutorialOverlay';
+import { ParticleManager } from '../managers/ParticleManager';
+import { FilterManager } from '../managers/FilterManager';
+import { WeatherManager } from '../managers/WeatherManager';
+import { NPCSystem } from '../systems/NPCSystem';
+import { DragonBonesManager } from '../core/DragonBonesManager';
+import { AssetManager } from '../core/AssetManager';
 import { resolveAudioPath } from '../utils/paths';
 import testMapData from '../data/maps/test-map.json';
 
@@ -34,6 +40,10 @@ export class OverworldScene extends Scene {
   private eventBus: EventBus;
   private transitionManager: TransitionManager;
   private audioManager: AudioManager;
+  private particleManager: ParticleManager;
+  private filterManager: FilterManager;
+  private weatherManager: WeatherManager;
+  private npcSystem: NPCSystem;
   private sceneManager: SceneManager | null = null;
   private player: Player | null = null;
   private tilemap: Tilemap | null = null;
@@ -56,6 +66,10 @@ export class OverworldScene extends Scene {
     this.eventBus = EventBus.getInstance();
     this.transitionManager = TransitionManager.getInstance();
     this.audioManager = AudioManager.getInstance();
+    this.particleManager = ParticleManager.getInstance();
+    this.filterManager = FilterManager.getInstance();
+    this.weatherManager = WeatherManager.getInstance();
+    this.npcSystem = NPCSystem.getInstance();
     this.sceneManager = sceneManager || null;
   }
 
@@ -74,6 +88,12 @@ export class OverworldScene extends Scene {
       this.physics.init();
       this.input.init();
       console.log('✅ Physics and Input initialized');
+
+      // Initialize visual effects managers
+      await this.particleManager.init(this.app);
+      await this.weatherManager.init(this.app);
+      this.npcSystem.init(this.app);
+      console.log('✅ Particle, Weather, and NPC managers initialized');
 
       // Create tilemap with placeholder texture
       await this.createTilemap();
@@ -95,6 +115,14 @@ export class OverworldScene extends Scene {
 
       // Play overworld music
       this.audioManager.playMusic('bgm_overworld', 1000);
+
+      // Setup initial weather (light leaves for atmosphere)
+      this.weatherManager.setWeather('leaves', this.worldContainer, 'light');
+      console.log('✅ Weather system active');
+
+      // Setup NPCs
+      this.npcSystem.setWorldContainer(this.worldContainer);
+      this.spawnDemoNPCs();
 
       // Show tutorial if first time
       if (!TutorialOverlay.isComplete()) {
@@ -149,11 +177,17 @@ export class OverworldScene extends Scene {
     
     this.player = new Player(spawnX, spawnY, this.physics);
     
-    // Create player visual (simple circle for now)
+    // Try to load and display DragonBones character
+    this.loadPlayerAnimation();
+    
+    // Create fallback visual (circle) in case DragonBones fails to load
     const playerGraphics = new PIXI.Graphics();
     playerGraphics.circle(0, 0, 16).fill(0x0088ff);
     
     this.worldContainer.addChild(playerGraphics);
+    
+    // Store reference for animation integration
+    (this as any).playerGraphics = playerGraphics;
     
     // Update player graphics position in update loop
     this.app.ticker.add(() => {
@@ -165,6 +199,84 @@ export class OverworldScene extends Scene {
         this.playerPosition = { x: pos.x, y: pos.y };
       }
     });
+  }
+
+  /**
+   * Loads and applies player DragonBones animation
+   */
+  private async loadPlayerAnimation(): Promise<void> {
+    try {
+      const assetManager = AssetManager.getInstance();
+      const dragonBonesManager = new DragonBonesManager(this.app);
+      
+      // Load a player character (use Absolution as default player character)
+      console.log('📂 Loading player character animation...');
+      const asset = await assetManager.loadDragonBonesCharacter('Absolution');
+      
+      // Create armature display
+      const armatureDisplay = dragonBonesManager.createDisplay(asset, asset.armatureName);
+      
+      if (!armatureDisplay) {
+        console.warn('⚠️ Failed to create player armature display');
+        return;
+      }
+      
+      // Scale to appropriate size for overworld
+      armatureDisplay.scale.x = 0.5;
+      armatureDisplay.scale.y = 0.5;
+      
+      // Replace placeholder circle with DragonBones display
+      const playerGraphics = (this as any).playerGraphics;
+      if (playerGraphics) {
+        try {
+          this.worldContainer.removeChild(playerGraphics);
+        } catch (e) {
+          // Graphics may not be in container, ignore
+        }
+      }
+      
+      // Add armature to world
+      this.worldContainer.addChild(armatureDisplay);
+      
+      // Position at player location
+      if (this.player) {
+        const pos = this.player.getPosition();
+        armatureDisplay.x = pos.x;
+        armatureDisplay.y = pos.y;
+      }
+      
+      // Update position in ticker
+      this.app.ticker.add(() => {
+        if (this.player) {
+          const pos = this.player.getPosition();
+          armatureDisplay.x = pos.x;
+          armatureDisplay.y = pos.y;
+          this.playerPosition = { x: pos.x, y: pos.y };
+        }
+      });
+      
+      // Play idle animation
+      if (asset.animations.includes('Idle')) {
+        dragonBonesManager.playAnimation(armatureDisplay, 'Idle', 0);
+      } else if (asset.animations.length > 0) {
+        // Fallback to first available animation
+        dragonBonesManager.playAnimation(armatureDisplay, asset.animations[0], 0);
+      }
+      
+      // Integrate with PlayerAnimation component and pass available animations
+      this.player.animation.setArmatureDisplay(armatureDisplay, asset.animations);
+      
+      console.log('✅ Player character loaded:', {
+        character: 'Absolution',
+        armature: asset.armatureName,
+        animations: asset.animations.length,
+        available: asset.animations.slice(0, 5).join(', ')
+      });
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      console.warn(`⚠️ Failed to load player animation: ${errorMsg}`);
+      console.log('💡 Using placeholder circle fallback');
+    }
   }
 
   /**
@@ -315,29 +427,108 @@ export class OverworldScene extends Scene {
     });
   }
 
+  /**
+   * Spawn demo NPCs for testing
+   */
+  private spawnDemoNPCs(): void {
+    // Elder near spawn
+    this.npcSystem.createNPC({
+      id: 'elder_main',
+      name: 'Tộc Trưởng',
+      type: 'elder',
+      x: 250,
+      y: 200,
+      dialogue: 'elder_greeting'
+    });
+
+    // Merchant in town area
+    this.npcSystem.createNPC({
+      id: 'merchant_01',
+      name: 'Thương Nhân',
+      type: 'merchant',
+      x: 450,
+      y: 350,
+      dialogue: 'merchant_intro',
+      shopId: 'shop_general'
+    });
+
+    // Trainer for battles
+    this.npcSystem.createNPC({
+      id: 'trainer_01',
+      name: 'Chiến Binh',
+      type: 'trainer',
+      x: 700,
+      y: 450,
+      dialogue: 'trainer_challenge'
+    });
+
+    // Guide character
+    this.npcSystem.createNPC({
+      id: 'guide_01',
+      name: 'Hướng Dẫn Viên',
+      type: 'guide',
+      x: 150,
+      y: 150,
+      dialogue: 'guide_help'
+    });
+
+    // Villagers for atmosphere
+    this.npcSystem.createNPC({
+      id: 'villager_01',
+      name: 'Dân Làng',
+      type: 'villager',
+      x: 350,
+      y: 250,
+      dialogue: 'villager_gossip'
+    });
+
+    this.npcSystem.createNPC({
+      id: 'villager_02',
+      name: 'Dân Làng',
+      type: 'villager',
+      x: 550,
+      y: 200,
+      dialogue: 'villager_gossip'
+    });
+
+    console.log('✅ Demo NPCs spawned (6 NPCs)');
+  }
+
   update(dt: number): void {
-    // Update physics
-    this.physics.update(dt);
+    // Convert dt from milliseconds to seconds for particle/weather systems
+    const deltaSeconds = dt / 1000;
     
-    // Update player
+    // Update player FIRST so movement input is applied before physics step
     if (this.player) {
+      const playerPos = this.player.getPosition();
+      
       this.player.update(dt, this.input);
       
       // Update camera to follow player
       if (this.camera) {
-        this.camera.follow(this.player.getPosition());
+        this.camera.follow(playerPos);
       }
       
       // Check for encounters
       if (this.encounters) {
-        this.encounters.checkPosition(this.player.getPosition());
+        this.encounters.checkPosition(playerPos);
       }
+      
+      // Update NPC system (proximity checks, interaction indicators)
+      this.npcSystem.update(playerPos.x, playerPos.y);
       
       // Update UI
       if (this.ui) {
         this.ui.updateHP(this.player.getHp(), this.player.getMaxHp());
       }
     }
+    
+    // Update physics AFTER player input so forces are included
+    this.physics.update(dt);
+    
+    // Update visual effects
+    this.particleManager.update(deltaSeconds);
+    this.weatherManager.update(deltaSeconds);
   }
 
   /**
@@ -377,6 +568,12 @@ export class OverworldScene extends Scene {
     
     // Clear physics
     this.physics.clear();
+    
+    // Cleanup managers
+    this.particleManager.cleanup();
+    this.weatherManager.clearWeather();
+    this.filterManager.cleanup();
+    this.npcSystem.clearAll();
     
     // Remove event listeners
     this.eventBus.off('encounter:trigger', this.handleEncounter);

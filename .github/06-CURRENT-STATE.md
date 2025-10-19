@@ -2,9 +2,95 @@
 
 <!-- AUTO-UPDATED: Agent updates this file after completing tasks -->
 
-**Last Updated**: 2025-10-17  
-**Current Phase**: Phase 3 (Battle System) - COMPLETE  
-**Overall Progress**: 60%
+**Last Updated**: 2025-10-19  
+**Current Phase**: Phase 3 Enhancement (Overworld Polish) - IN PROGRESS  
+**Overall Progress**: 70%
+
+---
+
+## 🚧 Phase 3 Enhancement: Overworld Polish (35% Complete)
+
+**Goal**: Transform overworld from functional to vibrant and engaging
+
+### ✅ Recently Completed (2025-10-19)
+- [x] Fixed WeatherManager PropertyList config (hex color numbers instead of strings)
+- [x] Loaded DragonBones player assets (Absolution character with animations)
+- [x] Fixed player animation names (flexible string-based system with fallbacks)
+- [x] Fixed physics update order (player input applied BEFORE physics step)
+- [x] Re-enabled weather system (light leaves falling in overworld)
+- [x] Refactored story to companion system (explorer + 3 Divine Beasts vs. 4-character party)
+- [x] Updated CharacterSelectionScene UI ("Bạn Đồng Hành" = Companions)
+- [x] Updated STORY_GUIDE.md with exploration-focused narrative
+
+### Visual Effects Managers (src/managers/)
+- [x] `ParticleManager.ts` (645 lines) - @pixi/particle-emitter wrapper
+  - Element-specific particle effects (Kim, Mộc, Thủy, Hỏa, Thổ)
+  - Battle effects (critical hit, super effective, victory, capture, level-up)
+  - Integrated into OverworldScene
+- [x] `FilterManager.ts` (415 lines) - @pixi/filters wrapper
+  - Status effect filters (poison, freeze, burn, stun, confusion)
+  - Damage feedback effects
+  - Critical hit/super effective glows
+- [x] `WeatherManager.ts` (618 lines) - Weather particle system (FIXED & RE-ENABLED)
+  - Rain, snow, leaves, petals, mist effects
+  - Weather intensity levels (light, medium, heavy)
+  - Smooth transitions between weather types
+  - ✅ Now active in OverworldScene with light leaf particles
+
+### Player Systems (src/entities/)
+- [x] `Player.ts` (253 lines) - Player orchestrator
+  - Updated animations to use 'Walk'/'Idle' with flexible names
+  - Fixed animation state management
+- [x] `components/PlayerMovement.ts` (180 lines) - Matter.js movement
+- [x] `components/PlayerAnimation.ts` (230 lines) - DragonBones animation
+  - ✅ Now uses flexible animation names
+  - ✅ Intelligent fallback to available animations
+  - ✅ Receives available animations array from DragonBonesManager
+
+### Overworld Scene
+- [x] `OverworldScene.ts` (588 lines) - Main exploration scene
+  - ✅ Fixed physics update order (critical bug fix)
+  - ✅ Player input applied before physics.update()
+  - ✅ Weather system re-enabled
+  - ✅ DragonBones character loading functional
+  - ✅ Weather actively rendering
+
+### NPC System
+- [x] `NPCSystem.ts` (340 lines) - NPC management
+  - NPC spawning and positioning
+  - Proximity detection and interaction indicators
+  - Multiple NPC types (elder, merchant, trainer, guide, villager)
+  - Integrated into OverworldScene with 6 demo NPCs spawned
+
+### Story & Character System
+- [x] `CharacterSelectionScene.ts` (576 lines) - Companion selection
+  - ✅ Updated to companion system (1 starter only)
+  - ✅ UI text changed to "Chọn Thần Thú Bạn Đầu Tiên" (Choose First Companion)
+  - ✅ Party panel renamed to "Bạn Đồng Hành" (Companions)
+- [x] `docs/STORY_GUIDE.md` - Complete narrative guide
+  - ✅ Refactored from "defend from evil" to "explore and discover"
+  - ✅ Changed from 4-character party to single explorer + 3 Divine Beasts
+  - ✅ Protagonist is now "Sasha" (explorer) not warrior
+  - ✅ Companions acquired throughout journey in zones
+
+### Integration Status
+- [x] All managers initialized in OverworldScene
+- [x] Update loop processes: player input → physics → particles/weather → NPCs
+- [x] Weather system active (light leaves for atmosphere)
+- [x] DragonBones character displaying with animations
+- [x] Demo NPCs populate overworld
+- [x] Proper cleanup on scene destroy
+
+### Remaining Tasks for Phase 3
+- [ ] Test complete movement loop (verify WASD movement works)
+- [ ] Environmental props system
+- [ ] Points of Interest (POI) system
+- [ ] Zone transition effects
+- [ ] Ambient atmosphere per zone
+- [ ] Quest visual feedback
+- [ ] Performance testing and validation
+
+See `docs/PHASE3_ENHANCEMENT_SUMMARY.md` for detailed plan.
 
 ---
 

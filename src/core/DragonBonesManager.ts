@@ -27,7 +27,11 @@ export interface DragonBonesAsset {
  */
 export class DragonBonesManager {
   private factory: PixiFactory;
-  private loadedDataNames = new Set<string>(); // Track loaded data to prevent duplicates
+  // Track loaded data across all manager instances to avoid re-parsing the
+  // same DragonBones data into the shared PixiFactory (which logs errors
+  // if the same name is added multiple times). Use a static Set so it's
+  // shared globally.
+  private static loadedDataNames: Set<string> = new Set<string>();
 
   /**
    * Creates a new DragonBonesManager
@@ -54,16 +58,16 @@ export class DragonBonesManager {
     try {
       // Check if this data has already been added to prevent duplicates
       const dataKey = `${asset.id}_${armatureName}`;
-      
-      if (!this.loadedDataNames.has(dataKey)) {
+
+      if (!DragonBonesManager.loadedDataNames.has(dataKey)) {
         // Parse the DragonBones skeleton data
         this.factory.parseDragonBonesData(asset.skeleton);
 
         // Parse the texture atlas data with the texture
         this.factory.parseTextureAtlasData(asset.textureAtlas, asset.texture);
-        
-        // Mark as loaded
-        this.loadedDataNames.add(dataKey);
+
+        // Mark as loaded globally
+        DragonBonesManager.loadedDataNames.add(dataKey);
       }
 
       // Build and return the armature display
@@ -235,7 +239,25 @@ export class DragonBonesManager {
    * Call this when disposing of the manager
    */
   public dispose(): void {
-    // Clear all cached DragonBones data
-    this.factory.clear();
+    // Instance dispose should not clear the shared factory (global state).
+    // Clearing the global PixiFactory can break other parts of the app that
+    // rely on previously-parsed DragonBones data. Provide a static helper
+    // to clear global data when the application is shutting down.
+    // No-op for instances.
+  }
+
+  /**
+   * Clear all globally parsed DragonBones data and reset the tracker.
+   * Call this only when you intentionally want to clear the global runtime
+   * (for example during a full app teardown in tests).
+   */
+  public static clearAll(): void {
+    try {
+      // clear factory data
+      PixiFactory.factory.clear();
+    } catch (e) {
+      // ignore factory clear errors
+    }
+    DragonBonesManager.loadedDataNames.clear();
   }
 }

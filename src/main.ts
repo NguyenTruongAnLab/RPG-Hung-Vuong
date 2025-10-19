@@ -19,6 +19,8 @@ async function startGame() {
   try {
     // Create PixiJS application
     const app = new Application();
+    // Note: previous defensive patch for PIXI.Container.addChild was removed.
+    // WeatherManager now uses a local SafeContainer wrapper when constructing emitters.
     await app.init({
       width: 960,
       height: 640,
@@ -37,31 +39,43 @@ async function startGame() {
     // Create scene manager
     const sceneManager = new SceneManager(app);
 
-    // Check if player already has a party selected
-    const savedParty = localStorage.getItem('playerParty');
-    
-    if (savedParty) {
-      // Go directly to overworld
-      console.log('Existing party found, loading overworld...');
+    // Always show character selection first (opening experience)
+    // This allows players to see the game UI even if they have a saved party
+    console.log('Starting game - showing character selection scene...');
+    const selectionScene = new CharacterSelectionScene(app, sceneManager);
+    await sceneManager.switchTo(selectionScene);
+
+    // Listen for game start event
+    selectionScene.on('start-game', async () => {
+      console.log('Starting overworld scene...');
       const overworldScene = new OverworldScene(app, sceneManager);
       await sceneManager.switchTo(overworldScene);
-    } else {
-      // Show character selection
-      console.log('No party found, showing character selection...');
-      const selectionScene = new CharacterSelectionScene(app, sceneManager);
-      await sceneManager.switchTo(selectionScene);
-
-      // Listen for game start event
-      selectionScene.on('start-game', async () => {
-        const overworldScene = new OverworldScene(app, sceneManager);
-        await sceneManager.switchTo(overworldScene);
-      });
-    }
+    });
 
     // Game loop
     app.ticker.add((ticker) => {
       const deltaTime = ticker.deltaTime;
       sceneManager.update(deltaTime);
+    });
+
+    // Defensive check: remove any non-PIXI display objects from the stage to avoid
+    // 'updateLocalTransform is not a function' crashes during rendering. This helps
+    // catch accidental additions of plain objects to the stage at runtime.
+    app.ticker.add(() => {
+      try {
+        const children = [...app.stage.children];
+        for (const child of children) {
+          // Some objects (like plain POJOs) won't have updateLocalTransform method
+          // which Pixi expects on DisplayObject. Remove and log them.
+          // @ts-ignore
+          if (!child || typeof (child as any).updateLocalTransform !== 'function') {
+            console.error('Removing non-display child from stage to avoid render crash:', child);
+            try { app.stage.removeChild(child as any); } catch (e) { /* ignore */ }
+          }
+        }
+      } catch (e) {
+        // keep ticker stable
+      }
     });
 
     console.log('Thần Thú Văn Lang - Game started!');

@@ -1,8 +1,8 @@
 /**
- * CharacterSelectionScene - Choose starting party from 207 monsters
+ * CharacterSelectionScene - Choose starting Divine Beast companion
  * 
- * Allows players to browse all monsters by element and select
- * up to 3 for their starting party.
+ * Allows players to select 1 starting Divine Beast companion from 207 available creatures.
+ * This companion will journey with them throughout Văn Lang.
  * 
  * @example
  * ```typescript
@@ -18,7 +18,7 @@ import { DragonBonesAnimation } from '../entities/components/DragonBonesAnimatio
 
 export class CharacterSelectionScene extends Scene {
   private selectedMonsters: string[] = [];
-  private maxPartySize = 3;
+  private maxPartySize = 1; // Only select 1 starting companion
   private currentElement = 'kim';
   private currentPage = 0;
   private monstersPerPage = 12;
@@ -49,7 +49,7 @@ export class CharacterSelectionScene extends Scene {
   
   private createTitle(): void {
     const title = new PIXI.Text({
-      text: 'Chọn Đội Thần Thú',
+      text: 'Chọn Thần Thú Bạn Đầu Tiên',
       style: {
         fontSize: 36,
         fill: 0xFFD700,
@@ -267,7 +267,7 @@ export class CharacterSelectionScene extends Scene {
     this.addChild(panel);
     
     const title = new PIXI.Text({
-      text: 'Đội Hình',
+      text: 'Bạn Đồng Hành',
       style: {
         fontSize: 20,
         fill: 0xFFFFFF,

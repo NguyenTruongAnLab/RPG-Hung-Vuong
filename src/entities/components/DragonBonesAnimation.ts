@@ -96,16 +96,14 @@ export class DragonBonesAnimation {
    */
   play(animationName: string, loops: number = 0): void {
     if (!this.armatureDisplay) {
-      const error = `Cannot play animation: armature display not set for character "${this.characterName}"`;
-      console.error(error);
-      throw new Error(error);
+      console.warn(`Cannot play animation: armature display not set for character "${this.characterName}"`);
+      return;
     }
 
     // Validate animation object exists
     if (!this.armatureDisplay.animation) {
-      const error = `Cannot play animation: animation controller not initialized for "${this.characterName}"`;
-      console.error(error);
-      throw new Error(error);
+      console.warn(`Cannot play animation: animation controller not initialized for "${this.characterName}"`);
+      return;
     }
 
     // Find best match if exact name not found

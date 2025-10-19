@@ -72,6 +72,8 @@ export class Player {
     this.stats = new PlayerStats(initialStats);
     this.movement = new PlayerMovement(this.body);
     this.combat = new PlayerCombat(this.stats, physics);
+    // Note: PlayerAnimation doesn't require armatureDisplay for now
+    // It gracefully handles missing DragonBones display
     this.animation = new PlayerAnimation();
   }
 
@@ -119,7 +121,8 @@ export class Player {
   private updateAnimation(movementVector: Vector2D): void {
     // Update animation state
     if (movementVector.x !== 0 || movementVector.y !== 0) {
-      this.animation.play('walk');
+      // Try common animation names: Walk, Run, Move (PlayerAnimation will fallback if not found)
+      this.animation.play('Walk');
       
       // Update direction based on dominant movement axis
       if (Math.abs(movementVector.x) > Math.abs(movementVector.y)) {
@@ -130,7 +133,8 @@ export class Player {
         this.animation.setDirection(movementVector.y > 0 ? 'down' : 'up');
       }
     } else {
-      this.animation.play('idle');
+      // Try common animation names: Idle, Stand, Rest (PlayerAnimation will fallback)
+      this.animation.play('Idle');
     }
   }
 

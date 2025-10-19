@@ -2,11 +2,12 @@
 
 ## 🎭 Overview
 
-**Thần Thú Văn Lang** tells the epic story of a young Lạc Việt warrior chosen to defend the ancient kingdom of Văn Lang during the reign of the Hùng Kings. This guide provides the complete narrative structure, character profiles, and story progression for the game.
+**Thần Thú Văn Lang** tells the epic story of a young explorer discovering the ancient kingdom of Văn Lang during the reign of the Hùng Kings, capturing and befriending three divine beasts in a journey across Vietnamese mythology.
 
 **Time Period**: 2879-258 BCE (Văn Lang/Hùng Vương dynasty)  
 **Setting**: Ancient Vietnam (Văn Lang kingdom)  
-**Theme**: Vietnamese mythology meets creature collection adventure
+**Theme**: Vietnamese mythology exploration + creature collection (like Pokémon) with 3 companion beasts  
+**Gameplay Style**: Real-time top-down exploration with turn-based battles
 
 ---
 
@@ -14,92 +15,83 @@
 
 ### The Beginning
 
-In the prosperous land of Văn Lang, under the wise rule of the Hùng Kings, people live in harmony with mystical creatures called **Thần Thú** (Divine Beasts). These creatures embody the five elements of **Ngũ Hành** (Kim, Mộc, Thủy, Hỏa, Thổ) and have protected the land for generations.
+In the prosperous land of Văn Lang, under the wise rule of the Hùng Kings, people live in harmony with mystical creatures called **Thần Thú** (Divine Beasts). These creatures embody the five elements of **Ngũ Hành** (Kim, Mộc, Thủy, Hỏa, Thổ) and roam the land freely.
 
-However, darkness is stirring. An ancient evil known as **Ma Vương** (Demon Lord) is awakening, corrupting the Thần Thú and turning them against humanity. The balance of Ngũ Hành is breaking, threatening to plunge Văn Lang into chaos.
+An ancient legend speaks of a great explorer who would journey across Văn Lang, discover its secrets, and form bonds with three legendary Thần Thú. You are that explorer.
 
 ### The Hero's Call
 
-You are a young warrior from the **Làng Lạc Việt** (Lac Viet Village), chosen by the **Tộc Trưởng** (Tribe Elder) to become a **Thần Thú Master**. Your mission: journey across Văn Lang, form bonds with the Divine Beasts, restore the balance of elements, and defeat the Ma Vương before all is lost.
+You are a young explorer from **Làng Lạc Việt** (Lac Viet Village), setting out on a great adventure to discover the world, meet the Thần Thú, and learn the secrets of Văn Lang. With three divine beasts at your side, you'll explore vast forests, climb sacred mountains, cross mystical rivers, and uncover the legends hidden within this ancient land.
 
 ---
 
 ## 🌟 Main Characters
 
-### Playable Character (Customizable)
+### Playable Character (Player-Named Explorer)
 
-**Name**: Chosen by player (default: "Chiến Sĩ" - Warrior)  
+**Name**: Chosen by player (default: "Sasha")  
 **Age**: 16-18  
 **Origin**: Làng Lạc Việt  
-**Role**: Thần Thú Master in training  
-**Goal**: Protect Văn Lang and master all 200 Thần Thú
+**Role**: Young explorer and adventurer  
+**Goal**: Discover Văn Lang, befriend three Divine Beasts, uncover ancient secrets  
+**Personality**: Curious, brave, determined to explore the world
 
-### Tộc Trưởng (Tribe Elder)
+---
+
+## 🐉 Companion System: Three Divine Beasts
+
+Instead of a party of human companions, you journey with **3 Thần Thú (Divine Beasts)** that you'll encounter and befriend throughout your journey. Like Pokémon, each beast has unique abilities and element types.
+
+### Companion Slot 1: First Thần Thú (Starter)
+**How You Get It**: Gift from the village Elder at the start of your journey  
+**Purpose**: Your primary companion in battles  
+**Role**: Tank/defender for your team
+
+### Companion Slot 2: Second Thần Thú  
+**How You Get It**: Encounter and capture in the forest zone  
+**Purpose**: Secondary attacker  
+**Role**: Balanced offensive/defensive
+
+### Companion Slot 3: Third Thần Thú  
+**How You Get It**: Encounter and capture in a later zone  
+**Purpose**: Special ability provider  
+**Role**: Utility and special effects
+
+---
+
+## 👥 Key NPCs You'll Meet
+
+### Tộc Trưởng (Village Elder)
 
 **Age**: 68  
-**Role**: Village elder and mentor  
-**Personality**: Wise, patient, mysterious  
-**Voice Tone**: Deep, slow (lower frequency beeps)  
+**Location**: Làng Lạc Việt (starting village)  
+**Role**: Quest giver, mentor, story guide  
+**Personality**: Wise, patient, knowledgeable about ancient legends  
+**Voice Tone**: Deep, slow (lower frequency)  
 **Key Moments**:
-- Opening: Gives player their first Thần Thú
-- Mid-game: Reveals secrets about Ma Vương
-- Ending: Celebrates player's victory
+- Opening: Gives you your first Thần Thú
+- Mid-journey: Shares legends and guidance
+- Ending: Celebrates your discoveries
 
-**Dialog Sample** (Vietnamese):
-> "Con ơi, bóng đêm đang bao trùm đất nước. Ngươi phải thu phục Thần Thú để bảo vệ bộ lạc!"
-> 
-> _"Child, darkness shrouds our land. You must master the Divine Beasts to protect our tribe!"_
+**Dialog Sample**:
+> "Hành trình khám phá của em sẽ kể cho chúng ta những chuyện chưa bao giờ nghe!"  
+> _"Your journey of discovery will tell us stories we've never heard!"_
 
-### Lạc Nhi (Scholar Companion)
+### Lạc Nhi (Scholar - Optional)
 
 **Age**: 17  
-**Role**: Scholar and strategist  
+**Location**: Forest temple  
+**Role**: Optional guide who explains element system  
 **Personality**: Intelligent, curious, bookish  
-**Voice Tone**: Bright, quick (higher frequency)  
-**Specialty**: Knows Thần Thú lore and Ngũ Hành theory  
-**Key Moments**:
-- Rừng Thần: Joins party, teaches element advantages
-- Library quest: Discovers Ma Vương's weakness
-- Boss battles: Provides tactical advice
+**Specialty**: Knows about element types and Thần Thú lore
 
-**Dialog Sample**:
-> "Ta đã nghiên cứu Ngũ Hành! Kim thắng Mộc, Mộc thắng Thổ, Thổ thắng Thủy!"
-> 
-> _"I've studied the Five Elements! Metal beats Wood, Wood beats Earth, Earth beats Water!"_
+### Tự Xưa (Hermit - Optional)
 
-### Phong Dũng (Warrior Companion)
-
-**Age**: 19  
-**Role**: Strong warrior and protector  
-**Personality**: Brave, loyal, straightforward  
-**Voice Tone**: Mid-range, steady rhythm  
-**Specialty**: Combat tactics and training  
-**Key Moments**:
-- Núi Tản Viên: Joins party after trial
-- Teaches battle skills
-- Final battle: Fights alongside player
-
-**Dialog Sample**:
-> "Chiến đấu là vinh dự! Ta sẽ đồng hành cùng ngươi đến cùng!"
-> 
-> _"Battle is honor! I will journey with you to the end!"_
-
-### Diệp Linh (Nimble Scout)
-
-**Age**: 16  
-**Role**: Scout and tracker  
-**Personality**: Playful, nimble, adventurous  
-**Voice Tone**: Varied pitch, fast tempo  
-**Specialty**: Finding hidden paths and rare Thần Thú  
-**Key Moments**:
-- Rừng Thần: Guides through forest
-- Unlocks secret areas
-- Helps capture legendary creatures
-
-**Dialog Sample**:
-> "Hehe! Ta biết con đường tắt. Theo ta nào!"
-> 
-> _"Hehe! I know a shortcut. Follow me!"_
+**Age**: Unknown  
+**Location**: Mountain peak  
+**Role**: Optional wise guide  
+**Personality**: Mysterious, speaks in riddles  
+**Specialty**: Teaches ancient secrets and meditation techniques
 
 ---
 
@@ -141,22 +133,22 @@ NARRATOR (V.O.):
 **Dialog**:
 ```
 TỘC TRƯỞNG:
-"Chào mừng trở về, Chiến Sĩ! Ta đã chờ ngươi."
-(Welcome back, Warrior! I've been waiting for you.)
+"Chào mừng bạn, nhà thám hiểm trẻ! Ta đã chờ ngươi."
+(Welcome, young explorer! I've been waiting for you.)
 
 [Player nods]
 
-"Bóng đêm đang bao trùm. Ngươi phải thu phục Thần Thú để bảo vệ bộ lạc!"
-(Darkness shrouds us. You must master Divine Beasts to protect our tribe!)
+"Hãy khám phá Văn Lang. Gặp gỡ những Thần Thú, kết bạn với chúng, và biết thêm về thế giới của chúng ta."
+(Explore Van Lang. Meet Divine Beasts, befriend them, and learn about our world.)
 
 [Screen transitions to selection]
-"Hãy chọn Thần Thú đầu tiên của ngươi. Chọn khôn ngoan!"
-(Choose your first Divine Beast. Choose wisely!)
+"Hãy chọn Thần Thú đầu tiên làm bạn đồng hành. Chọn khôn ngoan!"
+(Choose your first Divine Beast companion. Choose wisely!)
 ```
 
 **Outcome**: Player selects from 3 starter Thần Thú (Fire, Water, or Wood type)
 
-#### Scene 1.3 - Tutorial Battle
+#### Scene 1.3 - First Encounter
 **Location**: Village outskirts  
 **Trigger**: Walk to edge of village  
 **Voice**: `voice_tutorial_encounter.mp3`, `voice_tutorial_battle.mp3`
@@ -164,118 +156,109 @@ TỘC TRƯỞNG:
 **Dialog**:
 ```
 TỘC TRƯỞNG:
-"Cẩn thận! Thần Thú hoang dã xuất hiện!"
-(Careful! A wild Divine Beast appears!)
+"Chú ý! Một Thần Thú hoang dã!"
+(Look! A wild Divine Beast!)
 
 [Battle begins - easy enemy, 20 HP]
 
-"Trong chiến đấu, sử dụng các kỹ năng để tấn công!"
-(In battle, use skills to attack!)
+"Hãy thử chiến đấu! Sử dụng các kỹ năng để tấn công!"
+(Try battling! Use skills to attack!)
 
 [After victory]
-"Tốt lắm! Ngươi đã sẵn sàng cho hành trình."
-(Excellent! You are ready for the journey.)
+"Tuyệt vời! Ngươi có thể cố gắng bắt nó nếu muốn."
+(Great! You can try to catch it if you wish.)
 ```
 
-**Outcome**: Victory gives first EXP, unlocks capture mechanic
+**Outcome**: Learn battle mechanics, option to capture Thần Thú, unlock catch system
 
 ---
 
-### ACT 2: JOURNEY (Exploring Văn Lang)
+### ACT 2: JOURNEY (Exploring Văn Lang - Discovery & Collection)
 
 **Duration**: ~3 hours  
-**Goal**: Explore 5 elemental zones, collect Thần Thú, defeat mini-bosses
+**Goal**: Explore zones, encounter wild Thần Thú, befriend your companions, discover Văn Lang's secrets
 
 #### Zone 1: Rừng Thần (Divine Forest - Wood Element)
 
-**Description**: Ancient forest with towering trees, moss-covered stones, and mystical glowing flora.
+**Description**: Ancient forest with towering trees, moss-covered stones, and mystical glowing flora. Home to many Wood-element Divine Beasts.
 
-**Thần Thú Found**: Wood-type creatures (Níu Mộc, Ma Cây, Tinh Linh Cây)
+**Thần Thú Found**: Wood-type creatures you can encounter and catch
 
 **Scene 2.1 - Enter Forest**
 **Trigger**: Walk to forest entrance from village  
-**Voice**: `voice_zone_forest_warning.mp3`
+**Voice**: `voice_zone_forest_discover.mp3`
 
 **Cutscene**:
 ```
-[Camera pans through dark trees]
+[Camera pans through ancient trees, shafts of light through canopy]
 NARRATOR:
-"Rừng Thần, nơi sinh sống của các Thần Thú Mộc hệ."
-(Divine Forest, home of Wood-element Divine Beasts.)
+"Rừng Thần - được gọi theo cách các Thần Thú Mộc hệ sinh sống tại đây."
+(Divine Forest - named for the Wood-element Divine Beasts living here.)
 
-[Lạc Nhi appears]
-LẠC NHI:
-"Rừng này nguy hiểm. Ta sẽ đồng hành!"
-(This forest is dangerous. I will accompany you!)
-
-[Lạc Nhi joins party]
+[Soft forest ambiance plays]
+"Khám phá rừng này. Gặp gỡ những Thần Thú mới. Hãy mạnh mẽ lên!"
+(Explore this forest. Meet new Divine Beasts. Grow stronger!)
 ```
 
-**Mini-Boss**: **Ma Cây** (Tree Demon)
-- HP: 150
-- Element: Wood
-- Weak to: Fire
-
-**Scene 2.2 - Defeat Ma Cây**
-**Voice**: `voice_boss_defeat_generic.mp3`
-
-**Dialog**:
-```
-[Ma Cây defeated, turns back to normal tree]
-LẠC NHI:
-"Ngươi đã thanh tẩy Ma Cây! Rừng được bình yên trở lại."
-(You've purified the Tree Demon! The forest is peaceful again.)
-
-[Reward: 500 EXP, Wood Stone (1/5)]
-```
+**What You'll Find**:
+- Multiple wild Thần Thú encounters (Wood-type)
+- Hidden items and treasures
+- Optional NPC: Lạc Nhi (Scholar who explains element system)
+- Opportunities to catch your second companion
 
 #### Zone 2: Sông Hồng (Red River - Water Element)
 
-**Description**: Mighty river with rushing waters, fishing villages, and water temples.
+**Description**: Mighty river with rushing waters, fishing villages, and ancient temples by the shore.
 
-**Thần Thú Found**: Water-type creatures (Rồng Nước, Cá Chép, Long Nữ)
+**Thần Thú Found**: Water-type creatures
 
-**Scene 2.3 - River Crossing**
+**Scene 2.2 - River Discovery**
 **Trigger**: Walk to river  
-**Voice**: `voice_zone_water_warning.mp3`
+**Voice**: `voice_zone_water_discover.mp3`
 
 **Cutscene**:
 ```
-[Camera shows flowing river]
+[Camera shows flowing river, waterfalls in distance]
 NARRATOR:
-"Sông Hồng, nguồn sống của Văn Lang."
-(Red River, lifeblood of Van Lang.)
+"Sông Hồng - dòng sông thiêng của Văn Lang. Nơi đây sống những Thần Thú Thủy hệ."
+(Red River - sacred river of Van Lang. Home to Water-element Divine Beasts.)
 
-[Long Nữ (Dragon Princess) appears from water]
-LONG NỮ:
-"Con người, hãy chứng minh ngươi xứng đáng!"
-(Human, prove your worth!)
-
-[Quest trigger: Find Sacred Pearl]
+[Peaceful water sounds]
+"Tìm hiểu những bí ẩn nơi bờ sông."
+(Discover the mysteries along the river.)
 ```
 
-**Quest**: **Ngọc Trai Thiêng** (Sacred Pearl)
-- Objective: Find pearl hidden in underwater cave
-- Reward: Long Nữ joins as summonable Thần Thú
+**What You'll Find**:
+- Water-type Thần Thú encounters
+- Fishing village NPCs with stories
+- Opportunity to catch your second or third companion
+- Hidden underwater areas
 
 #### Zone 3: Kim Sơn (Metal Mountain - Metal Element)
 
-**Description**: Rocky peaks with ore veins, ancient mines, and metal creatures.
+**Description**: Rocky peaks with ore veins, ancient mines, and metal-type Divine Beasts.
 
-**Thần Thú Found**: Metal-type creatures (Hổ Sắt, Kim Điêu, Cương Thạch)
+**Thần Thú Found**: Metal-type creatures
 
-**Scene 2.4 - Mountain Ascent**
-**Voice**: `voice_zone_metal_warning.mp3`
+**Scene 2.3 - Mountain Ascent**
+**Voice**: `voice_zone_metal_discover.mp3`
 
 **Cutscene**:
 ```
-[Camera pans up mountain]
-PHONG DŨNG (appears):
-"Núi này là thử thách cho những người mạnh mẽ!"
-(This mountain tests the strong!)
+[Camera pans up mountain peaks]
+NARRATOR:
+"Kim Sơn - ngọn núi có tầm nhìn rộng nhất Văn Lang."
+(Metal Mountain - the highest-viewing mountain in Van Lang.)
 
-[Phong Dũng joins party]
+"Lên đỉnh. Gặp gỡ những Thần Thú mạnh mẽ."
+(Climb to the peak. Meet powerful Divine Beasts.)
 ```
+
+**What You'll Find**:
+- Metal-type Thần Thú encounters  
+- Challenging battles
+- Panoramic views and discoveries
+- Final companion encounter opportunity
 
 **Mini-Boss**: **Hổ Sắt** (Iron Tiger)
 - HP: 200

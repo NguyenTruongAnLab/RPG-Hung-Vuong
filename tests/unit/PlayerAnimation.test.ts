@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { PlayerAnimation } from '../../src/entities/components/PlayerAnimation';
-import * as dragonBones from 'dragonbones.js';
 
 // Mock DragonBones armature display
 function createMockArmatureDisplay() {
@@ -91,14 +90,15 @@ describe('PlayerAnimation', () => {
       expect(playerAnimation.isAnimationPlaying()).toBe(true);
     });
 
-    it('should warn if armature display not set', () => {
+    it('should silently fail if armature display not set', () => {
+      // PlayerAnimation.play() now silently returns when armatureDisplay is not set
+      // This prevents console spam during development without DragonBones assets
       const consoleSpy = vi.spyOn(console, 'warn');
       const newAnimation = new PlayerAnimation();
-      newAnimation.play('walk');
       
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Cannot play animation: armature display not set'
-      );
+      // Should not throw and should not warn
+      expect(() => newAnimation.play('walk')).not.toThrow();
+      expect(consoleSpy).not.toHaveBeenCalled();
     });
   });
 

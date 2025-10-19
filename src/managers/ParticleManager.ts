@@ -17,7 +17,7 @@
  * ```
  */
 import * as PIXI from 'pixi.js';
-import { Emitter, EmitterConfigV3 } from '@pixi/particle-emitter';
+import { Emitter, EmitterConfigV3, upgradeConfig } from '@pixi/particle-emitter';
 
 /**
  * Element types for particle effects
@@ -578,10 +578,10 @@ export class ParticleManager {
     emitterContainer.position.set(x, y);
     container.addChild(emitterContainer);
 
+    // Use upgradeConfig to ensure compatibility with current emitter API
+    const upgradedConfig = upgradeConfig(config, [this.particleTexture]);
     // @ts-ignore - Emitter API typing issue with PixiJS v8
-    const emitter = new Emitter(emitterContainer, config);
-    // @ts-ignore - init method signature variance
-    emitter.init([this.particleTexture]);
+    const emitter = new Emitter(emitterContainer, upgradedConfig);
     emitter.emit = true;
 
     this.activeEmitters.push({

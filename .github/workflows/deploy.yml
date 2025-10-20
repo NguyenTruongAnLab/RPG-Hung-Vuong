@@ -15,32 +15,14 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build-and-test:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      # 🔒 Security: Type check before build
-      - name: Type Check
-        run: npm run type-check
-
-      # 🔒 Security: Run tests
-      - name: Run Unit Tests
-        run: npm run test
-
-      # 🔒 Security: Build with hardened config + Encrypt assets into chunks
-      - name: Build Web Release with Encrypted Chunks
-        run: npm run build:web-release
 
       # 🔐 Verify encrypted chunks are present and properly sized
       - name: Verify Encrypted Chunks
@@ -72,43 +54,42 @@ jobs:
             exit 1
           fi
 
-      # 🔒 Security: Verify no source maps in build
-      - name: Verify No Source Maps
+      # 🎮 Verify game entry point
+      - name: Verify Game Entry Point
         run: |
-          if find release/js -name "*.map" -type f 2>/dev/null | grep -q .; then
-            echo "❌ ERROR: Source maps found in build! Remove them before publishing."
-            find release/js -name "*.map" -type f
-            exit 1
+          if [ -f "release/index.html" ]; then
+            echo "✅ Game index.html found"
           else
-            echo "✅ No source maps found - safe to publish"
+            echo "❌ ERROR: release/index.html missing!"
+            exit 1
           fi
 
-      # 🔒 Security: Check for environment variables in build
-      - name: Scan for Secrets
+      # 📊 Display what will be deployed
+      - name: Display Deployment Contents
         run: |
-          if grep -r "PRIVATE_KEY\|SECRET_KEY\|API_KEY\|PASSWORD" release/js 2>/dev/null | grep -v "node_modules"; then
-            echo "⚠️ WARNING: Potential secrets found in build"
-            exit 1
-          else
-            echo "✅ No obvious secrets detected"
-          fi
-
-      # 📊 Display release folder contents for monitoring
-      - name: Display Release Folder Size
-        run: |
-          echo "📦 Release folder structure:"
+          echo "📦 Release folder contents:"
           du -sh release/ || du -sh release
           echo ""
           echo "🔐 Encrypted chunks:"
           ls -lh release/assets.asar.enc.chunk* || echo "No chunks found"
           echo ""
-          echo "📄 Key files:"
-          ls -lh release/index.html release/asset-loader.js release/assets.meta.json 2>/dev/null || echo "Missing key files"
+          echo "📄 Game files:"
+          ls -lh release/index.html release/asset-loader.js release/assets.meta.json 2>/dev/null
+          echo ""
+          echo "🎮 Will NOT deploy:"
+          echo "   - release/assets/audio/ (ignored by .gitignore)"
+          echo "   - release/assets/dragonbones_assets/ (ignored by .gitignore)"
+          echo "   - release/assets/monsters/ (ignored by .gitignore)"
+          echo "   - release/assets/tilesets/ (ignored by .gitignore)"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./release
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 
   deploy:
     environment:

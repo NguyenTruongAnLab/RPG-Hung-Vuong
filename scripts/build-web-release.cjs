@@ -308,6 +308,11 @@ function createLocalVersion(releaseDir) {
 
 function createLocalMirror(releaseDir, repoBase = 'RPG-Hung-Vuong') {
   log('\n🪞 Creating local base-path mirror...', 'cyan');
+  
+  // OPTIMIZED: Only create .html redirect files, no duplication
+  // Use index-local.html for local testing (already uses relative paths)
+  // Only create minimal index.html in subfolder for GitHub Pages path testing
+  
   const mirrorDir = path.join(releaseDir, repoBase);
 
   if (fs.existsSync(mirrorDir)) {
@@ -316,17 +321,24 @@ function createLocalMirror(releaseDir, repoBase = 'RPG-Hung-Vuong') {
 
   fs.mkdirSync(mirrorDir, { recursive: true });
 
-  const entries = fs.readdirSync(releaseDir);
-  for (const entry of entries) {
-    if (entry === repoBase) {
-      continue;
-    }
-    const sourcePath = path.join(releaseDir, entry);
-    const destPath = path.join(mirrorDir, entry);
-    copyEntry(sourcePath, destPath);
-  }
+  // Create minimal redirect to show the mirror exists
+  const redirectHtml = `<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Redirecting...</title>
+    <meta http-equiv="refresh" content="0; url=../index-local.html">
+</head>
+<body>
+    <p>Redirecting to local test page...</p>
+    <p>If not redirected, use <a href="../index-local.html">index-local.html</a> for local testing.</p>
+</body>
+</html>`;
 
-  log(`✅ Local mirror ready at ${repoBase}/`, 'green');
+  fs.writeFileSync(path.join(mirrorDir, 'index.html'), redirectHtml);
+  
+  log(`✅ Local mirror ready at ${repoBase}/ (lightweight redirect only)`, 'green');
+  log(`   💡 Use index-local.html directly for testing (no duplication)`, 'blue');
 }
 
 /**
@@ -420,11 +432,13 @@ async function main() {
     log(`   4. Any static host: Upload release/ contents`, 'blue');
     
     log(`\n💡 Next Steps:`, 'green');
-  log(`   1. Test locally: npx serve release -p 3000`, 'blue');
-  log(`   2. Open http://localhost:3000/RPG-Hung-Vuong/index-local.html`, 'blue');
-  log(`   3. Verify decryption works in browser console`, 'blue');
-  log(`   4. Deploy to your hosting platform`, 'blue');
-  log(`   5. Check browser console for "✅ Game assets ready!"`, 'blue');
+    log(`   1. Test locally: npx serve release -p 3000`, 'blue');
+    log(`   2. Open http://localhost:3000/index-local.html`, 'blue');
+    log(`   3. Verify decryption works in browser console`, 'blue');
+    log(`   4. Deploy to your hosting platform`, 'blue');
+    log(`   5. Check browser console for "✅ Game assets ready!"`, 'blue');
+    log(`\n   📝 Note: Use index-local.html for local testing`, 'yellow');
+    log(`   📝 Use index.html for GitHub Pages deployment`, 'yellow');
     
     log(`\n✅ Build complete!\n`, 'green');
     

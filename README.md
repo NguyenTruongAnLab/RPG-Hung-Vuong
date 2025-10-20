@@ -14,6 +14,10 @@ npm install
 npm run dev
 ```
 
+```bash
+npm run build:web-release
+```
+
 **Key Features**:
 - ✅ **200+ Monsters** with DragonBones animations
 - ✅ **Showcase Demo Mode** - Browse all monsters with interactive controls

@@ -93,7 +93,10 @@ function copyBuildFiles(distDir, releaseDir) {
   // Copy main build files
   copy(path.join(distDir, 'index.html'), path.join(releaseDir, 'index.html'));
   copy(path.join(distDir, 'js'), path.join(releaseDir, 'js'));
-  copy(path.join(distDir, 'assets'), path.join(releaseDir, 'assets'));
+  
+  // ⚠️ DO NOT copy assets folder - we only use encrypted chunks
+  // Assets are decrypted in browser from encrypted chunks
+  // copy(path.join(distDir, 'assets'), path.join(releaseDir, 'assets'));
   
   // Copy favicon if exists
   if (fs.existsSync(path.join(distDir, 'favicon.ico'))) {
@@ -141,18 +144,36 @@ function copyEncryptedChunks(sourceDir, releaseDir) {
 }
 
 /**
- * Copy asset loader
+ * Copy asset loader scripts
  */
 function copyAssetLoader(releaseDir) {
-  log('\n🔧 Creating asset loader...', 'cyan');
+  log('\n🔧 Copying asset loader scripts...', 'cyan');
   
-  const assetLoaderPath = path.join(releaseDir, 'asset-loader.js');
-  if (fs.existsSync(assetLoaderPath)) {
-    log(`✅ Asset loader already exists`, 'green');
+  const publicScriptsDir = path.join(__dirname, '..', 'public', 'scripts');
+  
+  // Copy asset-loader.js
+  const assetLoaderSrc = path.join(publicScriptsDir, 'asset-loader.js');
+  const assetLoaderDest = path.join(releaseDir, 'asset-loader.js');
+  
+  if (fs.existsSync(assetLoaderSrc)) {
+    fs.copyFileSync(assetLoaderSrc, assetLoaderDest);
+    log(`   ✓ Copied asset-loader.js`, 'green');
   } else {
-    log(`⚠️  Asset loader not found, creating placeholder`, 'yellow');
-    fs.writeFileSync(assetLoaderPath, '// Asset loader placeholder\n');
+    log(`   ⚠️  asset-loader.js not found in public/scripts`, 'yellow');
   }
+  
+  // Copy asar-reader.js
+  const asarReaderSrc = path.join(publicScriptsDir, 'asar-reader.js');
+  const asarReaderDest = path.join(releaseDir, 'asar-reader.js');
+  
+  if (fs.existsSync(asarReaderSrc)) {
+    fs.copyFileSync(asarReaderSrc, asarReaderDest);
+    log(`   ✓ Copied asar-reader.js`, 'green');
+  } else {
+    log(`   ⚠️  asar-reader.js not found in public/scripts`, 'yellow');
+  }
+  
+  log(`✅ Asset loader scripts copied`, 'green');
 }
 
 /**
@@ -175,12 +196,16 @@ function injectAssetLoader(releaseDir) {
     return;
   }
   
-  // Inject before closing body tag
-  const assetLoaderScript = '<script src="./asset-loader.js"></script>';
-  html = html.replace('</body>', `${assetLoaderScript}\n</body>`);
+  // Inject both scripts before closing body tag (asar-reader MUST come first!)
+  const scripts = `
+<!-- 🔐 Load encrypted asset system BEFORE game -->
+<script src="./asar-reader.js"></script>
+<script src="./asset-loader.js"></script>`;
+  
+  html = html.replace('</body>', `${scripts}\n</body>`);
   
   fs.writeFileSync(htmlPath, html);
-  log(`✅ Enhanced index.html with asset loader`, 'green');
+  log(`✅ Enhanced index.html with encrypted asset system`, 'green');
 }
 
 /**

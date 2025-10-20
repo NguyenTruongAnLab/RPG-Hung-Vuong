@@ -74,15 +74,17 @@
     }
 
     /**
-     * Load all encrypted chunks
+     * Load all encrypted chunks IN PARALLEL for maximum speed
      */
     async loadChunks() {
-      console.log(`📦 [AssetLoader] Loading ${this.metadata.chunks.length} encrypted chunks...`);
+      console.log(`📦 [AssetLoader] Loading ${this.metadata.chunks.length} encrypted chunks in parallel...`);
+      this._updateLoadingUI('Downloading encrypted chunks...');
       
-      let totalLoaded = 0;
+      const startTime = performance.now();
+      let completedChunks = 0;
       
-      for (let i = 0; i < this.metadata.chunks.length; i++) {
-        const chunkInfo = this.metadata.chunks[i];
+      // Create all fetch promises at once (parallel downloads)
+      const chunkPromises = this.metadata.chunks.map(async (chunkInfo, i) => {
         const chunkUrl = `./${chunkInfo.filename}`;
         
         try {
@@ -90,21 +92,48 @@
           if (!response.ok) throw new Error(`HTTP ${response.status}`);
           
           const chunk = await response.arrayBuffer();
-          this.chunks.push(chunk);
           
-          totalLoaded += chunk.byteLength;
-          const percent = Math.round((totalLoaded / this.metadata.totalSize) * 100);
-          console.log(
-            `✅ [AssetLoader] Chunk ${i + 1}/${this.metadata.chunks.length} loaded ` +
-            `(${(totalLoaded / 1024 / 1024).toFixed(2)}/${(this.metadata.totalSize / 1024 / 1024).toFixed(2)} MB - ${percent}%)`
-          );
+          completedChunks++;
+          const percent = Math.round((completedChunks / this.metadata.chunks.length) * 100);
+          const sizeMB = (chunk.byteLength / 1024 / 1024).toFixed(2);
+          
+          console.log(`✅ [AssetLoader] Chunk ${i} loaded (${sizeMB} MB)`);
+          this._updateLoadingUI(`Loading chunks: ${completedChunks}/${this.metadata.chunks.length} (${percent}%)`);
+          
+          return { index: i, data: chunk };
         } catch (error) {
           console.error(`❌ [AssetLoader] Failed to load chunk ${i}:`, error);
           throw error;
         }
-      }
+      });
       
-      console.log(`✅ [AssetLoader] All chunks loaded: ${(totalLoaded / 1024 / 1024).toFixed(2)} MB`);
+      // Wait for all chunks to download in parallel
+      const results = await Promise.all(chunkPromises);
+      
+      // Sort by index to ensure correct order
+      results.sort((a, b) => a.index - b.index);
+      
+      // Store in correct order
+      this.chunks = results.map(r => r.data);
+      
+      const totalLoaded = this.chunks.reduce((sum, chunk) => sum + chunk.byteLength, 0);
+      const elapsedTime = ((performance.now() - startTime) / 1000).toFixed(2);
+      const speedMBps = (totalLoaded / 1024 / 1024 / elapsedTime).toFixed(2);
+      
+      console.log(
+        `✅ [AssetLoader] All chunks loaded: ${(totalLoaded / 1024 / 1024).toFixed(2)} MB ` +
+        `in ${elapsedTime}s (${speedMBps} MB/s)`
+      );
+    }
+    
+    /**
+     * Update loading UI with progress
+     */
+    _updateLoadingUI(message) {
+      const progressEl = document.getElementById('loading-progress');
+      if (progressEl) {
+        progressEl.textContent = message;
+      }
     }
 
     /**
@@ -183,6 +212,7 @@
     async initialize() {
       try {
         console.log('🔐 [AssetLoader] Starting initialization...');
+        this._updateLoadingUI('Loading asset metadata...');
         
         // Load metadata
         await this.loadMetadata();
@@ -192,12 +222,15 @@
         
         // Derive key
         console.log(`🔑 [AssetLoader] Deriving decryption key from build ID: ${BUILD_ID}`);
+        this._updateLoadingUI('Preparing decryption key...');
         const key = await this.deriveKey(BUILD_ID);
         
         // Concatenate chunks
+        this._updateLoadingUI('Combining encrypted chunks...');
         const concatenated = this.concatenateChunks();
         
         // Decrypt
+        this._updateLoadingUI('Decrypting assets (this may take a moment)...');
         this.decryptedData = await this.decrypt(concatenated, key);
         
         // Mark as ready
@@ -205,6 +238,7 @@
         window.encryptedAssetsReady = true;
         window.decryptedAssetData = this.decryptedData;
         
+        this._updateLoadingUI('✅ Assets ready! Starting game...');
         console.log('✅ [AssetLoader] Asset system ready! Decrypted ASAR available.');
         console.log(`📊 [AssetLoader] Total decrypted size: ${(this.decryptedData.byteLength / 1024 / 1024).toFixed(2)} MB`);
         

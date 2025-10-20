@@ -16,8 +16,10 @@
     "generate-audio": "node scripts/generate-audio.cjs",
     "security-check": "node scripts/security-check.cjs",
     "encrypt-assets": "node scripts/encrypt-assets.cjs",
+    "encrypt-assets-chunked": "node scripts/encrypt-assets-chunked.cjs",
     "build:assets": "npm run build:web && npm run encrypt-assets",
     "build:web": "vite build",
+    "build:web-release": "npm run build:web && npm run encrypt-assets-chunked && node scripts/build-web-release.cjs",
     "build:electron": "npm run build:web && npm run encrypt-assets && electron-builder --publish=never",
     "build:windows": "npm run build:electron",
     "pre-release": "npm run type-check && npm run test && npm run build && npm run security-check"

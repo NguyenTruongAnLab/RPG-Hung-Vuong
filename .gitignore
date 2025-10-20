@@ -28,11 +28,11 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# ⚠️ ENCRYPTED ASSET BUNDLES - DO NOT COMMIT
-# These are generated during build process only
-assets.asar.enc
-assets.asar
-assets.meta.json
+# ⚠️ ENCRYPTED ASSET BUNDLES - GENERATED ONLY AT ROOT
+# These are temporary files created during build process
+/assets.asar.enc
+/assets.asar
+/assets.meta.json
 
 # ⚠️ LOCAL ASSETS - LARGE BINARY FILES (DO NOT COMMIT TO GIT)
 # These files are too large for GitHub. Keep them local only.
@@ -41,6 +41,14 @@ public/assets/audio/
 public/assets/dragonbones_assets/
 public/assets/monsters/
 public/assets/tilesets/
+
+# ⚠️ UNENCRYPTED ASSETS IN RELEASE FOLDER - DO NOT TRACK
+# Only encrypted chunks should be committed, not original assets
+release/assets/audio/
+release/assets/dragonbones_assets/
+release/assets/monsters/
+release/assets/tilesets/
+release/assets/.gitkeep
 
 # Backup & temporary files
 *.backup

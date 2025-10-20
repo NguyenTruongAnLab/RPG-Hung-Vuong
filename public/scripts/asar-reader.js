@@ -26,6 +26,7 @@ class AsarReader {
     this.buffer = buffer;
     this.dataView = new DataView(buffer.buffer, buffer.byteOffset, buffer.byteLength);
     this.fileTree = null;
+    this.normalizedFileTree = null;
     this.dataOffset = 0;
     
     this._parseHeader();
@@ -36,34 +37,62 @@ class AsarReader {
    */
   _parseHeader() {
     try {
-      // Read header sizes (12 bytes total)
-      const headerSize = this.dataView.getUint32(0, true); // Little endian
-      const jsonSize = this.dataView.getUint32(4, true);
-      const alignment = this.dataView.getUint32(8, true);
-      
-      console.log(`📦 [ASAR] Header size: ${headerSize}, JSON size: ${jsonSize}, Alignment: ${alignment}`);
-      
-      // Read JSON header
-      const jsonStart = 16; // After the 3 UInt32LE values + 4 bytes padding
-      const jsonEnd = jsonStart + jsonSize;
-      const jsonBytes = this.buffer.slice(jsonStart, jsonEnd);
-      const jsonText = new TextDecoder('utf-8').decode(jsonBytes);
-      
-      this.fileTree = JSON.parse(jsonText);
-      
-      // Calculate data offset (aligned)
-      this.dataOffset = 8 + headerSize;
-      if (alignment > 0) {
-        this.dataOffset = Math.ceil(this.dataOffset / alignment) * alignment;
-      }
-      
-      console.log(`✅ [ASAR] Header parsed, data starts at byte ${this.dataOffset}`);
-      console.log(`📁 [ASAR] File tree:`, this.fileTree);
-      
+  // Desktop ASAR files use Chromium's Pickle format for metadata.
+  // Layout is:
+  // [0..3]   uint32 payload size of size-pickle (always 4)
+  // [4..7]   uint32 header byte length (headerSize)
+  // [8..11]  uint32 payload size of header-pickle (aligned string length)
+  // [12..15] uint32 JSON string length
+  // [16..]   JSON header bytes (with 0-padding to 4-byte boundary)
+
+  const headerSize = this.dataView.getUint32(4, true);
+  const headerPayloadSize = this.dataView.getUint32(8, true);
+  const jsonLength = this.dataView.getUint32(12, true);
+
+  const jsonStart = 16;
+  const jsonEnd = jsonStart + jsonLength;
+  const jsonBytes = this.buffer.slice(jsonStart, jsonEnd);
+  const headerText = new TextDecoder('utf-8').decode(jsonBytes);
+
+  this.fileTree = JSON.parse(headerText);
+
+  // File data begins immediately after the header pickle (8 + headerSize bytes)
+  this.dataOffset = 8 + headerSize;
+
+  // Create normalized file tree for cross-platform path compatibility
+  this.normalizedFileTree = this._normalizeFileTree(this.fileTree);
+
+  console.log(`📦 [ASAR] Header size: ${headerSize}, payload size: ${headerPayloadSize}`);
+  console.log(`✅ [ASAR] Data starts at byte ${this.dataOffset}`);
+  console.log(`📁 [ASAR] File tree:`, this.fileTree);
+
     } catch (error) {
       console.error('❌ [ASAR] Failed to parse header:', error);
       throw error;
     }
+  }
+
+  /**
+   * Normalize file tree to use forward slashes
+   */
+  _normalizeFileTree(node, currentPath = '') {
+    if (!node.files) {
+      // It's a file, return as-is
+      return node;
+    }
+
+    // It's a directory, normalize its children
+    const normalizedFiles = {};
+    
+    for (const [key, value] of Object.entries(node.files)) {
+      // Normalize the key (replace backslashes with forward slashes)
+      const normalizedKey = key.replace(/\\/g, '/');
+      normalizedFiles[normalizedKey] = this._normalizeFileTree(value, 
+        currentPath ? `${currentPath}/${normalizedKey}` : normalizedKey
+      );
+    }
+    
+    return { files: normalizedFiles };
   }
 
   /**
@@ -72,9 +101,11 @@ class AsarReader {
    * @returns {Object|null} File info with {size, offset}
    */
   _getFileInfo(filePath) {
-    const parts = filePath.split('/').filter(p => p.length > 0);
-    let current = this.fileTree.files;
-    
+    // Normalize path separators - ASAR may contain Windows backslashes
+    const normalizedPath = filePath.replace(/\\/g, '/');
+    const parts = normalizedPath.split('/').filter(p => p.length > 0);
+    let current = this.normalizedFileTree.files;
+
     for (let i = 0; i < parts.length; i++) {
       const part = parts[i];
       
@@ -96,9 +127,7 @@ class AsarReader {
         }
         current = current[part].files;
       }
-    }
-    
-    return null;
+    }    return null;
   }
 
   /**

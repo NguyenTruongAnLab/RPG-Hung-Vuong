@@ -4,7 +4,7 @@
  * 🔐 Chunked Asset Encryption Script (GitHub Pages Compatible)
  * 
  * Creates encrypted ASAR bundle and splits into 25MB chunks
- * All chunks < 100 MB for GitHub file size limit compliance
+ * All chunks < 25 MB for GitHub file size limit compliance
  * Output: assets.asar.enc.chunk0, chunk1, chunk2... + assets.meta.json
  * 
  * Usage:
@@ -31,15 +31,16 @@ function log(message, color = 'reset') {
 
 /**
  * Generate a consistent key from build metadata
- * Uses scrypt for strong key derivation
+ * Mirrors browser PBKDF2 parameters for compatibility
  */
 function generateEncryptionKey(buildId) {
   try {
-    return crypto.scryptSync(
-      buildId,
-      Buffer.from('rpg-hung-vuong-assets-v1'),
-      32 // 256-bit key for AES-256
-    );
+    const salt = 'rpg-hung-vuong-assets-v1';
+    const iterations = 100000;
+    const keyLength = 32; // 256-bit key
+    const digest = 'sha256';
+
+    return crypto.pbkdf2Sync(buildId, salt, iterations, keyLength, digest);
   } catch (error) {
     log(`❌ Error generating key: ${error.message}`, 'red');
     process.exit(1);
@@ -182,7 +183,11 @@ function saveMetadata(metaFile, keyInfo, iv, authTag, chunks, totalSize) {
     version: 2,
     algorithm: 'aes-256-gcm',
     keySize: 256,
-    keyDerivation: 'scrypt',
+    keyDerivation: {
+      method: 'pbkdf2',
+      iterations: 100000,
+      hash: 'sha-256'
+    },
     iv: iv.toString('hex'),
     authTag: authTag.toString('hex'),
     timestamp: new Date().toISOString(),
@@ -232,15 +237,11 @@ function verifyEncryption(outputDir, key, metadata) {
     // Prepare for decryption
     const iv = Buffer.from(ivHex, 'hex');
     const authTag = Buffer.from(authTagHex, 'hex');
-    
-    // Separate ciphertext and auth tag (auth tag is appended)
-    const ciphertextLen = concatenated.length - authTag.length;
-    const ciphertext = concatenated.slice(0, ciphertextLen);
-    const storedAuthTag = concatenated.slice(ciphertextLen);
+    const ciphertext = concatenated;
     
     // Decrypt to verify
     const decipher = crypto.createDecipheriv('aes-256-gcm', key, iv);
-    decipher.setAuthTag(storedAuthTag);
+    decipher.setAuthTag(authTag);
     
     try {
       const decrypted = Buffer.concat([

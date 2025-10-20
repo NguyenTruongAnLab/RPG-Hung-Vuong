@@ -23,6 +23,28 @@ function log(message, color = 'reset') {
   console.log(`${colors[color]}${message}${colors.reset}`);
 }
 
+function copyEntry(src, dest) {
+  if (!fs.existsSync(src)) {
+    return;
+  }
+
+  const stats = fs.lstatSync(src);
+  if (stats.isDirectory()) {
+    if (!fs.existsSync(dest)) {
+      fs.mkdirSync(dest, { recursive: true });
+    }
+    for (const entry of fs.readdirSync(src)) {
+      copyEntry(path.join(src, entry), path.join(dest, entry));
+    }
+  } else {
+    const parentDir = path.dirname(dest);
+    if (!fs.existsSync(parentDir)) {
+      fs.mkdirSync(parentDir, { recursive: true });
+    }
+    fs.copyFileSync(src, dest);
+  }
+}
+
 /**
  * Ensure release folder is clean
  */
@@ -75,24 +97,9 @@ function removeDir(dir) {
 function copyBuildFiles(distDir, releaseDir) {
   log('\n📁 Copying web build files...', 'cyan');
   
-  const copy = (src, dest) => {
-    if (!fs.existsSync(src)) return;
-    
-    if (fs.lstatSync(src).isDirectory()) {
-      if (!fs.existsSync(dest)) {
-        fs.mkdirSync(dest, { recursive: true });
-      }
-      for (const entry of fs.readdirSync(src)) {
-        copy(path.join(src, entry), path.join(dest, entry));
-      }
-    } else {
-      fs.copyFileSync(src, dest);
-    }
-  };
-  
   // Copy main build files
-  copy(path.join(distDir, 'index.html'), path.join(releaseDir, 'index.html'));
-  copy(path.join(distDir, 'js'), path.join(releaseDir, 'js'));
+  copyEntry(path.join(distDir, 'index.html'), path.join(releaseDir, 'index.html'));
+  copyEntry(path.join(distDir, 'js'), path.join(releaseDir, 'js'));
   
   // ⚠️ DO NOT copy assets folder - we only use encrypted chunks
   // Assets are decrypted in browser from encrypted chunks
@@ -100,10 +107,10 @@ function copyBuildFiles(distDir, releaseDir) {
   
   // Copy favicon if exists
   if (fs.existsSync(path.join(distDir, 'favicon.ico'))) {
-    fs.copyFileSync(path.join(distDir, 'favicon.ico'), path.join(releaseDir, 'favicon.ico'));
+    copyEntry(path.join(distDir, 'favicon.ico'), path.join(releaseDir, 'favicon.ico'));
   }
   if (fs.existsSync(path.join(distDir, 'favicon.svg'))) {
-    fs.copyFileSync(path.join(distDir, 'favicon.svg'), path.join(releaseDir, 'favicon.svg'));
+    copyEntry(path.join(distDir, 'favicon.svg'), path.join(releaseDir, 'favicon.svg'));
   }
   
   log(`✅ Build files copied`, 'green');
@@ -178,6 +185,7 @@ function copyAssetLoader(releaseDir) {
 
 /**
  * Inject asset loader into index.html
+ * CRITICAL: Scripts must load BEFORE the game module in <head>
  */
 function injectAssetLoader(releaseDir) {
   log('\n🎨 Enhancing index.html...', 'cyan');
@@ -196,16 +204,129 @@ function injectAssetLoader(releaseDir) {
     return;
   }
   
-  // Inject both scripts before closing body tag (asar-reader MUST come first!)
+  // Inject scripts in <head> BEFORE game module (critical for proper load order)
+  // Asset loader must be available when main.ts executes
   const scripts = `
-<!-- 🔐 Load encrypted asset system BEFORE game -->
-<script src="./asar-reader.js"></script>
-<script src="./asset-loader.js"></script>`;
+  <!-- 🔐 CRITICAL: Load asset system BEFORE game module! -->
+  <script src="./asar-reader.js"></script>
+  <script src="./asset-loader.js"></script>
   
-  html = html.replace('</body>', `${scripts}\n</body>`);
+  <!-- Game module loads after asset system is initialized -->
+  `;
+  
+  // Find the first <script type="module"> tag and inject before it
+  const moduleScriptPattern = /(<script type="module")/;
+  if (moduleScriptPattern.test(html)) {
+    html = html.replace(moduleScriptPattern, `${scripts}$1`);
+    log(`✅ Enhanced index.html with encrypted asset system (in <head>)`, 'green');
+  } else {
+    log(`⚠️  Could not find module script tag, falling back to </head> injection`, 'yellow');
+    html = html.replace('</head>', `${scripts}\n</head>`);
+  }
   
   fs.writeFileSync(htmlPath, html);
-  log(`✅ Enhanced index.html with encrypted asset system`, 'green');
+}
+
+/**
+ * Create index-local.html for local testing
+ * Converts GitHub Pages paths to relative paths
+ */
+function createLocalVersion(releaseDir) {
+  log('\n🏠 Creating local testing version...', 'cyan');
+  
+  const htmlPath = path.join(releaseDir, 'index.html');
+  const localPath = path.join(releaseDir, 'index-local.html');
+  
+  if (!fs.existsSync(htmlPath)) {
+    log(`⚠️  index.html not found`, 'yellow');
+    return;
+  }
+  
+  let html = fs.readFileSync(htmlPath, 'utf-8');
+  
+  // Replace GitHub Pages paths with relative paths
+  html = html.replace(/\/RPG-Hung-Vuong\//g, './');
+  
+  // Update title
+  html = html.replace(/<title>(.*?)<\/title>/, '<title>$1 (Local Test)</title>');
+  
+  // Add loading UI
+  const loadingUI = `
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            font-size: 24px;
+        }
+        #loading-progress {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #4CAF50;
+        }`;
+  
+  html = html.replace('</style>', `${loadingUI}\n    </style>`);
+  
+  // Add loading div
+  const loadingDiv = `
+        <div id="loading">
+            🔐 Loading encrypted assets...
+            <div id="loading-progress">Please wait...</div>
+        </div>`;
+  
+  html = html.replace('<div id="game-container">', `<div id="game-container">${loadingDiv}`);
+  
+  // Add event listeners
+  const eventListeners = `
+
+<script>
+    // Update loading progress
+    window.addEventListener('assetsReady', () => {
+        const loading = document.getElementById('loading');
+        if (loading) {
+            loading.innerHTML = '✅ Assets ready! Starting game...';
+            setTimeout(() => {
+                loading.style.display = 'none';
+            }, 1000);
+        }
+    });
+    
+    window.addEventListener('assetsFailed', () => {
+        const loading = document.getElementById('loading');
+        if (loading) {
+            loading.innerHTML = '❌ Failed to load assets!<br>Check console for details.';
+        }
+    });
+</script>`;
+  
+  html = html.replace('</body>', `${eventListeners}\n</body>`);
+  
+  fs.writeFileSync(localPath, html);
+  log(`✅ Created index-local.html for local testing`, 'green');
+}
+
+function createLocalMirror(releaseDir, repoBase = 'RPG-Hung-Vuong') {
+  log('\n🪞 Creating local base-path mirror...', 'cyan');
+  const mirrorDir = path.join(releaseDir, repoBase);
+
+  if (fs.existsSync(mirrorDir)) {
+    removeDir(mirrorDir);
+  }
+
+  fs.mkdirSync(mirrorDir, { recursive: true });
+
+  const entries = fs.readdirSync(releaseDir);
+  for (const entry of entries) {
+    if (entry === repoBase) {
+      continue;
+    }
+    const sourcePath = path.join(releaseDir, entry);
+    const destPath = path.join(mirrorDir, entry);
+    copyEntry(sourcePath, destPath);
+  }
+
+  log(`✅ Local mirror ready at ${repoBase}/`, 'green');
 }
 
 /**
@@ -272,7 +393,13 @@ async function main() {
     // Step 5: Inject asset loader
     injectAssetLoader(releaseDir);
     
-    // Step 6: Show statistics
+  // Step 6: Create local testing version
+    createLocalVersion(releaseDir);
+    
+  // Step 7: Mirror release for absolute GitHub Pages base path
+  createLocalMirror(releaseDir);
+
+  // Step 8: Show statistics
     showSizeStats(releaseDir);
     
     // Success summary
@@ -293,10 +420,11 @@ async function main() {
     log(`   4. Any static host: Upload release/ contents`, 'blue');
     
     log(`\n💡 Next Steps:`, 'green');
-    log(`   1. Test locally: npx serve release/ -p 3000`, 'blue');
-    log(`   2. Verify decryption works in browser console`, 'blue');
-    log(`   3. Deploy to your hosting platform`, 'blue');
-    log(`   4. Check browser console for "✅ Game assets ready!"`, 'blue');
+  log(`   1. Test locally: npx serve release -p 3000`, 'blue');
+  log(`   2. Open http://localhost:3000/RPG-Hung-Vuong/index-local.html`, 'blue');
+  log(`   3. Verify decryption works in browser console`, 'blue');
+  log(`   4. Deploy to your hosting platform`, 'blue');
+  log(`   5. Check browser console for "✅ Game assets ready!"`, 'blue');
     
     log(`\n✅ Build complete!\n`, 'green');
     

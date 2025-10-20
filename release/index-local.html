@@ -40,6 +40,7 @@
             height: 100% !important;
             object-fit: contain;
         }
+    
         #loading {
             position: absolute;
             top: 50%;
@@ -54,7 +55,13 @@
             color: #4CAF50;
         }
     </style>
-  <script type="module" crossorigin src="./js/index-wFM3DA0J.js"></script>
+  
+  <!-- 🔐 CRITICAL: Load asset system BEFORE game module! -->
+  <script src="./asar-reader.js"></script>
+  <script src="./asset-loader.js"></script>
+  
+  <!-- Game module loads after asset system is initialized -->
+  <script type="module" crossorigin src="./js/index-C2CcMckr.js"></script>
   <link rel="modulepreload" crossorigin href="./js/pixi-Drb_ZD99.js">
   <link rel="modulepreload" crossorigin href="./js/animation-BOInWBL1.js">
   <link rel="modulepreload" crossorigin href="./js/physics-ecXgi8kP.js">
@@ -64,12 +71,8 @@
         <div id="loading">
             🔐 Loading encrypted assets...
             <div id="loading-progress">Please wait...</div>
-        </div>
-    </div>
+        </div></div>
 
-<!-- 🔐 Load encrypted asset system BEFORE game -->
-<script src="./asar-reader.js"></script>
-<script src="./asset-loader.js"></script>
 
 <script>
     // Update loading progress

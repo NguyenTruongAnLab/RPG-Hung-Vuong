@@ -16,6 +16,8 @@ npm run dev
 
 ```bash
 npm run build:web-release
+npx serve release/ -p 3000
+http://localhost:3000/RPG-Hung-Vuong/index-local.html
 ```
 
 **Key Features**:
@@ -100,7 +102,6 @@ Khám phá thế giới Văn Lang với 6 địa điểm:
 - **pixi-dragonbones-runtime** - 2D skeletal animation runtime for PixiJS 8.x
 - **Vitest** - Fast unit testing framework
 - **Playwright** - End-to-end testing
-- **GitHub Actions** - CI/CD tự động với testing
 - **GitHub Pages** - Deployment miễn phí
 
 ## 🚀 Cài đặt & Chạy

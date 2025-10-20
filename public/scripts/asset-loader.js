@@ -13,7 +13,7 @@
 (function() {
   'use strict';
 
-  const BUILD_ID = 'e6de500'; // Git commit hash used for encryption key
+  const BUILD_ID = '75bb7ee'; // Git commit hash used for encryption key
   
   console.log('🔐 [AssetLoader] Initializing encrypted asset system...');
 
@@ -248,75 +248,142 @@
     }
     
     /**
-     * Intercept fetch requests to serve decrypted assets
+     * Intercept fetch requests and XMLHttpRequest to serve decrypted assets
      */
     _interceptFetch() {
       const originalFetch = window.fetch;
+      const originalXHROpen = XMLHttpRequest.prototype.open;
+      const originalXHRSend = XMLHttpRequest.prototype.send;
       const asarReader = this.asarReader;
-      
+
+      // Helper function to check if URL is an asset request
+      const getAssetPath = (url) => {
+        const assetMatch = url.match(/(?:\/RPG-Hung-Vuong)?\/assets\/(.+)$/);
+        return assetMatch ? assetMatch[1] : null;
+      };
+
+      // Helper function to get content type from extension
+      const getContentType = (filename) => {
+        const ext = filename.split('.').pop().toLowerCase();
+        return {
+          'json': 'application/json',
+          'png': 'image/png',
+          'jpg': 'image/jpeg',
+          'jpeg': 'image/jpeg',
+          'mp3': 'audio/mpeg',
+          'wav': 'audio/wav',
+          'ogg': 'audio/ogg',
+          'txt': 'text/plain',
+        }[ext] || 'application/octet-stream';
+      };
+
+      // Intercept fetch requests
       window.fetch = async function(input, init) {
         const url = typeof input === 'string' ? input : input.url;
+        const assetPath = getAssetPath(url);
         
-        // Check if this is an asset request
-        // Patterns: /assets/..., /RPG-Hung-Vuong/assets/..., ./assets/...
-        const assetMatch = url.match(/(?:\/RPG-Hung-Vuong)?\/assets\/(.+)$/);
-        
-        if (assetMatch) {
-          const assetPath = 'assets/' + assetMatch[1];
+        if (assetPath) {
           console.log(`🔍 [AssetLoader] Intercepting fetch: ${url} → ${assetPath}`);
           
           const data = asarReader.readFile(assetPath);
           
           if (data) {
-            console.log(`✅ [AssetLoader] Served from ASAR: ${assetPath} (${data.byteLength} bytes)`);
+            console.log(`✅ [AssetLoader] Served from ASAR (fetch): ${assetPath} (${data.byteLength} bytes)`);
             
-            // Determine content type from extension
-            const ext = assetPath.split('.').pop().toLowerCase();
-            const contentType = {
-              'json': 'application/json',
-              'png': 'image/png',
-              'jpg': 'image/jpeg',
-              'jpeg': 'image/jpeg',
-              'mp3': 'audio/mpeg',
-              'wav': 'audio/wav',
-              'ogg': 'audio/ogg',
-              'txt': 'text/plain',
-            }[ext] || 'application/octet-stream';
-            
-            // Return mock Response
             return new Response(data, {
               status: 200,
               statusText: 'OK',
               headers: {
-                'Content-Type': contentType,
+                'Content-Type': getContentType(assetPath),
                 'Content-Length': data.byteLength.toString(),
               }
             });
           } else {
-            console.warn(`⚠️  [AssetLoader] Asset not found in ASAR: ${assetPath}`);
-            // Fall back to original fetch (will likely 404)
+            console.warn(`⚠️  [AssetLoader] Asset not found in ASAR (fetch): ${assetPath}`);
           }
         }
         
         // Not an asset request, use original fetch
         return originalFetch.call(this, input, init);
       };
+
+      // Intercept XMLHttpRequest (for PixiJS image loading)
+      XMLHttpRequest.prototype.open = function(method, url, async, user, password) {
+        this._url = url;
+        this._assetPath = getAssetPath(url);
+        
+        if (this._assetPath) {
+          console.log(`🔍 [AssetLoader] Intercepting XHR: ${url} → ${this._assetPath}`);
+        }
+        
+        return originalXHROpen.call(this, method, url, async, user, password);
+      };
+
+      XMLHttpRequest.prototype.send = function(body) {
+        if (this._assetPath) {
+          const assetPath = this._assetPath;
+          const data = asarReader.readFile(assetPath);
+          
+          if (data) {
+            console.log(`✅ [AssetLoader] Served from ASAR (XHR): ${assetPath} (${data.byteLength} bytes)`);
+            
+            // Simulate successful response
+            Object.defineProperty(this, 'status', { writable: true, value: 200 });
+            Object.defineProperty(this, 'statusText', { writable: true, value: 'OK' });
+            Object.defineProperty(this, 'readyState', { writable: true, value: 4 });
+            Object.defineProperty(this, 'response', { writable: true, value: data.buffer });
+            Object.defineProperty(this, 'responseType', { writable: true, value: 'arraybuffer' });
+            
+            // Set response headers
+            this.getResponseHeader = function(name) {
+              const headers = {
+                'content-type': getContentType(assetPath),
+                'content-length': data.byteLength.toString()
+              };
+              return headers[name.toLowerCase()] || null;
+            };
+            
+            // Trigger events
+            setTimeout(() => {
+              if (this.onloadstart) this.onloadstart(new Event('loadstart'));
+              if (this.onload) this.onload(new Event('load'));
+              if (this.onloadend) this.onloadend(new Event('loadend'));
+            }, 0);
+            
+            return;
+          } else {
+            console.warn(`⚠️  [AssetLoader] Asset not found in ASAR (XHR): ${assetPath}`);
+          }
+        }
+        
+        // Not an asset request or asset not found, use original send
+        return originalXHRSend.call(this, body);
+      };
       
-      console.log('✅ [AssetLoader] Fetch interception active');
+      console.log('✅ [AssetLoader] Fetch and XHR interception active');
     }
   }
 
   // Auto-initialize when DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      const loader = new EncryptedAssetLoader();
-      window.assetLoader = loader;
+  const loader = new EncryptedAssetLoader();
+  window.assetLoader = loader;
+
+  let initializationStarted = false;
+
+  const startInitialization = () => {
+    if (initializationStarted) {
+      return;
+    }
+    initializationStarted = true;
+    if (typeof loader.initialize === 'function') {
       loader.initialize();
-    });
+    }
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startInitialization, { once: true });
   } else {
-    const loader = new EncryptedAssetLoader();
-    window.assetLoader = loader;
-    loader.initialize();
+    startInitialization();
   }
 
 })();

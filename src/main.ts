@@ -3,7 +3,7 @@
  * 
  * Modern entry using SceneManager and CharacterSelectionScene
  */
-import { Application } from 'pixi.js';
+import { Application, Assets } from 'pixi.js';
 import * as PIXI from 'pixi.js';
 import { SceneManager } from './core/SceneManager';
 import { AssetManager } from './core/AssetManager';
@@ -12,6 +12,16 @@ import { OverworldScene } from './scenes/OverworldScene';
 
 // Make PIXI available globally for DragonBones
 (window as any).PIXI = PIXI;
+
+// CRITICAL: Disable Web Workers for image loading so fetch/XHR interception works
+// PixiJS v8 uses WorkerManager.loadImageBitmap which bypasses main thread interception
+// Setting preferWorkers: false forces images to load on main thread where asset-loader.js can intercept
+try {
+  Assets.setPreferences({ preferWorkers: false });
+  console.log('🔧 [Main] Disabled PixiJS Web Workers for encrypted asset interception');
+} catch (error) {
+  console.warn('⚠️ [Main] Could not disable workers:', error);
+}
 
 /**
  * Initialize and start the game
@@ -142,5 +152,40 @@ async function startGame() {
   }
 }
 
-// Start the game immediately - pixi-dragonbones-runtime is now a proper ES module
-startGame();
+/**
+ * Wait for encrypted assets if in production web build
+ * Development uses unencrypted assets directly
+ */
+if (typeof (window as any).assetLoader !== 'undefined') {
+  console.log('🔐 [Main] Detected encrypted asset system, waiting for assets to be ready...');
+  
+  // Check if already ready (loaded before script execution)
+  if ((window as any).encryptedAssetsReady) {
+    console.log('🔐 [Main] Assets already ready, starting game now');
+    startGame();
+  } else {
+    // Wait for assetsReady event
+    window.addEventListener('assetsReady', () => {
+      console.log('🔐 [Main] Received assetsReady event, starting game now');
+      startGame();
+    });
+    
+    // Also handle failure case
+    window.addEventListener('assetsFailed', () => {
+      console.error('❌ [Main] Failed to load encrypted assets, cannot start game');
+      const container = document.getElementById('game-container');
+      if (container) {
+        container.innerHTML = '<div style="color: red; text-align: center; padding: 50px;">' +
+          '❌ Failed to load game assets<br>' +
+          'Please check console for details and try refreshing the page.' +
+          '</div>';
+      }
+    });
+    
+    console.log('🔐 [Main] Waiting for assetsReady event...');
+  }
+} else {
+  // Development mode or Electron - start immediately
+  console.log('🚀 [Main] No encrypted asset system detected, starting game immediately');
+  startGame();
+}

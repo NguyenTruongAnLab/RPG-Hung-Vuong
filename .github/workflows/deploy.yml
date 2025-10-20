@@ -82,6 +82,21 @@ jobs:
           echo "   - release/assets/monsters/ (ignored by .gitignore)"
           echo "   - release/assets/tilesets/ (ignored by .gitignore)"
 
+      # ℹ️ Note: build-web-release.cjs already created RPG-Hung-Vuong subfolder
+      # This matches the Vite base path and GitHub Pages structure
+      - name: Verify GitHub Pages Structure
+        run: |
+          echo "📊 Verifying deployment structure..."
+          if [ -d "release/RPG-Hung-Vuong" ]; then
+            echo "✅ RPG-Hung-Vuong subfolder exists"
+            du -sh release/RPG-Hung-Vuong/ || echo "Structure verified"
+            ls -la release/RPG-Hung-Vuong/ | head -20
+          else
+            echo "❌ ERROR: RPG-Hung-Vuong subfolder not found!"
+            echo "This is required for GitHub Pages deployment."
+            exit 1
+          fi
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

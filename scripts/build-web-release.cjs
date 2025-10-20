@@ -307,12 +307,7 @@ function createLocalVersion(releaseDir) {
 }
 
 function createLocalMirror(releaseDir, repoBase = 'RPG-Hung-Vuong') {
-  log('\n🪞 Creating local base-path mirror...', 'cyan');
-  
-  // OPTIMIZED: Only create .html redirect files, no duplication
-  // Use index-local.html for local testing (already uses relative paths)
-  // Only create minimal index.html in subfolder for GitHub Pages path testing
-  
+  log('\n🪞 Creating GitHub Pages deployment structure...', 'cyan');
   const mirrorDir = path.join(releaseDir, repoBase);
 
   if (fs.existsSync(mirrorDir)) {
@@ -321,24 +316,41 @@ function createLocalMirror(releaseDir, repoBase = 'RPG-Hung-Vuong') {
 
   fs.mkdirSync(mirrorDir, { recursive: true });
 
-  // Create minimal redirect to show the mirror exists
-  const redirectHtml = `<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Redirecting...</title>
-    <meta http-equiv="refresh" content="0; url=../index-local.html">
-</head>
-<body>
-    <p>Redirecting to local test page...</p>
-    <p>If not redirected, use <a href="../index-local.html">index-local.html</a> for local testing.</p>
-</body>
-</html>`;
+  // OPTIMIZATION: Move heavy files, copy light files
+  // This avoids 125MB duplication of encrypted chunks
+  const entries = fs.readdirSync(releaseDir);
+  for (const entry of entries) {
+    if (entry === repoBase) {
+      continue;
+    }
+    
+    const sourcePath = path.join(releaseDir, entry);
+    const destPath = path.join(mirrorDir, entry);
+    
+    // Move (not copy) encrypted chunks and asset loader to save space
+    if (entry.startsWith('assets.asar.enc.chunk') || 
+        entry === 'assets.meta.json' ||
+        entry === 'asset-loader.js' ||
+        entry === 'asar-reader.js') {
+      
+      // Move the file (rename/cut)
+      if (fs.lstatSync(sourcePath).isFile()) {
+        const parentDir = path.dirname(destPath);
+        if (!fs.existsSync(parentDir)) {
+          fs.mkdirSync(parentDir, { recursive: true });
+        }
+        fs.renameSync(sourcePath, destPath);
+      }
+    } else {
+      // Copy other files (HTML, JS, favicons - small files)
+      copyEntry(sourcePath, destPath);
+    }
+  }
 
-  fs.writeFileSync(path.join(mirrorDir, 'index.html'), redirectHtml);
-  
-  log(`✅ Local mirror ready at ${repoBase}/ (lightweight redirect only)`, 'green');
-  log(`   💡 Use index-local.html directly for testing (no duplication)`, 'blue');
+  log(`✅ GitHub Pages structure ready at ${repoBase}/`, 'green');
+  log(`   � Chunks stored once (no duplication, ~125MB saved)`, 'green');
+  log(`   📝 For local testing: npx serve release -p 3000`, 'blue');
+  log(`   📝 Then open: http://localhost:3000/RPG-Hung-Vuong/index-local.html`, 'blue');
 }
 
 /**
@@ -433,12 +445,12 @@ async function main() {
     
     log(`\n💡 Next Steps:`, 'green');
     log(`   1. Test locally: npx serve release -p 3000`, 'blue');
-    log(`   2. Open http://localhost:3000/index-local.html`, 'blue');
+    log(`   2. Open http://localhost:3000/RPG-Hung-Vuong/index-local.html`, 'blue');
     log(`   3. Verify decryption works in browser console`, 'blue');
     log(`   4. Deploy to your hosting platform`, 'blue');
     log(`   5. Check browser console for "✅ Game assets ready!"`, 'blue');
-    log(`\n   📝 Note: Use index-local.html for local testing`, 'yellow');
-    log(`   📝 Use index.html for GitHub Pages deployment`, 'yellow');
+    log(`\n   � Optimization: Chunks stored once in RPG-Hung-Vuong/ (~125MB)`, 'yellow');
+    log(`   📝 Local & GitHub Pages both use the same files (no duplication)`, 'yellow');
     
     log(`\n✅ Build complete!\n`, 'green');
     

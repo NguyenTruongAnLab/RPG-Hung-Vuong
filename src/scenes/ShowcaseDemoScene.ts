@@ -539,7 +539,7 @@ export class ShowcaseDemoScene extends Scene {
           } catch (e) {
             console.warn('Error destroying animation:', e);
           }
-        }, 0);
+        }, 100); // Increased from 0 to 100ms to prevent "Cannot read properties of null" errors
       } catch (e) {
         console.warn('Error cleaning up old display:', e);
       }

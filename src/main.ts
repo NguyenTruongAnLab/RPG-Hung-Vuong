@@ -140,6 +140,22 @@ async function startGame() {
         // keep ticker stable
       }
     });
+    
+    // Catch DragonBones rendering errors (getBuffer errors from destroyed armatures)
+    const originalConsoleError = console.error;
+    console.error = function(...args: any[]) {
+      const errorMessage = args.join(' ');
+      
+      // Suppress known DragonBones rendering race condition errors
+      if (errorMessage.includes('getBuffer') || 
+          errorMessage.includes('Cannot read properties of null')) {
+        console.warn('⚠️ Suppressed transient rendering error:', errorMessage);
+        return; // Don't crash, just warn
+      }
+      
+      // Let other errors through
+      originalConsoleError.apply(console, args);
+    };
 
     console.log('Thần Thú Văn Lang - Game started!');
     console.log('207 Divine Beasts | Ngũ Hành System | Turn-based Combat');

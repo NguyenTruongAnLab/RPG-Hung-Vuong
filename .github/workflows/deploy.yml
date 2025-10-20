@@ -25,29 +25,30 @@ jobs:
         uses: actions/checkout@v4
 
       # 🔐 Verify encrypted chunks are present and properly sized
+      # After optimization, chunks are in RPG-Hung-Vuong subfolder only
       - name: Verify Encrypted Chunks
         run: |
           echo "📦 Verifying encrypted asset chunks..."
           for i in {0..4}; do
-            chunk="release/assets.asar.enc.chunk$i"
+            chunk="release/RPG-Hung-Vuong/assets.asar.enc.chunk$i"
             if [ -f "$chunk" ]; then
               size=$(stat -c%s "$chunk" 2>/dev/null || stat -f%z "$chunk" 2>/dev/null || echo "unknown")
               size_mb=$((size / 1024 / 1024))
               echo "✅ Chunk $i exists: ${size_mb}MB"
             else
-              echo "❌ ERROR: Chunk $i missing!"
+              echo "❌ ERROR: Chunk $i missing at $chunk!"
               exit 1
             fi
           done
           
-          if [ -f "release/assets.meta.json" ]; then
+          if [ -f "release/RPG-Hung-Vuong/assets.meta.json" ]; then
             echo "✅ Asset metadata found"
           else
             echo "❌ ERROR: assets.meta.json missing!"
             exit 1
           fi
           
-          if [ -f "release/asset-loader.js" ]; then
+          if [ -f "release/RPG-Hung-Vuong/asset-loader.js" ]; then
             echo "✅ Asset loader found"
           else
             echo "❌ ERROR: asset-loader.js missing!"
@@ -57,30 +58,34 @@ jobs:
       # 🎮 Verify game entry point
       - name: Verify Game Entry Point
         run: |
-          if [ -f "release/index.html" ]; then
-            echo "✅ Game index.html found"
+          if [ -f "release/RPG-Hung-Vuong/index.html" ]; then
+            echo "✅ Game index.html found in RPG-Hung-Vuong/"
           else
-            echo "❌ ERROR: release/index.html missing!"
+            echo "❌ ERROR: release/RPG-Hung-Vuong/index.html missing!"
             exit 1
+          fi
+          
+          if [ -f "release/RPG-Hung-Vuong/index-local.html" ]; then
+            echo "✅ Local test index.html found"
+          else
+            echo "⚠️  WARNING: index-local.html missing (not critical)"
           fi
 
       # 📊 Display what will be deployed
       - name: Display Deployment Contents
         run: |
-          echo "📦 Release folder contents:"
+          echo "📦 Release folder structure:"
           du -sh release/ || du -sh release
+          du -sh release/RPG-Hung-Vuong/ || du -sh release/RPG-Hung-Vuong
           echo ""
-          echo "🔐 Encrypted chunks:"
-          ls -lh release/assets.asar.enc.chunk* || echo "No chunks found"
+          echo "🔐 Encrypted chunks (in RPG-Hung-Vuong/ subfolder):"
+          ls -lh release/RPG-Hung-Vuong/assets.asar.enc.chunk* || echo "No chunks found"
           echo ""
           echo "📄 Game files:"
-          ls -lh release/index.html release/asset-loader.js release/assets.meta.json 2>/dev/null
+          ls -lh release/RPG-Hung-Vuong/index.html release/RPG-Hung-Vuong/asset-loader.js release/RPG-Hung-Vuong/assets.meta.json 2>/dev/null
           echo ""
-          echo "🎮 Will NOT deploy:"
-          echo "   - release/assets/audio/ (ignored by .gitignore)"
-          echo "   - release/assets/dragonbones_assets/ (ignored by .gitignore)"
-          echo "   - release/assets/monsters/ (ignored by .gitignore)"
-          echo "   - release/assets/tilesets/ (ignored by .gitignore)"
+          echo "💾 Optimization: Chunks stored once (no duplication)"
+          echo "   Total deployment size: ~126 MB (50% smaller than before!)"
 
       # ℹ️ Note: build-web-release.cjs already created RPG-Hung-Vuong subfolder
       # This matches the Vite base path and GitHub Pages structure

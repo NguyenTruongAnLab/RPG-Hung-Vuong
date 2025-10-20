@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thần Thú Văn Lang - Hùng Vương RPG (Local Test)</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: #1a1a2e;
+            color: #eee;
+            overflow: hidden;
+        }
+        #game-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        canvas {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain;
+        }
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            font-size: 24px;
+        }
+        #loading-progress {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #4CAF50;
+        }
+    </style>
+  <script type="module" crossorigin src="./js/index-wFM3DA0J.js"></script>
+  <link rel="modulepreload" crossorigin href="./js/pixi-Drb_ZD99.js">
+  <link rel="modulepreload" crossorigin href="./js/animation-BOInWBL1.js">
+  <link rel="modulepreload" crossorigin href="./js/physics-ecXgi8kP.js">
+</head>
+<body>
+    <div id="game-container">
+        <div id="loading">
+            🔐 Loading encrypted assets...
+            <div id="loading-progress">Please wait...</div>
+        </div>
+    </div>
+
+<!-- 🔐 Load encrypted asset system BEFORE game -->
+<script src="./asar-reader.js"></script>
+<script src="./asset-loader.js"></script>
+
+<script>
+    // Update loading progress
+    window.addEventListener('assetsReady', () => {
+        const loading = document.getElementById('loading');
+        if (loading) {
+            loading.innerHTML = '✅ Assets ready! Starting game...';
+            setTimeout(() => {
+                loading.style.display = 'none';
+            }, 1000);
+        }
+    });
+    
+    window.addEventListener('assetsFailed', () => {
+        const loading = document.getElementById('loading');
+        if (loading) {
+            loading.innerHTML = '❌ Failed to load assets!<br>Check console for details.';
+        }
+    });
+</script>
+</body>
+</html>

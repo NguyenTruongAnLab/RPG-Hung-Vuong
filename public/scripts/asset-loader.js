@@ -132,27 +132,34 @@
 
     /**
      * Decrypt concatenated data using AES-256-GCM
+     * IV and authTag are stored in metadata, not in the encrypted data
      */
     async decrypt(encryptedData, key) {
       console.log('🔓 [AssetLoader] Decrypting assets with AES-256-GCM...');
       
       try {
-        // Extract IV (first 16 bytes) and auth tag (last 16 bytes)
-        const iv = encryptedData.slice(0, 16);
-        const authTag = encryptedData.slice(encryptedData.length - 16);
-        const ciphertext = encryptedData.slice(16, encryptedData.length - 16);
+        // Get IV and authTag from metadata (stored as hex strings)
+        const iv = new Uint8Array(
+          this.metadata.iv.match(/.{1,2}/g).map(byte => parseInt(byte, 16))
+        );
+        const authTag = new Uint8Array(
+          this.metadata.authTag.match(/.{1,2}/g).map(byte => parseInt(byte, 16))
+        );
         
-        // Combine ciphertext and auth tag for Web Crypto API
-        const combined = new Uint8Array(ciphertext.length + authTag.length);
-        combined.set(ciphertext);
-        combined.set(authTag, ciphertext.length);
+        console.log(`🔑 [AssetLoader] IV: ${this.metadata.iv}`);
+        console.log(`🔑 [AssetLoader] AuthTag: ${this.metadata.authTag}`);
+        console.log(`📦 [AssetLoader] Encrypted data: ${encryptedData.byteLength} bytes`);
+        
+        // For AES-GCM in Web Crypto API, we need to append the authTag to the ciphertext
+        const combined = new Uint8Array(encryptedData.byteLength + authTag.byteLength);
+        combined.set(encryptedData);
+        combined.set(authTag, encryptedData.byteLength);
         
         // Decrypt
         const decrypted = await crypto.subtle.decrypt(
           {
             name: 'AES-GCM',
             iv: iv,
-            additionalData: new TextEncoder().encode('rpg-hung-vuong'),
             tagLength: 128,
           },
           key,

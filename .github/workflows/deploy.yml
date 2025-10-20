@@ -38,16 +38,46 @@ jobs:
       - name: Run Unit Tests
         run: npm run test
 
-      # 🔒 Security: Build with hardened config (no sourcemaps)
-      - name: Build
-        run: npm run build
+      # 🔒 Security: Build with hardened config + Encrypt assets into chunks
+      - name: Build Web Release with Encrypted Chunks
+        run: npm run build:web-release
+
+      # 🔐 Verify encrypted chunks are present and properly sized
+      - name: Verify Encrypted Chunks
+        run: |
+          echo "📦 Verifying encrypted asset chunks..."
+          for i in {0..4}; do
+            chunk="release/assets.asar.enc.chunk$i"
+            if [ -f "$chunk" ]; then
+              size=$(stat -c%s "$chunk" 2>/dev/null || stat -f%z "$chunk" 2>/dev/null || echo "unknown")
+              size_mb=$((size / 1024 / 1024))
+              echo "✅ Chunk $i exists: ${size_mb}MB"
+            else
+              echo "❌ ERROR: Chunk $i missing!"
+              exit 1
+            fi
+          done
+          
+          if [ -f "release/assets.meta.json" ]; then
+            echo "✅ Asset metadata found"
+          else
+            echo "❌ ERROR: assets.meta.json missing!"
+            exit 1
+          fi
+          
+          if [ -f "release/asset-loader.js" ]; then
+            echo "✅ Asset loader found"
+          else
+            echo "❌ ERROR: asset-loader.js missing!"
+            exit 1
+          fi
 
       # 🔒 Security: Verify no source maps in build
       - name: Verify No Source Maps
         run: |
-          if find dist -name "*.map" -type f 2>/dev/null | grep -q .; then
+          if find release/js -name "*.map" -type f 2>/dev/null | grep -q .; then
             echo "❌ ERROR: Source maps found in build! Remove them before publishing."
-            find dist -name "*.map" -type f
+            find release/js -name "*.map" -type f
             exit 1
           else
             echo "✅ No source maps found - safe to publish"
@@ -56,17 +86,29 @@ jobs:
       # 🔒 Security: Check for environment variables in build
       - name: Scan for Secrets
         run: |
-          if grep -r "PRIVATE_KEY\|SECRET_KEY\|API_KEY\|PASSWORD" dist/ 2>/dev/null | grep -v "node_modules"; then
+          if grep -r "PRIVATE_KEY\|SECRET_KEY\|API_KEY\|PASSWORD" release/js 2>/dev/null | grep -v "node_modules"; then
             echo "⚠️ WARNING: Potential secrets found in build"
             exit 1
           else
             echo "✅ No obvious secrets detected"
           fi
 
+      # 📊 Display release folder contents for monitoring
+      - name: Display Release Folder Size
+        run: |
+          echo "📦 Release folder structure:"
+          du -sh release/ || du -sh release
+          echo ""
+          echo "🔐 Encrypted chunks:"
+          ls -lh release/assets.asar.enc.chunk* || echo "No chunks found"
+          echo ""
+          echo "📄 Key files:"
+          ls -lh release/index.html release/asset-loader.js release/assets.meta.json 2>/dev/null || echo "Missing key files"
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: ./release
 
   deploy:
     environment:

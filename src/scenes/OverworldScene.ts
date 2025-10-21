@@ -11,6 +11,8 @@
  * ```
  */
 import * as PIXI from 'pixi.js';
+import Matter from 'matter-js';
+import gsap from 'gsap';
 import { Scene, SceneManager } from '../core/SceneManager';
 import { PhysicsManager } from '../core/PhysicsManager';
 import { InputManager } from '../core/InputManager';
@@ -22,6 +24,7 @@ import { Tilemap } from '../world/Tilemap';
 import { TilemapCollision } from '../world/TilemapCollision';
 import { TilemapEncounters } from '../world/TilemapEncounters';
 import { Camera } from '../world/Camera';
+import { ParallaxBackground } from '../world/ParallaxBackground';
 import { OverworldUI } from './OverworldUI';
 import { BattleSceneV2, EncounterData } from './BattleSceneV2';
 import { TutorialOverlay } from '../ui/TutorialOverlay';
@@ -40,6 +43,7 @@ import { QuestLog } from '../ui/QuestLog';
 import { Enemy } from '../entities/Enemy.js';
 import { DragonBonesManager } from '../core/DragonBonesManager';
 import { AssetManager } from '../core/AssetManager';
+import { MonsterDatabase } from '../data/MonsterDatabaseWrapper';
 import { resolveAudioPath } from '../utils/paths';
 import { ALL_SAMPLE_QUESTS } from '../data/sampleQuests';
 import overworldMapData from '../data/maps/overworld-map.json';
@@ -70,10 +74,12 @@ export class OverworldScene extends Scene {
   private collision: TilemapCollision | null = null;
   private encounters: TilemapEncounters | null = null;
   private camera: Camera | null = null;
+  private parallaxBg: ParallaxBackground | null = null;
   private ui: OverworldUI | null = null;
   private worldContainer: PIXI.Container;
   private playerPosition: { x: number; y: number } = { x: 640, y: 400 }; // Safe spawn position away from borders
   private tutorial: TutorialOverlay | null = null;
+  private isDestroying: boolean = false; // Flag to prevent update during destruction
 
   constructor(app: PIXI.Application, sceneManager?: SceneManager) {
     super(app);
@@ -107,6 +113,13 @@ export class OverworldScene extends Scene {
     console.log('✅ OverworldScene.init() STARTED - Player movement ready');
     console.log('====================================');
 
+    // Recreate worldContainer if destroyed
+    if (!this.worldContainer || this.worldContainer.destroyed) {
+      console.log('🔄 Recreating destroyed worldContainer...');
+      this.worldContainer = new PIXI.Container();
+      this.addChild(this.worldContainer);
+    }
+
     // CRITICAL: Ensure canvas has focus for keyboard input
     // Canvas must be focused for window.addEventListener to work
     this.app.canvas.setAttribute('tabindex', '0');
@@ -137,6 +150,10 @@ export class OverworldScene extends Scene {
       this.collisionSystem.init();
       console.log('✅ Collision system initialized - collision events will now fire');
 
+      // Initialize transition manager (REQUIRED for scene transitions!)
+      this.transitionManager.init(this.app);
+      console.log('✅ TransitionManager initialized - scene transitions ready');
+
       // Initialize visual effects managers
       await this.particleManager.init(this.app);
       await this.weatherManager.init(this.app);
@@ -150,6 +167,11 @@ export class OverworldScene extends Scene {
 
       // Create tilemap with placeholder texture
       await this.createTilemap();
+
+      // Add parallax background BEFORE tilemap
+      this.parallaxBg = new ParallaxBackground(this.app, 'landscape');
+      this.worldContainer.addChildAt(this.parallaxBg.getContainer(), 0);
+      console.log('✅ Parallax background added to overworld');
 
       // Create player
       this.createPlayer();
@@ -186,6 +208,15 @@ export class OverworldScene extends Scene {
 
       // Setup Enemies
       await this.spawnDemoEnemies();
+      
+      // Setup enemy collision detection (Pokemon-style battle trigger)
+      console.log('🔧 About to setup enemy collisions...');
+      try {
+        this.setupEnemyCollisions();
+        console.log('✅ setupEnemyCollisions() completed');
+      } catch (error) {
+        console.error('❌ setupEnemyCollisions() failed:', error);
+      }
 
       // Show tutorial if first time
       if (!TutorialOverlay.isComplete()) {
@@ -736,8 +767,157 @@ export class OverworldScene extends Scene {
     
     console.log(`✅ Demo enemies spawned (${this.enemies.length} enemies)`);
   }
+  
+  /**
+   * Setup enemy collision detection for Pokemon-style battle triggers
+   * When player touches an enemy, start a battle
+   */
+  private setupEnemyCollisions(): void {
+    console.log('🔧🔧🔧 setupEnemyCollisions() CALLED 🔧🔧🔧');
+    
+    const engine = this.physics.getEngine();
+    
+    console.log(`🔧 Engine is: ${engine ? 'VALID' : 'NULL'}`);
+    
+    if (!engine) {
+      console.error('❌❌❌ Cannot setup enemy collisions: Physics engine is null! ❌❌❌');
+      return;
+    }
+    
+    console.log('🔧 Setting up enemy collision detection...');
+    console.log(`   Engine has ${engine.world.bodies.length} bodies`);
+    console.log(`   Engine.enableSleeping: ${engine.enableSleeping}`);
+    console.log(`   Engine.detector type: ${engine.detector?.constructor?.name}`);
+    
+    // Find player and enemy bodies for debugging
+    const playerBody = engine.world.bodies.find(b => b.label === 'player');
+    const enemyBodies = engine.world.bodies.filter(b => b.label?.startsWith('enemy_'));
+    
+    console.log(`   Found player body: ${playerBody ? 'YES' : 'NO'}`);
+    console.log(`   Found ${enemyBodies.length} enemy bodies`);
+    
+    if (playerBody) {
+      console.log(`   Player collision filter: category=${playerBody.collisionFilter.category}, mask=${playerBody.collisionFilter.mask}`);
+      console.log(`   Player isSensor: ${playerBody.isSensor}, isStatic: ${playerBody.isStatic}`);
+      
+      // ⚡ FORCE player body to be awake
+      Matter.Sleeping.set(playerBody, false);
+    }
+    
+    if (enemyBodies.length > 0) {
+      console.log(`   First enemy collision filter: category=${enemyBodies[0].collisionFilter.category}, mask=${enemyBodies[0].collisionFilter.mask}`);
+      console.log(`   First enemy isSensor: ${enemyBodies[0].isSensor}, isStatic: ${enemyBodies[0].isStatic}`);
+      
+      // ⚡ FORCE all enemy bodies to be awake
+      enemyBodies.forEach(body => {
+        Matter.Sleeping.set(body, false);
+      });
+    }
+    
+    console.log(`   Engine pairs count BEFORE manual update: ${engine.pairs ? engine.pairs.list.length : 'N/A'}`);
+    
+    // ⚡ FORCE a physics update to generate collision pairs
+    Matter.Engine.update(engine, 16);
+    
+    console.log(`   Engine pairs count AFTER manual update: ${engine.pairs ? engine.pairs.list.length : 'N/A'}`);
+    
+    // Listen for collision events from Matter.js physics engine
+    Matter.Events.on(engine, 'collisionStart', (event) => {
+      const pairs = event.pairs;
+      
+      // Log ALL collisions for debugging
+      console.log(`🔍🔍🔍 [setupEnemyCollisions] Detected ${pairs.length} collision pair(s) 🔍🔍🔍`);
+      
+      for (const pair of pairs) {
+        const bodyA = pair.bodyA;
+        const bodyB = pair.bodyB;
+        
+        console.log(`🔍 [setupEnemyCollisions] ${bodyA.label} <-> ${bodyB.label}`);
+        
+        // Check if collision involves player and an enemy
+        const isPlayerA = bodyA.label === 'player';
+        const isPlayerB = bodyB.label === 'player';
+        const isEnemyA = bodyA.label?.startsWith('enemy_');
+        const isEnemyB = bodyB.label?.startsWith('enemy_');
+        
+        if ((isPlayerA && isEnemyB) || (isPlayerB && isEnemyA)) {
+          // Player touched an enemy - trigger battle!
+          const enemyBody = isEnemyA ? bodyA : bodyB;
+          const enemyName = enemyBody.label.replace('enemy_', '');
+          
+          console.log(`⚔️ BATTLE START! Player encountered ${enemyName}!`);
+          
+          // Trigger battle with this enemy
+          this.startEnemyBattle(enemyName);
+          
+          // Remove the enemy from overworld (they're in battle now)
+          const enemyIndex = this.enemies.findIndex(e => 
+            e.getPosition().x === enemyBody.position.x && 
+            e.getPosition().y === enemyBody.position.y
+          );
+          
+          if (enemyIndex !== -1) {
+            this.enemies[enemyIndex].destroy();
+            this.enemies.splice(enemyIndex, 1);
+          }
+          
+          break; // Only handle one battle at a time
+        }
+      }
+    });
+    
+    console.log('✅✅✅ Enemy collision detection setup (Pokemon-style battle triggers) ✅✅✅');
+  }
+  
+  /**
+   * Start a battle with an enemy monster
+   * @param enemyCharacter - Enemy DragonBones character name
+   */
+  private async startEnemyBattle(enemyCharacter: string): Promise<void> {
+    try {
+      console.log(`🎮 Starting battle with ${enemyCharacter}...`);
+      
+      // Stop overworld music
+      this.audioManager.stop('bgm_overworld');
+      
+      // Fade out
+      await this.transitionManager.fadeOut(this, 0.5);
+      
+      // Get random monster from database for the enemy
+      const monsterDb = MonsterDatabase.getInstance();
+      const randomMonster = monsterDb.getRandomMonster();
+      
+      console.log(`🎲 Random monster selected:`, {
+        id: randomMonster.id,
+        name: randomMonster.name,
+        assetName: randomMonster.assetName
+      });
+      
+      // Create encounter data (use assetName for DragonBones, not ID)
+      const encounterData = {
+        enemyMonsterId: randomMonster.assetName || randomMonster.id, // Use assetName if available
+        zone: 'overworld'
+      };
+      
+      // Switch to battle scene
+      if (this.sceneManager) {
+        const { BattleSceneV2 } = await import('./BattleSceneV2');
+        const battleScene = new BattleSceneV2(this.app, encounterData, this.sceneManager);
+        await this.sceneManager.switchTo(battleScene);
+        await this.transitionManager.fadeIn(battleScene, 0.5);
+      }
+    } catch (error) {
+      console.error('Failed to start enemy battle:', error);
+    }
+  }
 
   update(dt: number): void {
+    // CRITICAL: Don't update if scene is being destroyed
+    // This prevents "updateLocalTransform is not a function" errors
+    if (this.isDestroying || this.destroyed) {
+      return;
+    }
+    
     // Convert dt from milliseconds to seconds for particle/weather systems
     const deltaSeconds = dt / 1000;
     
@@ -751,6 +931,63 @@ export class OverworldScene extends Scene {
     
     // Update physics AFTER player input so forces are included in the step
     this.physics.update(dt);
+    
+    // ⚔️ MANUAL COLLISION DETECTION: Check if player overlaps any enemy
+    // Matter.js events don't work for stationary bodies, so we check manually each frame
+    const allBodies = this.physics.getAllBodies();
+    const playerBody = allBodies.find(b => b.label === 'player');
+    const enemyBodies = allBodies.filter(b => b.label?.startsWith('enemy_'));
+    
+    if (playerBody && enemyBodies.length > 0) {
+      // Check each enemy for overlap with player
+      for (const enemyBody of enemyBodies) {
+        // Calculate distance between centers
+        const distance = Math.sqrt(
+          Math.pow(playerBody.position.x - enemyBody.position.x, 2) + 
+          Math.pow(playerBody.position.y - enemyBody.position.y, 2)
+        );
+        
+        // Get body radii (assuming circular bodies)
+        const playerRadius = (playerBody.circleRadius || 16);
+        const enemyRadius = (enemyBody.circleRadius || 20);
+        const collisionThreshold = playerRadius + enemyRadius;
+        
+        // DEBUG: Log physics update periodically (every ~60 frames = ~1 second)
+        if (Math.random() < 0.016 && enemyBody === enemyBodies[0]) {
+          console.log(`🎯 Physics check: Player at (${Math.round(playerBody.position.x)}, ${Math.round(playerBody.position.y)}), First enemy at (${Math.round(enemyBody.position.x)}, ${Math.round(enemyBody.position.y)}), Distance: ${Math.round(distance)}px`);
+          console.log(`   Collision threshold: ${Math.round(collisionThreshold)}px (player: ${playerRadius}px + enemy: ${enemyRadius}px)`);
+          console.log(`   Player velocity: (${playerBody.velocity.x.toFixed(2)}, ${playerBody.velocity.y.toFixed(2)})`);
+        }
+        
+        // Check if bodies are overlapping (distance < sum of radii)
+        if (distance < collisionThreshold) {
+          // COLLISION DETECTED! Player touched an enemy
+          const enemyName = enemyBody.label.replace('enemy_', '');
+          
+          console.log(`⚔️⚔️⚔️ BATTLE START! Player collided with ${enemyName}! ⚔️⚔️⚔️`);
+          console.log(`   Distance: ${Math.round(distance)}px < Threshold: ${Math.round(collisionThreshold)}px`);
+          
+          // Trigger battle with this enemy
+          this.startEnemyBattle(enemyName);
+          
+          // Remove the enemy from overworld (they're in battle now)
+          const enemyIndex = this.enemies.findIndex(e => {
+            const pos = e.getPosition();
+            return Math.abs(pos.x - enemyBody.position.x) < 1 && 
+                   Math.abs(pos.y - enemyBody.position.y) < 1;
+          });
+          
+          if (enemyIndex !== -1) {
+            this.enemies[enemyIndex].destroy();
+            this.enemies.splice(enemyIndex, 1);
+            this.physics.removeBody(enemyBody);
+          }
+          
+          // Only handle one battle at a time
+          break;
+        }
+      }
+    }
     
     // Update combat system
     this.combatSystem.update(dt);
@@ -769,6 +1006,12 @@ export class OverworldScene extends Scene {
       // Update camera to follow player
       if (this.camera) {
         this.camera.follow(playerPos);
+        
+        // Update parallax background to follow camera
+        if (this.parallaxBg) {
+          const camPos = this.camera.getPosition();
+          this.parallaxBg.update(camPos.x, camPos.y);
+        }
       }
       
       // Check for encounters
@@ -783,6 +1026,18 @@ export class OverworldScene extends Scene {
       for (const enemy of this.enemies) {
         if (!enemy.isDead()) {
           enemy.update(dt, playerPos);
+          
+          // DEBUG: Check distance to player
+          const enemyPos = enemy.getPosition();
+          const distance = Math.sqrt(
+            Math.pow(playerPos.x - enemyPos.x, 2) + 
+            Math.pow(playerPos.y - enemyPos.y, 2)
+          );
+          
+          // Log when player gets close to enemy
+          if (distance < 50 && Math.random() < 0.01) { // 1% chance per frame to avoid spam
+            console.log(`📏 Player distance to enemy: ${distance.toFixed(0)}px`);
+          }
         }
       }
       
@@ -807,46 +1062,45 @@ export class OverworldScene extends Scene {
    * Cleans up the scene
    */
   destroy(): void {
-    console.log('Destroying OverworldScene...');
+    // Set flag to prevent further updates
+    this.isDestroying = true;
+    
+    console.log('🗑️ [OverworldScene] Destroying scene...');
+    
+    // CRITICAL: Kill all GSAP animations on this scene to prevent "Cannot set properties of null" errors
+    gsap.killTweensOf(this.worldContainer);
+    gsap.killTweensOf(this);
+    
+    if (this.camera) {
+      gsap.killTweensOf(this.camera);
+      this.camera.stopAnimations();
+      this.camera = null;
+    }
+    if (this.parallaxBg) {
+      this.parallaxBg.destroy();
+      this.parallaxBg = null;
+    }
     
     // Remove zoom handler
     if ((this as any).zoomHandler) {
       this.app.canvas.removeEventListener('wheel', (this as any).zoomHandler);
     }
     
-    // Cleanup player
-    if (this.player) {
-      this.player.destroy();
-      this.player = null;
+    // CRITICAL: Remove and dispose player DragonBones animation BEFORE destroying containers
+    if (this.playerDisplay && this.playerDisplay.parent) {
+      this.playerDisplay.parent.removeChild(this.playerDisplay);
+      // PlayerAnimation.dispose() will be called by player.destroy()
     }
     
-    // Cleanup tilemap
-    if (this.tilemap) {
-      this.tilemap.destroy();
-      this.tilemap = null;
-    }
-    
-    // Cleanup collision
-    if (this.collision) {
-      this.collision.destroy();
-      this.collision = null;
-    }
-    
-    // Cleanup UI
-    if (this.ui) {
-      this.ui.destroy();
-      this.ui = null;
-    }
-    
-    // Clear physics
-    this.physics.clear();
-    
-    // Cleanup managers
+    // Cleanup managers BEFORE destroying containers
     this.particleManager.cleanup();
     this.weatherManager.clearWeather();
     this.filterManager.cleanup();
     this.npcSystem.clearAll();
     this.wildEncounters.clear();
+    
+    // Clear physics
+    this.physics.clear();
     
     // Cleanup enemies
     for (const enemy of this.enemies) {
@@ -859,7 +1113,24 @@ export class OverworldScene extends Scene {
     this.eventBus.off('wild-encounter:trigger', this.handleWildEncounter);
     this.eventBus.off('battle:end', this.onBattleEnd);
     
-    // Destroy PIXI containers
-    this.worldContainer.destroy({ children: true });
+    // Destroy world container with all children
+    if (this.worldContainer) {
+      this.worldContainer.destroy({ children: true });
+    }
+    
+    // Null out references (already destroyed as children of worldContainer)
+    this.player = null;
+    this.playerDisplay = null;
+    this.tilemap = null;
+    this.collision = null;
+    this.encounters = null;
+    this.ui = null;
+    this.tutorial = null;
+    this.questLog = null;
+    
+    // Call PIXI.Container destroy to cleanup this scene container
+    PIXI.Container.prototype.destroy.call(this, { children: true });
+    
+    console.log('✅ [OverworldScene] Scene destroyed successfully');
   }
 }

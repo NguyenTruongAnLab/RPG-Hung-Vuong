@@ -57,7 +57,12 @@ export class TransitionManager {
    */
   init(app: PIXI.Application): void {
     this.app = app;
-    this.createOverlay();
+    
+    // Only create overlay if it doesn't exist yet
+    // This prevents creating multiple overlays when switching scenes
+    if (!this.overlay || this.overlay.destroyed) {
+      this.createOverlay();
+    }
   }
 
   /**
@@ -68,6 +73,15 @@ export class TransitionManager {
       throw new Error('TransitionManager not initialized. Call init() first.');
     }
 
+    // Clean up old overlay if it exists
+    if (this.overlay) {
+      gsap.killTweensOf(this.overlay);
+      if (this.overlay.parent) {
+        this.overlay.parent.removeChild(this.overlay);
+      }
+      this.overlay.destroy();
+    }
+
     this.overlay = new PIXI.Graphics();
     this.overlay.rect(0, 0, this.app.screen.width, this.app.screen.height);
     this.overlay.fill(0x000000);
@@ -76,6 +90,8 @@ export class TransitionManager {
     
     // Add to stage
     this.app.stage.addChild(this.overlay);
+    
+    console.log('✅ [TransitionManager] Overlay created/recreated');
   }
 
   /**
@@ -102,6 +118,8 @@ export class TransitionManager {
 
     const { color = 0x000000, alpha = 1 } = options;
 
+    console.log(`🌑 [TransitionManager] Fading out (${duration}s) to alpha=${alpha}`);
+
     // Update overlay color if needed
     if (this.overlay) {
       this.overlay.clear();
@@ -115,6 +133,7 @@ export class TransitionManager {
         duration: duration,
         ease: 'power2.inOut',
         onComplete: () => {
+          console.log('✅ [TransitionManager] Fade out complete');
           resolve();
         }
       });
@@ -143,12 +162,22 @@ export class TransitionManager {
       this.createOverlay();
     }
 
+    console.log(`☀️ [TransitionManager] Fading in (${duration}s) from alpha=${this.overlay?.alpha || 0} to alpha=0`);
+
+    // CRITICAL: Ensure overlay is fully opaque before fading in
+    // This prevents the "black screen" bug where fadeIn starts from wrong alpha
+    if (this.overlay) {
+      this.overlay.alpha = 1;
+      console.log(`   Set overlay alpha to 1 (black) before animation`);
+    }
+
     return new Promise((resolve) => {
       gsap.to(this.overlay, {
         alpha: 0,
         duration: duration,
         ease: 'power2.inOut',
         onComplete: () => {
+          console.log('✅ [TransitionManager] Fade in complete - screen should be visible now');
           resolve();
         }
       });

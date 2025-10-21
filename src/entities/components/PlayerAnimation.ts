@@ -66,10 +66,11 @@ export class PlayerAnimation {
     // Apply uniform scale to all characters for consistent size
     // Target: 64-80px tall character regardless of original DragonBones asset size
     // Scale 0.25 = smaller characters, 0.5 = larger characters
+    // CRITICAL: Most DragonBones assets face LEFT by default, so we flip with negative scale
     if (this.armatureDisplay) {
       const uniformScale = 0.3; // Balanced size for overworld exploration
-      this.armatureDisplay.scale.set(uniformScale, uniformScale);
-      console.log(`PlayerAnimation: Applied uniform scale ${uniformScale}`);
+      this.armatureDisplay.scale.set(-uniformScale, uniformScale); // Negative X to face RIGHT
+      console.log(`PlayerAnimation: Applied uniform scale ${uniformScale} (flipped to face right)`);
     }
     
     // Start with idle animation

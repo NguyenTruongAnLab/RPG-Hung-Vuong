@@ -165,7 +165,8 @@ export class Enemy {
       this.armatureDisplay = this.dbManager.createDisplay(asset, this.characterName);
       
       if (this.armatureDisplay) {
-        this.armatureDisplay.scale.set(0.35); // Match player scale
+        // CRITICAL: DragonBones assets face LEFT by default, flip to face RIGHT
+        this.armatureDisplay.scale.set(-0.35, 0.35); // Negative X to face RIGHT
         this.display.addChild(this.armatureDisplay);
         
         // Find all attack animations
@@ -363,7 +364,9 @@ export class Enemy {
     
     // After animation, return to idle
     setTimeout(() => {
-      this.playAnimation('idle');
+      if (this.armatureDisplay && !this.isDead()) {
+        this.playAnimation('idle');
+      }
     }, 1000);
   }
 
@@ -533,7 +536,7 @@ export class Enemy {
     // Play damage animation
     this.playAnimation('Damage');
     setTimeout(() => {
-      if (this.hp > 0) {
+      if (this.hp > 0 && this.armatureDisplay) {
         this.playAnimation('Idle');
       }
     }, 500);
@@ -591,7 +594,15 @@ export class Enemy {
    * Destroy enemy
    */
   destroy(): void {
+    // Clear any pending animation timers
+    if (this.armatureDisplay) {
+      this.armatureDisplay.animation.stop();
+    }
+    
     this.physics.removeBody(this.body);
     this.display.destroy({ children: true });
+    
+    // Clear references to prevent memory leaks
+    this.armatureDisplay = null;
   }
 }

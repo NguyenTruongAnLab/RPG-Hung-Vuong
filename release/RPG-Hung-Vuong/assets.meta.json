@@ -7,10 +7,10 @@
     "iterations": 100000,
     "hash": "sha-256"
   },
-  "iv": "e3b093ba30abc8d16c265937f69abcdf",
-  "authTag": "55f174cdc4f51f83d10451f72f99f8de",
-  "timestamp": "2025-10-21T16:16:04.940Z",
-  "buildId": "a853ce6",
+  "iv": "44dc7c2b4f3ca4dc8e9f8e4c74904dc1",
+  "authTag": "c0d193e14e4adfc0d23c264b1b4bf08a",
+  "timestamp": "2025-10-21T21:42:01.537Z",
+  "buildId": "8d8880b",
   "chunked": true,
   "chunks": [
     {
@@ -39,11 +39,17 @@
     },
     {
       "filename": "assets.asar.enc.chunk4",
-      "size": 23822839,
+      "size": 26214400,
       "offset": 104857600,
       "index": 4
+    },
+    {
+      "filename": "assets.asar.enc.chunk5",
+      "size": 1948311,
+      "offset": 131072000,
+      "index": 5
     }
   ],
-  "totalSize": 128680439,
+  "totalSize": 133020311,
   "hint": "Decryption key derived from build ID + salt. Chunks must be loaded in order and concatenated before decryption."
 }

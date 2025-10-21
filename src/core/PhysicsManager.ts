@@ -81,10 +81,17 @@ export class PhysicsManager {
 
     // Create engine with no gravity (top-down view)
     this.engine = Matter.Engine.create({
-      gravity: { x: 0, y: 0, scale: 0 }
+      gravity: { x: 0, y: 0, scale: 0 },
+      enableSleeping: false // ⚡ CRITICAL: Disable sleeping to ensure collision detection always runs
     });
     
     this.world = this.engine.world;
+    
+    // 🔧 FORCE collision detection to be active
+    console.log('🔧 Physics engine created with collision detection enabled');
+    console.log('   enableSleeping:', this.engine.enableSleeping);
+    console.log('   detector type:', this.engine.detector?.constructor?.name);
+    
     this.isInitialized = true;
   }
 

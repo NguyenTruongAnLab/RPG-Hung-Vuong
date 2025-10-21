@@ -2,13 +2,26 @@
  * MonsterDatabase - Singleton wrapper for the monster database
  * Provides singleton access to the monster database with useful methods
  */
-import { MONSTER_DATABASE } from './MonsterDatabase.js';
+import monsterDatabaseJson from './monster-database.json';
 
 export interface MonsterData {
   id: string;
   name: string;
   element: string;
-  baseStats: {
+  assetName?: string; // DragonBones asset name (may differ from id)
+  animations?: {
+    idle?: string;
+    attack?: string;
+    damage?: string;
+  };
+  stats?: {
+    hp: number;
+    attack: number;
+    defense: number;
+    speed: number;
+    magic: number;
+  };
+  baseStats?: {
     hp: number;
     attack: number;
     defense: number;
@@ -34,7 +47,11 @@ export class MonsterDatabase {
   private database: Record<string, any>;
 
   private constructor() {
-    this.database = MONSTER_DATABASE;
+    // Convert JSON array to Record<string, MonsterData> keyed by id
+    this.database = monsterDatabaseJson.monsters.reduce((acc, monster) => {
+      acc[monster.id] = monster;
+      return acc;
+    }, {} as Record<string, any>);
   }
 
   /**

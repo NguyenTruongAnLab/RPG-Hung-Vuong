@@ -18,11 +18,18 @@ import * as PIXI from 'pixi.js';
 import { PixiArmatureDisplay } from 'pixi-dragonbones-runtime';
 import { Scene, SceneManager } from '../core/SceneManager';
 import { DragonBonesAnimation } from '../entities/components/DragonBonesAnimation';
+import { AudioManager } from '../core/AudioManager';
+import { AnimationSoundManager } from '../managers/AnimationSoundManager';
+import { resolveAudioPath } from '../utils/paths';
+import { UISound } from '../utils/UISound';
 import monsterDB from '../data/monster-database.json';
 import vi from '../data/vi.json';
 
 export class ShowcaseDemoScene extends Scene {
   private sceneManager: SceneManager;
+  private audioManager: AudioManager;
+  private animSoundManager: AnimationSoundManager;
+  private isMusicPlaying = true; // Music plays by default
   private currentMonsterIndex = 0;
   private currentAnimation: DragonBonesAnimation | null = null;
   private currentElement: string = 'all';
@@ -66,6 +73,8 @@ export class ShowcaseDemoScene extends Scene {
   constructor(app: PIXI.Application, sceneManager: SceneManager) {
     super(app);
     this.sceneManager = sceneManager;
+    this.audioManager = AudioManager.getInstance();
+    this.animSoundManager = AnimationSoundManager.getInstance();
     this.filteredMonsters = [...monsterDB.monsters];
   }
 
@@ -76,9 +85,27 @@ export class ShowcaseDemoScene extends Scene {
     // Calculate responsive scale factors
     this.calculateScaleFactors();
     
+    // Initialize UI sound system
+    UISound.init(this.audioManager);
+    
+    // Load all audio files
+    await this.audioManager.load('bgm_showcase', resolveAudioPath('bgm_showcase.wav'), 'music');
+    await this.audioManager.load('sfx_click', resolveAudioPath('sfx_click.wav'), 'sfx');
+    await this.audioManager.load('sfx_hover', resolveAudioPath('sfx_hover.wav'), 'sfx');
+    await this.audioManager.load('sfx_select', resolveAudioPath('sfx_select.wav'), 'sfx');
+    await this.audioManager.load('sfx_attack', resolveAudioPath('sfx_attack.wav'), 'sfx');
+    await this.audioManager.load('sfx_critical', resolveAudioPath('sfx_critical.wav'), 'sfx');
+    await this.audioManager.load('sfx_impact', resolveAudioPath('sfx_impact.wav'), 'sfx');
+    await this.audioManager.load('sfx_damage', resolveAudioPath('sfx_damage.wav'), 'sfx');
+    
+    // Play showcase background music
+    this.audioManager.playMusic('bgm_showcase', 1500); // 1.5s fade in
+    console.log('🎵 Showcase background music started');
+    
     this.createBackground();
     this.createHeader();
     this.createElementFilter();
+    this.createMusicToggle(); // Add music play/pause button
     this.createMonsterDisplay();
     this.createInfoPanel();
     this.createControlPanel();
@@ -206,16 +233,21 @@ export class ShowcaseDemoScene extends Scene {
     
     elements.forEach((element, index) => {
       const isSelected = element === this.currentElement;
-      const btn = new PIXI.Graphics();
       
+      // Create container for button
+      const btnContainer = new PIXI.Container();
+      btnContainer.position.set(margin + index * (btnWidth + spacing), filterY);
+      
+      const btn = new PIXI.Graphics();
       btn.roundRect(0, 0, btnWidth, btnHeight, borderRadius);
       btn.fill(isSelected ? colors[index] : 0x333333);
-      btn.position.set(margin + index * (btnWidth + spacing), filterY);
-      btn.interactive = true;
-      btn.cursor = 'pointer';
-      btn.eventMode = 'static';
+      btnContainer.addChild(btn);
       
-      btn.on('pointerdown', () => {
+      btnContainer.interactive = true;
+      btnContainer.cursor = 'pointer';
+      btnContainer.eventMode = 'static';
+      
+      btnContainer.on('pointerdown', () => {
         this.currentElement = element;
         this.filterByElement(element);
       });
@@ -231,10 +263,80 @@ export class ShowcaseDemoScene extends Scene {
       });
       label.anchor.set(0.5);
       label.position.set(btnWidth / 2, btnHeight / 2);
-      btn.addChild(label);
+      btnContainer.addChild(label);
       
-      this.addChild(btn);
+      // Attach UI sounds
+      UISound.attachButtonSounds(btnContainer);
+      
+      this.addChild(btnContainer);
     });
+  }
+
+  /**
+   * Create music play/pause toggle button
+   */
+  private createMusicToggle(): void {
+    const width = this.app.screen.width;
+    
+    // Position at top-right corner
+    const btnWidth = 50;
+    const btnHeight = 50;
+    const x = width - btnWidth - 20;
+    const y = 20;
+    
+    const btn = new PIXI.Container();
+    btn.position.set(x, y);
+    btn.eventMode = 'static';
+    btn.cursor = 'pointer';
+    (btn as any).name = 'music-toggle';
+    
+    // Background circle
+    const bg = new PIXI.Graphics();
+    bg.circle(btnWidth / 2, btnHeight / 2, btnWidth / 2);
+    bg.fill({ color: 0x4CAF50, alpha: 0.8 });
+    btn.addChild(bg);
+    
+    // Icon (music note or muted)
+    const icon = new PIXI.Text({
+      text: this.isMusicPlaying ? '🎵' : '🔇',
+      style: {
+        fontSize: 24,
+        align: 'center'
+      }
+    });
+    icon.anchor.set(0.5);
+    icon.position.set(btnWidth / 2, btnHeight / 2);
+    (icon as any).name = 'icon';
+    btn.addChild(icon);
+    
+    // Toggle music on click
+    btn.on('pointerdown', () => {
+      this.isMusicPlaying = !this.isMusicPlaying;
+      
+      if (this.isMusicPlaying) {
+        this.audioManager.playMusic('bgm_showcase', 500);
+        icon.text = '🎵';
+        bg.tint = 0x4CAF50;
+      } else {
+        this.audioManager.stop('bgm_showcase');
+        icon.text = '🔇';
+        bg.tint = 0x666666;
+      }
+    });
+    
+    // Hover effect
+    btn.on('pointerover', () => {
+      bg.alpha = 1.0;
+    });
+    
+    btn.on('pointerout', () => {
+      bg.alpha = 0.8;
+    });
+    
+    // Attach UI sounds
+    UISound.attachButtonSounds(btn);
+    
+    this.addChild(btn);
   }
 
   private createMonsterDisplay(): void {
@@ -467,6 +569,9 @@ export class ShowcaseDemoScene extends Scene {
     btn.on('pointerout', () => {
       bg.tint = 0xFFFFFF;
     });
+    
+    // Attach UI sounds (click + hover)
+    UISound.attachButtonSounds(btn);
     
     return btn;
   }
@@ -823,6 +928,7 @@ export class ShowcaseDemoScene extends Scene {
           this.currentAnimationName = animName;
           if (this.currentAnimation) {
             this.currentAnimation.play(animName, 1);  // Play animation once
+            this.animSoundManager.playAnimationSound(animName);  // Play corresponding sound
             this.updateProgressText();  // Update debug text
           }
           this.updateAnimationButtons();  // Refresh button highlighting
@@ -884,6 +990,7 @@ export class ShowcaseDemoScene extends Scene {
     
     // Play animation once
     this.currentAnimation.play(animName, 1);
+    this.animSoundManager.playAnimationSound(animName);  // Play corresponding sound
     this.animationPlayCount++;
     
     // Update progress text
@@ -1020,6 +1127,10 @@ export class ShowcaseDemoScene extends Scene {
   }
 
   destroy(): void {
+    // Stop showcase music
+    this.audioManager.stop('bgm_showcase');
+    console.log('🔇 Showcase music stopped');
+    
     // Cleanup timeout
     if (this.autoPlayTimeout) {
       clearTimeout(this.autoPlayTimeout);

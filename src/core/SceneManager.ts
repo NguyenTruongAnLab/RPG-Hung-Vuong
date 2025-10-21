@@ -87,8 +87,9 @@ export class SceneManager {
     try {
       // Cleanup current scene
       if (this.currentScene) {
-        this.currentScene.destroy();
+        // CRITICAL: Remove from stage BEFORE destroying to prevent render errors
         this.app.stage.removeChild(this.currentScene);
+        this.currentScene.destroy();
       }
 
       // Initialize new scene

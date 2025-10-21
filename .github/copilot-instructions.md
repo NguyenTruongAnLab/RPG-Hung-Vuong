@@ -5,7 +5,6 @@
 ### For First-Time Reading:
 **Read these files in order:**
 
-1. **.github/00-START-HERE.md** ⭐ Start here first!
 2. **.github/01-PROJECT-VISION.md** - Understand what we're building
 3. **.github/02-ARCHITECTURE-RULES.md** - The 4 Commandments (CRITICAL!)
 4. **.github/03-TECH-STACK.md** - Libraries you MUST use
@@ -19,7 +18,6 @@
 - Refer **.github/04-CODING-STANDARDS.md** - Style guide
 - Refer **.github/09-COMMON-TASKS.md** - Code examples
 
----
 
 ## 📁 Complete Documentation Structure
 
@@ -40,8 +38,6 @@
 └── copilot-instructions.md       # This file (index)
 ```
 
----
-
 ## ⚡ Emergency Quick Reference
 
 ### The Golden Rules
@@ -53,6 +49,8 @@
 5. **Human Verification Required**: No feature is "DONE" until verified in `.github/VERIFICATION.md`
 6. **Vendor Exception**: External libraries and runtime files (libs/, vendor/, node_modules/) are exempt from line limits
 7. Do not create explainer documents or other documentation unless specifically asked to. Only edit the files listed in the documentation structure above with Files marked with `<!-- AUTO-UPDATED -->` should be updated by agents after completing tasks.
+8. ❌ Never create explainer documents or summaries unless explicitly asked
+
 
 
 ## 🎯 When to Read Which File

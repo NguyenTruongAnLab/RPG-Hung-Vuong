@@ -27,6 +27,9 @@ import { ProgressionSystem } from '../systems/ProgressionSystem';
 import { BattleAnimations } from './BattleAnimations';
 import { DragonBonesAnimation } from '../entities/components/DragonBonesAnimation';
 import { BattleMonsterLoader } from './BattleMonsterLoader';
+import { DamageNumbersManager } from '../managers/DamageNumbersManager';
+import { HitEffectsManager } from '../managers/HitEffectsManager';
+import { ParallaxBackground } from '../world/ParallaxBackground';
 import { resolveAudioPath } from '../utils/paths';
 import gsap from 'gsap';
 
@@ -101,6 +104,7 @@ export class BattleSceneV2 extends Scene {
   private playerMonster: Monster | null = null;
   private enemyMonster: Monster | null = null;
   private battleActive: boolean = true;
+  private isDestroying: boolean = false; // Flag to prevent update during destruction
   
   // UI elements
   private background: PIXI.Graphics | null = null;
@@ -119,6 +123,9 @@ export class BattleSceneV2 extends Scene {
   private camera: Camera | null = null;
   private worldContainer: PIXI.Container | null = null;
   private animations: BattleAnimations | null = null;
+  private damageNumbers: DamageNumbersManager;
+  private hitEffects: HitEffectsManager;
+  private parallaxBg: ParallaxBackground | null = null;
 
   /**
    * Creates a new BattleSceneV2
@@ -135,6 +142,8 @@ export class BattleSceneV2 extends Scene {
     this.audioManager = AudioManager.getInstance();
     this.particleManager = ParticleManager.getInstance();
     this.filterManager = FilterManager.getInstance();
+    this.damageNumbers = DamageNumbersManager.getInstance();
+    this.hitEffects = HitEffectsManager.getInstance();
     this.sceneManager = sceneManager || null;
   }
 
@@ -158,6 +167,11 @@ export class BattleSceneV2 extends Scene {
 
     // Setup camera
     this.camera = new Camera(this.worldContainer, this.app.screen.width, this.app.screen.height);
+    
+    // Add parallax background FIRST (behind everything)
+    this.parallaxBg = new ParallaxBackground(this.app, 'arena');
+    this.worldContainer.addChild(this.parallaxBg.getContainer());
+    console.log('✅ Battle arena parallax background added');
     
     // Create battle UI
     this.createBackground();
@@ -278,6 +292,41 @@ export class BattleSceneV2 extends Scene {
       
       // Emit elemental particles
       if (this.enemySprite) {
+        // Show floating damage numbers
+        if (result.advantage > 1.0) {
+          this.damageNumbers.showSuperEffective(
+            this.worldContainer!,
+            result.damage,
+            this.enemySprite.x,
+            this.enemySprite.y - 50,
+            this.playerMonster.element
+          );
+        } else {
+          this.damageNumbers.showDamage(
+            this.worldContainer!,
+            result.damage,
+            this.enemySprite.x,
+            this.enemySprite.y - 50,
+            result.isCritical
+          );
+        }
+        
+        // Hit spark effect
+        this.hitEffects.playHitSpark(this.worldContainer!, this.enemySprite.x, this.enemySprite.y);
+        
+        // Impact wave
+        this.hitEffects.playImpactWave(
+          this.worldContainer!,
+          this.enemySprite.x,
+          this.enemySprite.y,
+          result.isCritical ? 0xFFD700 : 0xFFFFFF
+        );
+        
+        // Camera shake on hit
+        if (this.camera) {
+          this.camera.shake(result.isCritical ? 15 : 8, 0.3);
+        }
+        
         this.particleManager.emitElementalEffect(
           this.playerMonster.element,
           this.enemySprite.x,
@@ -298,6 +347,7 @@ export class BattleSceneV2 extends Scene {
         
         // Critical hit effect
         if (result.isCritical) {
+          this.hitEffects.playCriticalBurst(this.worldContainer!, this.enemySprite.x, this.enemySprite.y);
           this.particleManager.emitBattleEffect(
             'critical-hit',
             this.enemySprite.x,
@@ -309,6 +359,7 @@ export class BattleSceneV2 extends Scene {
         
         // Super effective effect
         if (result.advantage > 1.0) {
+          this.hitEffects.playSuperEffectiveBurst(this.worldContainer!, this.enemySprite.x, this.enemySprite.y);
           this.particleManager.emitBattleEffect(
             'super-effective',
             this.enemySprite.x,
@@ -345,6 +396,41 @@ export class BattleSceneV2 extends Scene {
       
       // Emit elemental particles
       if (this.playerSprite) {
+        // Show floating damage numbers
+        if (result.advantage > 1.0) {
+          this.damageNumbers.showSuperEffective(
+            this.worldContainer!,
+            result.damage,
+            this.playerSprite.x,
+            this.playerSprite.y - 50,
+            this.enemyMonster.element
+          );
+        } else {
+          this.damageNumbers.showDamage(
+            this.worldContainer!,
+            result.damage,
+            this.playerSprite.x,
+            this.playerSprite.y - 50,
+            result.isCritical
+          );
+        }
+        
+        // Hit spark effect
+        this.hitEffects.playHitSpark(this.worldContainer!, this.playerSprite.x, this.playerSprite.y);
+        
+        // Impact wave
+        this.hitEffects.playImpactWave(
+          this.worldContainer!,
+          this.playerSprite.x,
+          this.playerSprite.y,
+          result.isCritical ? 0xFFD700 : 0xFFFFFF
+        );
+        
+        // Camera shake on hit
+        if (this.camera) {
+          this.camera.shake(result.isCritical ? 15 : 8, 0.3);
+        }
+        
         this.particleManager.emitElementalEffect(
           this.enemyMonster.element,
           this.playerSprite.x,
@@ -365,6 +451,7 @@ export class BattleSceneV2 extends Scene {
         
         // Critical hit effect
         if (result.isCritical) {
+          this.hitEffects.playCriticalBurst(this.worldContainer!, this.playerSprite.x, this.playerSprite.y);
           this.particleManager.emitBattleEffect(
             'critical-hit',
             this.playerSprite.x,
@@ -477,6 +564,9 @@ export class BattleSceneV2 extends Scene {
       const leveledUp = progression.addExp(expReward);
       this.updateBattleText(`Victory! +${expReward} EXP${leveledUp ? ' - Level Up!' : ''}`);
       
+      // Camera flash for victory
+      this.camera.flash(0xFFFFFF, 0.5, 0.8);
+      
       // Victory visual effects
       this.particleManager.emitBattleEffect(
         'victory',
@@ -491,6 +581,10 @@ export class BattleSceneV2 extends Scene {
       
       // Level up effect
       if (leveledUp && this.playerSprite) {
+        // Gold flash + zoom for level up
+        this.camera.flash(0xFFD700, 0.5, 0.8);
+        this.camera.levelUpZoom(1.3, 1.5);
+        
         this.particleManager.emitBattleEffect(
           'level-up',
           this.playerSprite.x,
@@ -504,14 +598,53 @@ export class BattleSceneV2 extends Scene {
     
     this.eventBus.emit('battle:end', result);
     await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // CRITICAL: Stop all camera animations BEFORE fading out to prevent render errors
+    if (this.camera) {
+      this.camera.stopAnimations();
+      console.log('🛑 [BattleSceneV2] Camera animations stopped');
+    }
+    
     await this.transitionManager.fadeOut(this, 0.5);
+    
+    // CRITICAL: Wait for render to complete before destroying scene
+    // This prevents "updateLocalTransform is not a function" errors
+    await new Promise(resolve => requestAnimationFrame(() => resolve(undefined)));
+    await new Promise(resolve => requestAnimationFrame(() => resolve(undefined)));
+    
+    console.log('🔄 [BattleSceneV2] Fade out complete, ready to switch scenes');
     
     // Return to overworld
     if (this.sceneManager) {
-      const { OverworldScene } = await import('./OverworldScene');
-      const overworldScene = new OverworldScene(this.app, this.sceneManager);
-      await this.sceneManager.switchTo(overworldScene);
-      await this.transitionManager.fadeIn(overworldScene, 0.5);
+      try {
+        console.log('🔄 [BattleSceneV2] Loading OverworldScene...');
+        const { OverworldScene } = await import('./OverworldScene');
+        
+        console.log('🔄 [BattleSceneV2] Creating new OverworldScene instance...');
+        const overworldScene = new OverworldScene(this.app, this.sceneManager);
+        
+        console.log('🔄 [BattleSceneV2] Switching to OverworldScene (will call init())...');
+        await this.sceneManager.switchTo(overworldScene);
+        
+        console.log('✅ [BattleSceneV2] OverworldScene switched successfully');
+        console.log('🔄 [BattleSceneV2] Waiting 2 frames for render pipeline...');
+        
+        // Wait for new scene to be added to render groups
+        await new Promise(resolve => requestAnimationFrame(() => resolve(undefined)));
+        await new Promise(resolve => requestAnimationFrame(() => resolve(undefined)));
+        
+        console.log('🔄 [BattleSceneV2] Fading in OverworldScene...');
+        await this.transitionManager.fadeIn(overworldScene, 0.5);
+        
+        console.log('✅ [BattleSceneV2] Transition complete! OverworldScene should now be visible.');
+        
+        // Force canvas focus to restore keyboard input
+        this.app.canvas.focus();
+        console.log('✅ [BattleSceneV2] Canvas refocused for keyboard input');
+      } catch (error) {
+        console.error('❌ [BattleSceneV2] FAILED to transition to OverworldScene:', error);
+        console.error('Stack trace:', error);
+      }
     }
   }
 
@@ -523,7 +656,7 @@ export class BattleSceneV2 extends Scene {
     const defenderAnim = isPlayerAttacking ? this.enemyAnimation : this.playerAnimation;
     
     // If we have DragonBones animations, use them
-    if (attackerAnim && defenderAnim) {
+    if (attackerAnim && defenderAnim && attackerAnim.getDisplay() && defenderAnim.getDisplay()) {
       try {
         // Play attack animation on attacker
         const attackAnims = attackerAnim.listAnimations();
@@ -565,6 +698,12 @@ export class BattleSceneV2 extends Scene {
    * @param dt - Delta time in milliseconds
    */
   update(dt: number): void {
+    // CRITICAL: Don't update if scene is being destroyed
+    // This prevents "updateLocalTransform is not a function" errors
+    if (this.isDestroying || this.destroyed) {
+      return;
+    }
+    
     // Update particles
     if (this.particles) {
       this.particles.update(dt / 16.67); // Convert to 60fps delta
@@ -578,43 +717,60 @@ export class BattleSceneV2 extends Scene {
    * Cleans up the battle scene
    */
   destroy(): void {
-    console.log('Destroying BattleSceneV2...');
+    // Set flag to prevent further updates
+    this.isDestroying = true;
     
-    // Cleanup DragonBones animations
+    console.log('🗑️ [BattleSceneV2] Destroying scene...');
+    
+    // Stop any active GSAP animations
+    if (this.worldContainer) {
+      gsap.killTweensOf(this.worldContainer);
+    }
+    gsap.killTweensOf(this);
+    
+    // CRITICAL: Remove and dispose DragonBones animations BEFORE destroying containers
+    // This prevents MeshSimple "Cannot read properties of null" errors
     if (this.playerAnimation) {
+      const display = this.playerAnimation.getDisplay();
+      if (display && display.parent) {
+        display.parent.removeChild(display);
+      }
       this.playerAnimation.destroy();
       this.playerAnimation = null;
     }
     
     if (this.enemyAnimation) {
+      const display = this.enemyAnimation.getDisplay();
+      if (display && display.parent) {
+        display.parent.removeChild(display);
+      }
       this.enemyAnimation.destroy();
       this.enemyAnimation = null;
     }
     
-    // Cleanup sprites
-    if (this.background) {
-      this.background.destroy();
-      this.background = null;
-    }
-    
-    if (this.playerSprite) {
-      this.playerSprite.destroy();
-      this.playerSprite = null;
-    }
-    
-    if (this.enemySprite) {
-      this.enemySprite.destroy();
-      this.enemySprite = null;
-    }
-    
-    if (this.battleText) {
-      this.battleText.destroy();
-      this.battleText = null;
-    }
-    
-    // Cleanup particle and filter managers
+    // Cleanup particle and filter managers BEFORE destroying containers
     this.particleManager.cleanup();
     this.filterManager.cleanup();
+    
+    // Destroy world container (children already removed above)
+    if (this.worldContainer) {
+      this.worldContainer.destroy({ children: true });
+      this.worldContainer = null;
+    }
+    
+    // Null out references (already destroyed by worldContainer)
+    this.background = null;
+    this.playerSprite = null;
+    this.enemySprite = null;
+    this.battleText = null;
+    this.camera = null;
+    this.parallaxBg = null;
+    this.animations = null;
+    
+    // Call PIXI.Container destroy to cleanup this scene container
+    PIXI.Container.prototype.destroy.call(this, { children: true });
+    
+    console.log('✅ [BattleSceneV2] Scene destroyed successfully');
     
     // Note: Don't remove event listeners as other scenes need them
   }

@@ -270,7 +270,7 @@ export class ParticleManager {
         {
           type: 'spawnShape',
           config: {
-            type: 'burst',
+            type: 'torus', // Changed from 'burst' to 'torus' (ring shape)
             data: {
               x: 0,
               y: 0,
@@ -524,7 +524,7 @@ export class ParticleManager {
         {
           type: 'spawnShape',
           config: {
-            type: 'burst',
+            type: 'torus', // Changed from 'burst' to 'torus' (ring shape)
             data: {
               x: 0,
               y: 0,

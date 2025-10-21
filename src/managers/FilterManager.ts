@@ -314,7 +314,7 @@ export class FilterManager {
     }) as unknown as PIXI.Filter;
 
     // @ts-ignore - BloomFilter typing issue with PixiJS v8
-    const bloomFilter = new BloomFilter(2) as unknown as PIXI.Filter;
+    const bloomFilter = new BloomFilter({ strength: 2 }) as unknown as PIXI.Filter;
 
     const existingFilters = sprite.filters ? [...sprite.filters] : [];
     sprite.filters = [...existingFilters, glowFilter, bloomFilter];
@@ -353,7 +353,7 @@ export class FilterManager {
   applyShockwave(x: number, y: number, container: PIXI.Container): void {
     // @ts-ignore - ShockwaveFilter typing issue with PixiJS v8
     const shockwave = new ShockwaveFilter(
-      [x, y],
+      { x, y },
       {
         radius: 100,
         wavelength: 30,
@@ -387,7 +387,7 @@ export class FilterManager {
    */
   applyVictoryBloom(container: PIXI.Container): void {
     // @ts-ignore - BloomFilter typing issue with PixiJS v8
-    const bloomFilter = new BloomFilter(2) as unknown as PIXI.Filter;
+    const bloomFilter = new BloomFilter({ strength: 2 }) as unknown as PIXI.Filter;
 
     const existingFilters = container.filters ? [...container.filters] : [];
     container.filters = [...existingFilters, bloomFilter];

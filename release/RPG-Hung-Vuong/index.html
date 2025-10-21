@@ -40,6 +40,21 @@
             height: 100% !important;
             object-fit: contain;
         }
+    
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            font-size: 24px;
+            z-index: 9999;
+        }
+        #loading-progress {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #4CAF50;
+        }
     </style>
   
   <!-- 🔐 CRITICAL: Load asset system BEFORE game module! -->
@@ -53,6 +68,27 @@
   <link rel="modulepreload" crossorigin href="/RPG-Hung-Vuong/js/physics-ecXgi8kP.js">
 </head>
 <body>
-    <div id="game-container"></div>
+    <div id="game-container">
+        <div id="loading">
+            🔐 Loading encrypted assets...
+            <div id="loading-progress">Please wait...</div>
+        </div></div>
+
+<script>
+    window.addEventListener('assetsReady', () => {
+        const loading = document.getElementById('loading');
+        if (loading) {
+            loading.innerHTML = '✅ Assets ready! Starting game...';
+            setTimeout(() => loading.style.display = 'none', 1000);
+        }
+    });
+    
+    window.addEventListener('assetsFailed', () => {
+        const loading = document.getElementById('loading');
+        if (loading) {
+            loading.innerHTML = '❌ Failed to load assets!<br>Check console for details.';
+        }
+    });
+</script>
 </body>
 </html>

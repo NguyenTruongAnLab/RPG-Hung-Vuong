@@ -13,8 +13,6 @@
 (function() {
   'use strict';
 
-  const BUILD_ID = '75bb7ee'; // Git commit hash used for encryption key
-  
   console.log('🔐 [AssetLoader] Initializing encrypted asset system...');
 
   class EncryptedAssetLoader {
@@ -217,13 +215,17 @@
         // Load metadata
         await this.loadMetadata();
         
+        // Get buildId from metadata (encryption script stores it there)
+        const buildId = this.metadata.buildId || 'default';
+        console.log(`🔑 [AssetLoader] Using build ID from metadata: ${buildId}`);
+        
         // Load chunks
         await this.loadChunks();
         
-        // Derive key
-        console.log(`🔑 [AssetLoader] Deriving decryption key from build ID: ${BUILD_ID}`);
+        // Derive key using buildId from metadata
+        console.log(`🔑 [AssetLoader] Deriving decryption key from build ID: ${buildId}`);
         this._updateLoadingUI('Preparing decryption key...');
-        const key = await this.deriveKey(BUILD_ID);
+        const key = await this.deriveKey(buildId);
         
         // Concatenate chunks
         this._updateLoadingUI('Combining encrypted chunks...');

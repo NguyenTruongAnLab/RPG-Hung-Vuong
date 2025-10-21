@@ -186,6 +186,7 @@ function copyAssetLoader(releaseDir) {
 /**
  * Inject asset loader into index.html
  * CRITICAL: Scripts must load BEFORE the game module in <head>
+ * Also adds loading UI for better user experience
  */
 function injectAssetLoader(releaseDir) {
   log('\n🎨 Enhancing index.html...', 'cyan');
@@ -223,6 +224,57 @@ function injectAssetLoader(releaseDir) {
     log(`⚠️  Could not find module script tag, falling back to </head> injection`, 'yellow');
     html = html.replace('</head>', `${scripts}\n</head>`);
   }
+  
+  // Add loading UI CSS
+  const loadingCSS = `
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            font-size: 24px;
+            z-index: 9999;
+        }
+        #loading-progress {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #4CAF50;
+        }`;
+  
+  html = html.replace('</style>', `${loadingCSS}\n    </style>`);
+  
+  // Add loading UI HTML
+  const loadingHTML = `
+        <div id="loading">
+            🔐 Loading encrypted assets...
+            <div id="loading-progress">Please wait...</div>
+        </div>`;
+  
+  html = html.replace('<div id="game-container">', `<div id="game-container">${loadingHTML}`);
+  
+  // Add loading event listeners
+  const loadingScript = `
+<script>
+    window.addEventListener('assetsReady', () => {
+        const loading = document.getElementById('loading');
+        if (loading) {
+            loading.innerHTML = '✅ Assets ready! Starting game...';
+            setTimeout(() => loading.style.display = 'none', 1000);
+        }
+    });
+    
+    window.addEventListener('assetsFailed', () => {
+        const loading = document.getElementById('loading');
+        if (loading) {
+            loading.innerHTML = '❌ Failed to load assets!<br>Check console for details.';
+        }
+    });
+</script>`;
+  
+  html = html.replace('</body>', `${loadingScript}\n</body>`);
+  
+  log(`✅ Added loading UI to index.html`, 'green');
   
   fs.writeFileSync(htmlPath, html);
 }
